@@ -8,12 +8,15 @@ namespace Cinema.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static void AddCinemaServices(this IServiceCollection serviceCollection)
+    public static void AddInfrastructureServices(this IServiceCollection serviceCollection)
     {
+        // register db context
         serviceCollection.AddDbContext<ApplicationDbContext>();
         
-        serviceCollection.AddScoped<IMovieRepository, MovieRepository>();
-        
+        // register configurations
         serviceCollection.AddSingleton<IAppConfiguration, AppConfiguration>();
+
+        // register repositories
+        serviceCollection.AddScoped<IMovieRepository, MovieRepository>();
     }
 }

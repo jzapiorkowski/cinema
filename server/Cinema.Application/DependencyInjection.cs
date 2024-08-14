@@ -6,7 +6,7 @@ namespace Cinema.Application;
 
 public static class DependencyInjection
 {
-    public static void AddCinemaServices(this IServiceCollection serviceCollection)
+    public static void AddApplicationServices(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<IMovieService, MovieService>();
         serviceCollection.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

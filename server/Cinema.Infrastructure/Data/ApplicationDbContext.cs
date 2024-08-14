@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Infrastructure.Data;
 
-public class ApplicationDbContext : DbContext
+internal class ApplicationDbContext : DbContext
 {
     private readonly IAppConfiguration _config;
 

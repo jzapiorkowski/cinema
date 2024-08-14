@@ -4,7 +4,7 @@ using Cinema.Application.Dto;
 
 namespace Cinema.API.Mappers;
 
-public class MovieProfile : Profile
+internal class MovieProfile : Profile
 {
     public MovieProfile()
     {

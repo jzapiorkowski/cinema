@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Cinema.Infrastructure.Configs;
 
-public class AppConfiguration : IAppConfiguration
+internal class AppConfiguration : IAppConfiguration
 {
     private readonly IConfiguration _configuration;
     

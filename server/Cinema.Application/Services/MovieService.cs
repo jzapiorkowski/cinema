@@ -6,27 +6,27 @@ using Cinema.Domain.Interfaces;
 
 namespace Cinema.Application.Services;
 
-public class MovieService : IMovieService
+internal class MovieService : IMovieService
 {
     private readonly IMovieRepository _movieRepository;
     private readonly IMapper _mapper;
-    
+
     public MovieService(IMovieRepository movieRepository, IMapper mapper)
     {
         _movieRepository = movieRepository;
         _mapper = mapper;
     }
-    
+
     public async Task CreateMovie(CreateMovieAppDto movie)
     {
-        Movie movieModel = _mapper.Map<Movie>(movie);
+        var movieModel = _mapper.Map<Movie>(movie);
 
         await _movieRepository.CreateMovie(movieModel);
     }
 
     public async Task<MovieAppResponseDto?> GetMovieById(int movieId)
     {
-        Movie? movie = await _movieRepository.GetMovieById(movieId);
+        var movie = await _movieRepository.GetMovieById(movieId);
 
         return _mapper.Map<MovieAppResponseDto>(movie);
     }
@@ -37,12 +37,12 @@ public class MovieService : IMovieService
 
         return _mapper.Map<List<MovieAppResponseDto>>(movies);
     }
-    
+
     public async Task<bool> DeleteMovie(int movieId)
     {
         return await _movieRepository.DeleteMovie(movieId);
     }
-    
+
     public async Task<bool> UpdateMovie(int movieId, UpdateMovieAppDto movieDto)
     {
         var existingMovie = await _movieRepository.GetMovieById(movieId);
@@ -51,9 +51,9 @@ public class MovieService : IMovieService
         {
             return false;
         }
-        
+
         var updatedMovie = _mapper.Map(movieDto, existingMovie);
-        
+
         await _movieRepository.UpdateMovie(updatedMovie);
 
         return true;

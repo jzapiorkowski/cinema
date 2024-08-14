@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Infrastructure.Repositories;
 
-public class MovieRepository : IMovieRepository
+internal class MovieRepository : IMovieRepository
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -17,7 +17,7 @@ public class MovieRepository : IMovieRepository
     public async Task CreateMovie(Movie movie)
     {
         await _dbContext.Movies.AddAsync(movie);
-            await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task<Movie?> GetMovieById(int movieId)
@@ -29,22 +29,22 @@ public class MovieRepository : IMovieRepository
     {
         return await _dbContext.Movies.ToListAsync();
     }
-    
+
     public async Task<bool> DeleteMovie(int movieId)
     {
         var movie = await _dbContext.Movies.FindAsync(movieId);
-    
+
         if (movie == null)
         {
             return false;
         }
-    
+
         _dbContext.Movies.Remove(movie);
         await _dbContext.SaveChangesAsync();
-    
+
         return true;
     }
-    
+
     public async Task UpdateMovie(Movie movie)
     {
         _dbContext.Movies.Update(movie);

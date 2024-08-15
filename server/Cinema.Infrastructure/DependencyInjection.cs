@@ -12,6 +12,10 @@ public static class DependencyInjection
     {
         // register db context
         serviceCollection.AddDbContext<ApplicationDbContext>();
+
+        // register unit of work
+        serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
+        serviceCollection.AddScoped<ITransactionalUnitOfWork, TransactionalUnitOfWork>();
         
         // register configurations
         serviceCollection.AddSingleton<IAppConfiguration, AppConfiguration>();

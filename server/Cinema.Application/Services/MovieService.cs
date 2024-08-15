@@ -13,12 +13,14 @@ internal class MovieService : IMovieService
     private readonly IMovieRepository _movieRepository;
     private readonly IMapper _mapper;
     private readonly ILogger<MovieService> _logger;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public MovieService(IMovieRepository movieRepository, IMapper mapper, ILogger<MovieService> logger)
+    public MovieService(IMapper mapper, ILogger<MovieService> logger, IUnitOfWork unitOfWork)
     {
-        _movieRepository = movieRepository;
         _mapper = mapper;
         _logger = logger;
+        _unitOfWork = unitOfWork;
+        _movieRepository = _unitOfWork.Repository<Movie, IMovieRepository>();
     }
 
     public async Task CreateMovie(CreateMovieAppDto movie)
@@ -27,7 +29,8 @@ internal class MovieService : IMovieService
         {
             var movieModel = _mapper.Map<Movie>(movie);
 
-            await _movieRepository.CreateMovie(movieModel);
+            await _movieRepository.Create(movieModel);
+            await _unitOfWork.CompleteAsync();
         }
         catch (Exception e)
         {
@@ -40,7 +43,7 @@ internal class MovieService : IMovieService
     {
         try
         {
-            var movie = await _movieRepository.GetMovieById(movieId);
+            var movie = await _movieRepository.GetByIdAsync(movieId);
 
             if (movie == null)
             {
@@ -64,7 +67,7 @@ internal class MovieService : IMovieService
     {
         try
         {
-            var movies = await _movieRepository.GetAllMovies();
+            var movies = await _movieRepository.GetAllAsync();
 
             return _mapper.Map<List<MovieAppResponseDto>>(movies);
         }
@@ -79,14 +82,15 @@ internal class MovieService : IMovieService
     {
         try
         {
-            var movie = await _movieRepository.GetMovieById(movieId);
+            var movie = await _movieRepository.GetByIdAsync(movieId);
 
             if (movie == null)
             {
                 throw new NotFoundException("movie", movieId);
             }
 
-            await _movieRepository.DeleteMovie(movie);
+            _movieRepository.Delete(movie);
+            await _unitOfWork.CompleteAsync();
         }
         catch (NotFoundException)
         {
@@ -103,7 +107,7 @@ internal class MovieService : IMovieService
     {
         try
         {
-            var existingMovie = await _movieRepository.GetMovieById(movieId);
+            var existingMovie = await _movieRepository.GetByIdAsync(movieId);
 
             if (existingMovie == null)
             {
@@ -112,7 +116,8 @@ internal class MovieService : IMovieService
 
             var updatedMovie = _mapper.Map(movieDto, existingMovie);
 
-            await _movieRepository.UpdateMovie(updatedMovie);
+            _movieRepository.Update(updatedMovie);
+            await _unitOfWork.CompleteAsync();
         }
         catch (NotFoundException)
         {

@@ -1,7 +1,10 @@
-using Cinema.Domain.Interfaces;
-using Cinema.Infrastructure.Configs;
-using Cinema.Infrastructure.Data;
-using Cinema.Infrastructure.Repositories;
+using Cinema.Domain.Core.Interfaces;
+using Cinema.Domain.Movies.Interfaces;
+using Cinema.Domain.Shared.Interfaces;
+using Cinema.Infrastructure.Core.Configs;
+using Cinema.Infrastructure.Core.Data;
+using Cinema.Infrastructure.Movies.Repositories;
+using Cinema.Infrastructure.Shared.UnitOfWork;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cinema.Infrastructure;

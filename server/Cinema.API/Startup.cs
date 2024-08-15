@@ -1,4 +1,4 @@
-using Cinema.API.Middlewares;
+using Cinema.API.Core.Middlewares;
 using Cinema.Application;
 using Cinema.Infrastructure;
 

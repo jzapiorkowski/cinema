@@ -10,12 +10,12 @@ namespace Cinema.API.Features.Movies.Controllers;
 [Route("movies")]
 public class MovieController : ControllerBase
 {
-    private readonly IMovieService _movieService;
+    private readonly IMovieFacade _movieFacade;
     private readonly IMapper _mapper;
 
-    public MovieController(IMovieService movieService, IMapper mapper)
+    public MovieController(IMovieFacade movieFacade, IMapper mapper)
     {
-        _movieService = movieService;
+        _movieFacade = movieFacade;
         _mapper = mapper;
     }
 
@@ -23,7 +23,7 @@ public class MovieController : ControllerBase
     [ProducesResponseType<List<MovieApiResponseDto>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllAsync()
     {
-        var movies = await _movieService.GetAllAsync();
+        var movies = await _movieFacade.GetAllAsync();
         return Ok(_mapper.Map<List<MovieApiResponseDto>>(movies));
     }
 
@@ -32,7 +32,7 @@ public class MovieController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByIdWithDetailsAsync(int movieId)
     {
-        var movie = await _movieService.GetByIdAsync(movieId);
+        var movie = await _movieFacade.GetByIdAsync(movieId);
         return Ok(_mapper.Map<MovieWithActorsApiResponseDto>(movie));
     }
 
@@ -42,7 +42,7 @@ public class MovieController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateMovieAsync([FromBody] CreateMovieApiDto movie)
     {
-        await _movieService.CreateAsync(_mapper.Map<CreateMovieAppDto>(movie));
+        await _movieFacade.CreateAsync(_mapper.Map<CreateMovieAppDto>(movie));
         return Ok();
     }
 
@@ -51,7 +51,7 @@ public class MovieController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteAsync(int movieId)
     {
-        await _movieService.DeleteAsync(movieId);
+        await _movieFacade.DeleteAsync(movieId);
         return NoContent();
     }
 
@@ -61,7 +61,7 @@ public class MovieController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateAsync(int movieId, [FromBody] UpdateMovieApiDto movie)
     {
-        await _movieService.UpdateAsync(movieId, _mapper.Map<UpdateMovieAppDto>(movie));
+        await _movieFacade.UpdateAsync(movieId, _mapper.Map<UpdateMovieAppDto>(movie));
         return NoContent();
     }
 }

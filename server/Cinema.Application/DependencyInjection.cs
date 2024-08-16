@@ -1,3 +1,4 @@
+using Cinema.Application.Features.Movies.Facades;
 using Cinema.Application.Features.Movies.Interfaces;
 using Cinema.Application.Features.Movies.Services;
 using Cinema.Application.Features.Persons.Interfaces;
@@ -17,5 +18,8 @@ public static class DependencyInjection
         serviceCollection.AddScoped<IMovieService, MovieService>();
         serviceCollection.AddScoped<IPersonValidationService, PersonValidationService>();
         serviceCollection.AddScoped<IPersonService, PersonService>();
+        
+        // register facades
+        serviceCollection.AddScoped<IMovieFacade, MovieFacade>();
     }
 }

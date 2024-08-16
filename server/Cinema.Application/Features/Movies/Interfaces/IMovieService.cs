@@ -1,12 +1,12 @@
-using Cinema.Application.Features.Movies.Dto;
+using Cinema.Domain.Features.Movies.Entities;
 
 namespace Cinema.Application.Features.Movies.Interfaces;
 
-public interface IMovieService
+internal interface IMovieService
 {
-    public Task CreateAsync(CreateMovieAppDto movie);
-    public Task<MovieWithActorAppResponseDto> GetByIdAsync(int movieId);
-    public Task<IEnumerable<MovieAppResponseDto>> GetAllAsync();
+    public Task CreateAsync(Movie movie);
+    public Task<Movie> GetByIdAsync(int movieId);
+    public Task<IEnumerable<Movie>> GetAllAsync();
     public Task DeleteAsync(int movieId);
-    public Task UpdateAsync(int movieId, UpdateMovieAppDto movieDto);
+    public Task UpdateAsync(Movie movie);
 }

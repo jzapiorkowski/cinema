@@ -1,9 +1,8 @@
 using Cinema.Domain.Shared.Interfaces;
 using Cinema.Infrastructure.Core.Data;
-using Cinema.Infrastructure.Shared.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cinema.Infrastructure;
+namespace Cinema.Infrastructure.Shared.UnitOfWork;
 
 internal class UnitOfWork : BaseUnitOfWork, IUnitOfWork
 {

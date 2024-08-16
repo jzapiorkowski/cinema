@@ -9,5 +9,5 @@ public class Movie
     public string Genre { get; set; }
     public string Director { get; set; }
     public DateTime ReleaseDate { get; set; }
-    public ICollection<MovieActor> MovieActors { get; set; }
+    public List<MovieActor> MovieActors { get; set; }
 }

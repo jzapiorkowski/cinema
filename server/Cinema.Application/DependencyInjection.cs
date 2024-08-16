@@ -1,3 +1,4 @@
+using Cinema.Application.Features.Movies.Builders;
 using Cinema.Application.Features.Movies.Facades;
 using Cinema.Application.Features.Movies.Interfaces;
 using Cinema.Application.Features.Movies.Services;
@@ -21,5 +22,8 @@ public static class DependencyInjection
         
         // register facades
         serviceCollection.AddScoped<IMovieFacade, MovieFacade>();
+        
+        // register builders
+        serviceCollection.AddTransient<IMovieBuilder, MovieBuilder>();
     }
 }

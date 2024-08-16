@@ -1,9 +1,11 @@
 using Cinema.Domain.Core.Interfaces;
 using Cinema.Domain.Movies.Interfaces;
+using Cinema.Domain.Persons.Repositories;
 using Cinema.Domain.Shared.Interfaces;
 using Cinema.Infrastructure.Core.Configs;
 using Cinema.Infrastructure.Core.Data;
 using Cinema.Infrastructure.Movies.Repositories;
+using Cinema.Infrastructure.Persons.Repositories;
 using Cinema.Infrastructure.Shared.UnitOfWork;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,5 +27,6 @@ public static class DependencyInjection
 
         // register repositories
         serviceCollection.AddScoped<IMovieRepository, MovieRepository>();
+        serviceCollection.AddScoped<IPersonRepository, PersonRepository>();
     }
 }

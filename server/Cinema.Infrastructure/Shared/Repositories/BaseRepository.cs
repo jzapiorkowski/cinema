@@ -47,7 +47,7 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
     {
         try
         {
-            return await _dbContext.Set<TEntity>().ToListAsync();
+            return await _dbContext.Set<TEntity>().AsNoTracking().ToListAsync();
         }
         catch (Exception e)
         {

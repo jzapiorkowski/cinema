@@ -16,4 +16,8 @@ public class UpdateMovieApiDto
     [Required]
     [DataType(DataType.DateTime)]
     public DateTime? ReleaseDate { get; set; }
+    
+    [Required]
+    [MinLength(0)]
+    public List<UpdateMovieActorApiDto> Actors { get; set; }
 }

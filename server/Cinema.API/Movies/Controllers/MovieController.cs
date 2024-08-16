@@ -28,12 +28,12 @@ public class MovieController : ControllerBase
     }
 
     [HttpGet("{movieId:int}")]
-    [ProducesResponseType<MovieApiResponseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<MovieWithActorsApiResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetMovieById(int movieId)
     {
         var movie = await _movieService.GetMovieById(movieId);
-        return Ok(_mapper.Map<MovieApiResponseDto>(movie));
+        return Ok(_mapper.Map<MovieWithActorsApiResponseDto>(movie));
     }
 
     [HttpPost]

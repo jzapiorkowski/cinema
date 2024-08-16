@@ -1,7 +1,9 @@
 using AutoMapper;
 using Cinema.Application.Movies.Dto;
 using Cinema.Application.Movies.Interfaces;
+using Cinema.Application.Persons.Interfaces;
 using Cinema.Application.Shared.Exceptions;
+using Cinema.Domain.MovieActors.Entities;
 using Cinema.Domain.Movies.Entities;
 using Cinema.Domain.Movies.Interfaces;
 using Cinema.Domain.Shared.Interfaces;
@@ -15,23 +17,42 @@ internal class MovieService : IMovieService
     private readonly IMapper _mapper;
     private readonly ILogger<MovieService> _logger;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IPersonValidationService _personValidationService;
 
-    public MovieService(IMapper mapper, ILogger<MovieService> logger, IUnitOfWork unitOfWork)
+    public MovieService(IMapper mapper, ILogger<MovieService> logger, IUnitOfWork unitOfWork,
+        IPersonValidationService personValidationService)
     {
         _mapper = mapper;
         _logger = logger;
         _unitOfWork = unitOfWork;
         _movieRepository = _unitOfWork.Repository<Movie, IMovieRepository>();
+        _personValidationService = personValidationService;
     }
 
-    public async Task CreateMovie(CreateMovieAppDto movie)
+    public async Task CreateMovie(CreateMovieAppDto createMovieAppDto)
     {
         try
         {
-            var movieModel = _mapper.Map<Movie>(movie);
+            var actors =
+                await _personValidationService.ValidatePersonsAsync(
+                    createMovieAppDto.Actors.Select(actor => actor.Id).ToList(), "actor");
 
-            await _movieRepository.Create(movieModel);
+
+            var movie = _mapper.Map<Movie>(createMovieAppDto);
+            movie.MovieActors = createMovieAppDto.Actors
+                .Join(actors, dto => dto.Id, actor => actor.Id, (dto, actor) => new MovieActor
+                {
+                    ActorId = actor.Id,
+                    Role = dto.Role
+                })
+                .ToList();
+
+            await _movieRepository.Create(movie);
             await _unitOfWork.CompleteAsync();
+        }
+        catch (NotFoundException)
+        {
+            throw;
         }
         catch (Exception e)
         {
@@ -40,18 +61,18 @@ internal class MovieService : IMovieService
         }
     }
 
-    public async Task<MovieAppResponseDto> GetMovieById(int movieId)
+    public async Task<MovieWithActorAppResponseDto> GetMovieById(int movieId)
     {
         try
         {
-            var movie = await _movieRepository.GetByIdAsync(movieId);
+            var movie = await _movieRepository.GetWithDetailsByIdAsync(movieId);
 
             if (movie == null)
             {
                 throw new NotFoundException("movie", movieId);
             }
 
-            return _mapper.Map<MovieAppResponseDto>(movie);
+            return _mapper.Map<MovieWithActorAppResponseDto>(movie);
         }
         catch (NotFoundException)
         {
@@ -60,7 +81,7 @@ internal class MovieService : IMovieService
         catch (Exception e)
         {
             _logger.LogError(e, "An error occurred while retrieving the movie with id {movieId}.", movieId);
-            throw new AppException("An error occurred while retrieving the movie with id {movieId}.", e);
+            throw new AppException($"An error occurred while retrieving the movie with id {movieId}.", e);
         }
     }
 
@@ -100,22 +121,33 @@ internal class MovieService : IMovieService
         catch (Exception e)
         {
             _logger.LogError(e, "An error occurred while deleting the movie with id {movieId}.", movieId);
-            throw new AppException("An error occurred while deleting the movie with id {movie.Id}.", e);
+            throw new AppException($"An error occurred while deleting the movie with id {movieId}.", e);
         }
     }
 
-    public async Task UpdateMovie(int movieId, UpdateMovieAppDto movieDto)
+    public async Task UpdateMovie(int movieId, UpdateMovieAppDto updateMovieAppDto)
     {
         try
         {
-            var existingMovie = await _movieRepository.GetByIdAsync(movieId);
+            var existingMovie = await _movieRepository.GetWithDetailsByIdAsync(movieId);
 
             if (existingMovie == null)
             {
                 throw new NotFoundException("movie", movieId);
             }
 
-            var updatedMovie = _mapper.Map(movieDto, existingMovie);
+            var actors =
+                await _personValidationService.ValidatePersonsAsync(
+                    updateMovieAppDto.Actors.Select(actor => actor.Id).ToList(), "actor");
+
+            var updatedMovie = _mapper.Map(updateMovieAppDto, existingMovie);
+            updatedMovie.MovieActors = updateMovieAppDto.Actors
+                .Join(actors, dto => dto.Id, actor => actor.Id, (dto, actor) => new MovieActor
+                {
+                    ActorId = actor.Id,
+                    Role = dto.Role
+                })
+                .ToList();
 
             _movieRepository.Update(updatedMovie);
             await _unitOfWork.CompleteAsync();
@@ -127,7 +159,7 @@ internal class MovieService : IMovieService
         catch (Exception e)
         {
             _logger.LogError(e, "An error occurred while updating the movie with id {movieId}.", movieId);
-            throw new AppException("An error occurred while updating the movie with id {movieId}.", e);
+            throw new AppException($"An error occurred while updating the movie with id {movieId}.", e);
         }
     }
 }

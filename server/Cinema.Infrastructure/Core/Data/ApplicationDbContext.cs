@@ -1,9 +1,9 @@
 using Cinema.Domain.Core.Interfaces;
-using Cinema.Domain.Movies.Entities;
-using Cinema.Domain.Persons.Entities;
-using Cinema.Infrastructure.MovieActors.ModelConfigurations;
-using Cinema.Infrastructure.Movies.ModelConfigurations;
-using Cinema.Infrastructure.Persons.ModelConfigurations;
+using Cinema.Domain.Features.Movies.Entities;
+using Cinema.Domain.Features.Persons.Entities;
+using Cinema.Infrastructure.Features.MovieActors.ModelConfigurations;
+using Cinema.Infrastructure.Features.Movies.ModelConfigurations;
+using Cinema.Infrastructure.Features.Persons.ModelConfigurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Infrastructure.Core.Data;

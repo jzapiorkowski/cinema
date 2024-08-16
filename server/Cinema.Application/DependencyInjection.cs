@@ -1,7 +1,7 @@
-using Cinema.Application.Movies.Interfaces;
-using Cinema.Application.Movies.Services;
-using Cinema.Application.Persons.Interfaces;
-using Cinema.Application.Persons.Services;
+using Cinema.Application.Features.Movies.Interfaces;
+using Cinema.Application.Features.Movies.Services;
+using Cinema.Application.Features.Persons.Interfaces;
+using Cinema.Application.Features.Persons.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cinema.Application;

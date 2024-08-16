@@ -29,7 +29,7 @@ internal class MovieService : IMovieService
         _personValidationService = personValidationService;
     }
 
-    public async Task CreateMovie(CreateMovieAppDto createMovieAppDto)
+    public async Task CreateAsync(CreateMovieAppDto createMovieAppDto)
     {
         try
         {
@@ -61,7 +61,7 @@ internal class MovieService : IMovieService
         }
     }
 
-    public async Task<MovieWithActorAppResponseDto> GetMovieById(int movieId)
+    public async Task<MovieWithActorAppResponseDto> GetByIdAsync(int movieId)
     {
         try
         {
@@ -85,7 +85,7 @@ internal class MovieService : IMovieService
         }
     }
 
-    public async Task<IEnumerable<MovieAppResponseDto>> GetAllMovies()
+    public async Task<IEnumerable<MovieAppResponseDto>> GetAllAsync()
     {
         try
         {
@@ -100,7 +100,7 @@ internal class MovieService : IMovieService
         }
     }
 
-    public async Task DeleteMovie(int movieId)
+    public async Task DeleteAsync(int movieId)
     {
         try
         {
@@ -125,7 +125,7 @@ internal class MovieService : IMovieService
         }
     }
 
-    public async Task UpdateMovie(int movieId, UpdateMovieAppDto updateMovieAppDto)
+    public async Task UpdateAsync(int movieId, UpdateMovieAppDto updateMovieAppDto)
     {
         try
         {

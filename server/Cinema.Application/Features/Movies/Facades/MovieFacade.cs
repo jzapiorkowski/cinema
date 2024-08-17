@@ -21,7 +21,7 @@ internal class MovieFacade : IMovieFacade
         _movieBuilder = movieBuilder;
     }
 
-    public async Task CreateAsync(CreateMovieAppDto createMovieAppDto)
+    public async Task<MovieAppResponseDto> CreateAsync(CreateMovieAppDto createMovieAppDto)
     {
         await _personValidationService.ValidatePersonsAsync(
             createMovieAppDto.Actors.Select(actor => actor.Id).ToList(), "actor");
@@ -34,7 +34,9 @@ internal class MovieFacade : IMovieFacade
             .SetDirector(createMovieAppDto.Director)
             .Build();
 
-        await _movieService.CreateAsync(movie);
+        var createdMovie = await _movieService.CreateAsync(movie);
+
+        return _mapper.Map<MovieAppResponseDto>(createdMovie);
     }
 
     public async Task<MovieWithActorAppResponseDto> GetByIdAsync(int movieId)
@@ -54,7 +56,7 @@ internal class MovieFacade : IMovieFacade
         await _movieService.DeleteAsync(movieId);
     }
 
-    public async Task UpdateAsync(int movieId, UpdateMovieAppDto movieDto)
+    public async Task<MovieAppResponseDto> UpdateAsync(int movieId, UpdateMovieAppDto movieDto)
     {
         var existingMovie = await _movieService.GetByIdAsync(movieId);
 
@@ -62,14 +64,16 @@ internal class MovieFacade : IMovieFacade
             movieDto.Actors.Select(actor => actor.Id).ToList(), "actor");
 
         var movie = _movieBuilder
+            .SetId(existingMovie.Id)
             .SetTitle(movieDto.Title)
             .SetReleaseDate(movieDto.ReleaseDate)
             .AddActors(movieDto.Actors.Select(dto => (dto.Id, dto.Role)))
             .SetGenre(movieDto.Genre)
             .SetDirector(movieDto.Director)
             .Build();
-        movie.Id = existingMovie.Id;
 
-        await _movieService.UpdateAsync(movie);
+        var updatedMovie = await _movieService.UpdateAsync(movie);
+
+        return _mapper.Map<MovieAppResponseDto>(updatedMovie);
     }
 }

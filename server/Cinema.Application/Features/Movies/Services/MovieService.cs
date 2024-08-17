@@ -20,12 +20,13 @@ internal class MovieService : IMovieService
         _movieRepository = _unitOfWork.Repository<Movie, IMovieRepository>();
     }
 
-    public async Task CreateAsync(Movie movie)
+    public async Task<Movie> CreateAsync(Movie movie)
     {
         try
         {
-            await _movieRepository.Create(movie);
+            var createdMovie = await _movieRepository.CreateAsync(movie);
             await _unitOfWork.CompleteAsync();
+            return createdMovie;
         }
         catch (Exception e)
         {
@@ -96,12 +97,14 @@ internal class MovieService : IMovieService
         }
     }
 
-    public async Task UpdateAsync(Movie movie)
+    public async Task<Movie> UpdateAsync(Movie movie)
     {
         try
         {
-            _movieRepository.Update(movie);
+            var updatedMovie = _movieRepository.Update(movie);
             await _unitOfWork.CompleteAsync();
+
+            return updatedMovie;
         }
         catch (Exception e)
         {

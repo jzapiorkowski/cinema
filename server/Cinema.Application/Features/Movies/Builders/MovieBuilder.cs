@@ -13,6 +13,12 @@ internal class MovieBuilder : IMovieBuilder
         _movie = new Movie();
     }
 
+    public IMovieBuilder SetId(int id)
+    {
+        _movie.Id = id;
+        return this;
+    }
+    
     public IMovieBuilder SetTitle(string title)
     {
         _movie.Title = title;

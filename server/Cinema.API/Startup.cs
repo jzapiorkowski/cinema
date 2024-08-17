@@ -15,7 +15,9 @@ public class Startup
         services.AddAPIServices();
         services.AddApplicationServices();
 
-        services.AddControllers();
+        services.AddControllers(
+            options => { options.SuppressAsyncSuffixInActionNames = false; }
+        );
     }
 
     public static void ConfigureMiddleware(WebApplication app, IWebHostEnvironment env)

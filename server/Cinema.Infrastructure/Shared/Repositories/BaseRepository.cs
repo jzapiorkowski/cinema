@@ -17,11 +17,12 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
         _logger = logger;
     }
 
-    public async Task Create(TEntity entity)
+    public async Task<TEntity> CreateAsync(TEntity entity)
     {
         try
         {
-            await _dbContext.Set<TEntity>().AddAsync(entity);
+            var createdEntity = await _dbContext.Set<TEntity>().AddAsync(entity);
+            return createdEntity.Entity;
         }
         catch (Exception e)
         {
@@ -70,11 +71,12 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
         }
     }
 
-    public void Update(TEntity entity)
+    public TEntity Update(TEntity entity)
     {
         try
         {
-            _dbContext.Set<TEntity>().Update(entity);
+            var updatedEntity = _dbContext.Set<TEntity>().Update(entity);
+            return updatedEntity.Entity;
         }
         catch (Exception e)
         {

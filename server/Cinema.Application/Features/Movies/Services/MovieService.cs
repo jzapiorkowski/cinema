@@ -35,7 +35,7 @@ internal class MovieService : IMovieService
         }
     }
 
-    public async Task<Movie> GetByIdAsync(int movieId)
+    public async Task<Movie> GetByIdAWithDetailsAsync(int movieId)
     {
         try
         {
@@ -56,7 +56,7 @@ internal class MovieService : IMovieService
         {
             _logger.LogError(e, "An error occurred while retrieving the movie with id {movieId}.", movieId);
             throw new AppException($"An error occurred while retrieving the movie with id {movieId}.", e);
-        }
+        } 
     }
 
     public async Task<IEnumerable<Movie>> GetAllAsync()
@@ -76,12 +76,7 @@ internal class MovieService : IMovieService
     {
         try
         {
-            var movie = await _movieRepository.GetByIdAsync(movieId);
-
-            if (movie == null)
-            {
-                throw new NotFoundException("movie", movieId);
-            }
+            var movie = await GetByIdAsync(movieId);
 
             _movieRepository.Delete(movie);
             await _unitOfWork.CompleteAsync();
@@ -110,6 +105,30 @@ internal class MovieService : IMovieService
         {
             _logger.LogError(e, "An error occurred while updating the movie with id {movieId}.", movie.Id);
             throw new AppException($"An error occurred while updating the movie with id {movie.Id}.", e);
+        }
+    }
+    
+    private async Task<Movie> GetByIdAsync(int movieId)
+    {
+        try
+        {
+            var movie = await _movieRepository.GetByIdAsync(movieId);
+
+            if (movie == null)
+            {
+                throw new NotFoundException("movie", movieId);
+            }
+
+            return movie;
+        }
+        catch (NotFoundException)
+        {
+            throw;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while retrieving the movie with id {movieId}.", movieId);
+            throw new AppException($"An error occurred while retrieving the movie with id {movieId}.", e);
         }
     }
 }

@@ -34,4 +34,18 @@ internal class PersonRepository : BaseRepository<Person>, IPersonRepository
 
         }
     }
+
+    public async Task<Person?> GetWithDetailsByIdAsync(int id)
+    {
+        try
+        {
+            return await _dbContext.Person.Include(p => p.MovieActors).ThenInclude(ma => ma.Movie)
+                .SingleOrDefaultAsync(p => p.Id == id);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }        
+    }
 }

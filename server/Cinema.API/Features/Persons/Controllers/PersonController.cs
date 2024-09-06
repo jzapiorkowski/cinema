@@ -1,5 +1,6 @@
 using AutoMapper;
 using Cinema.API.Features.Persons.Dto;
+using Cinema.Application.Features.Persons.Dto;
 using Cinema.Application.Features.Persons.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,8 +32,8 @@ public class PersonController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByIdWithDetailsAsync(int id)
     {
-        var movie = await _personFacade.GetWithDetailsByIdAsync(id);
-        return Ok(_mapper.Map<PersonWithDetailsApiResponseDto>(movie));
+        var person = await _personFacade.GetWithDetailsByIdAsync(id);
+        return Ok(_mapper.Map<PersonWithDetailsApiResponseDto>(person));
     }
 
     [HttpDelete("{id:int}")]
@@ -42,5 +43,28 @@ public class PersonController : ControllerBase
     {
         await _personFacade.DeleteAsync(id);
         return NoContent();
+    }
+
+    [HttpPost]
+    [ProducesResponseType<PersonApiResponseDto>(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> CreateAsync([FromBody] CreatePersonApiDto person)
+    {
+        var createdPerson = await _personFacade.CreateAsync(_mapper.Map<CreatePersonAppDto>(person));
+        var personApiResponse = _mapper.Map<PersonApiResponseDto>(createdPerson);
+
+        return CreatedAtAction(nameof(GetByIdWithDetailsAsync), new { id = personApiResponse.Id },
+            personApiResponse);
+    }
+    
+    [HttpPut("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<PersonApiResponseDto>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdatePersonApiDto person)
+    {
+        var updatedPerson = await _personFacade.UpdateAsync(id, _mapper.Map<UpdatePersonAppDto>(person));
+        return Ok(_mapper.Map<PersonApiResponseDto>(updatedPerson));
     }
 }

@@ -107,7 +107,20 @@ internal class MovieService : IMovieService
             throw new AppException($"An error occurred while updating the movie with id {movie.Id}.", e);
         }
     }
-    
+
+    public async Task<List<Movie>> GetByIdsAsync(List<int> ids)
+    {
+        try
+        {
+            return await _movieRepository.GetByIdsAsync(ids);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while retrieving people with ids {ids}.", ids);
+            throw new AppException($"An error occurred while retrieving people with ids {ids}.", e);
+        }
+    }
+
     private async Task<Movie> GetByIdAsync(int movieId)
     {
         try

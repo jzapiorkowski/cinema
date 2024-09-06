@@ -34,4 +34,18 @@ internal class MovieRepository : BaseRepository<Movie>, IMovieRepository
             throw new DatabaseException($"An error occurred while retrieving the movie with id {id}.", e);
         }
     }
+
+    public async Task<List<Movie>> GetByIdsAsync(IEnumerable<int> ids)
+    {
+        try
+        {
+            return await _dbContext.Movie.Where(m => ids.Contains(m.Id)).ToListAsync();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while retrieving the movies with ids {ids}.",
+                ids);
+            throw new DatabaseException($"An error occurred while retrieving the movies with ids {ids}.", e);
+        }
+    }
 }

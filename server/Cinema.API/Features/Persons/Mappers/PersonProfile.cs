@@ -12,5 +12,11 @@ internal class PersonProfile : Profile
         CreateMap<PersonWithDetailsAppResponseDto, PersonWithDetailsApiResponseDto>();
         CreateMap<PersonActedInAppResponseDto, PersonActedInApiResponseDto>();
         CreateMap<PersonMovieAppResponseDto, PersonMovieApiResponseDto>();
+
+        CreateMap<CreatePersonApiDto, CreatePersonAppDto>();
+        CreateMap<CreatePersonActedInApiDto, CreatePersonActedInAppDto>();
+
+        CreateMap<UpdatePersonApiDto, UpdatePersonAppDto>();
+        CreateMap<UpdatePersonActedInApiDto, UpdatePersonActedInAppDto>();
     }
 }

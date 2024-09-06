@@ -8,4 +8,6 @@ internal interface IPersonService
     public Task<IEnumerable<Person>> GetAllAsync();
     public Task<Person> GetWithDetailsByIdAsync(int id);
     public Task DeleteAsync(int id);
+    public Task<Person> CreateAsync(Person person);
+    public Task<Person> UpdateAsync(Person person);
 }

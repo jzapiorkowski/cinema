@@ -7,15 +7,15 @@ namespace Cinema.Application.Features.Movies.Facades;
 
 internal class MovieFacade : IMovieFacade
 {
-    private readonly IPersonValidationService _personValidationService;
+    private readonly IPersonRelatedEntityValidator _personRelatedEntityValidator;
     private readonly IMapper _mapper;
     private readonly IMovieService _movieService;
     private readonly IMovieBuilder _movieBuilder;
 
-    public MovieFacade(IPersonValidationService personValidationService, IMapper mapper, IMovieService movieService,
+    public MovieFacade(IPersonRelatedEntityValidator personRelatedEntityValidator, IMapper mapper, IMovieService movieService,
         IMovieBuilder movieBuilder)
     {
-        _personValidationService = personValidationService;
+        _personRelatedEntityValidator = personRelatedEntityValidator;
         _mapper = mapper;
         _movieService = movieService;
         _movieBuilder = movieBuilder;
@@ -23,7 +23,7 @@ internal class MovieFacade : IMovieFacade
 
     public async Task<MovieAppResponseDto> CreateAsync(CreateMovieAppDto createMovieAppDto)
     {
-        await _personValidationService.ValidatePersonsAsync(
+        await _personRelatedEntityValidator.ValidateEntitiesAsync(
             createMovieAppDto.Actors.Select(actor => actor.Id).ToList(), "actor");
 
         var movie = _movieBuilder
@@ -60,7 +60,7 @@ internal class MovieFacade : IMovieFacade
     {
         var existingMovie = await _movieService.GetByIdAWithDetailsAsync(movieId);
 
-        await _personValidationService.ValidatePersonsAsync(
+        await _personRelatedEntityValidator.ValidateEntitiesAsync(
             movieDto.Actors.Select(actor => actor.Id).ToList(), "actor");
 
         var movie = _movieBuilder

@@ -87,7 +87,38 @@ internal class PersonService : IPersonService
             throw new AppException($"An error occurred while deleting person with id {id}", e);
         }
     }
-    
+
+    public async Task<Person> CreateAsync(Person person)
+    {
+        try
+        {
+            var createdPerson = await _unitOfWork.Repository<Person, IPersonRepository>().CreateAsync(person);
+            await _unitOfWork.CompleteAsync();
+            return createdPerson;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while creating person");
+            throw new AppException($"An error occurred while creating person", e);
+        }
+    }
+
+    public async Task<Person> UpdateAsync(Person person)
+    {
+        try
+        {
+            var updatedPerson = _unitOfWork.Repository<Person, IPersonRepository>().Update(person);
+            await _unitOfWork.CompleteAsync();
+
+            return updatedPerson;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while updating person with id {id}", person.Id);
+            throw new AppException($"An error occurred while updating person with id {person.Id}", e);
+        }
+    }
+
     private async Task<Person> GetByIdAsync(int id)
     {
         try

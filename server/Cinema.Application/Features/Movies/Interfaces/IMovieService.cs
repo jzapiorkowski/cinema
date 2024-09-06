@@ -9,4 +9,5 @@ internal interface IMovieService
     public Task<IEnumerable<Movie>> GetAllAsync();
     public Task DeleteAsync(int movieId);
     public Task<Movie> UpdateAsync(Movie movie);
+    public Task<List<Movie>> GetByIdsAsync(List<int> moviesIds);
 }

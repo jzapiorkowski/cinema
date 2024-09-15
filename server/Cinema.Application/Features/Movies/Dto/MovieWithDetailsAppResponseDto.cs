@@ -6,6 +6,7 @@ public class MovieWithDetailsAppResponseDto
     public string Title { get; set; }
     public string Genre { get; set; }
     public DateTime ReleaseDate { get; set; }
+    public TimeSpan Duration { get; set; }
     public ICollection<MovieActorAppResponseDto> Actors { get; set; }
     public MovieDirectorAppResponseDto Director { get; set; }
 }

@@ -9,6 +9,7 @@ public class Movie
     public string Title { get; set; }
     public string Genre { get; set; }
     public DateTime ReleaseDate { get; set; }
+    public TimeSpan Duration { get; set; }
     public List<MovieActor> MovieActors { get; set; }
     public Person DirectedBy { get; set; }
     public int DirectorId { get; set; } 

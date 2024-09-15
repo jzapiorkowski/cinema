@@ -11,7 +11,10 @@ public class UpdateMovieApiDto
     public string Genre { get; set; }
     
     [Required]
-    public string DirectorId { get; set; }
+    public int DirectorId { get; set; }
+    
+    [Required]
+    public TimeSpan Duration { get; set; }
 
     [Required]
     [DataType(DataType.DateTime)]

@@ -14,6 +14,7 @@ internal class MovieConfiguration : IEntityTypeConfiguration<Movie>
         builder.Property(m => m.Title).HasColumnName("title");
         builder.Property(m => m.Genre).HasColumnName("genre");
         builder.Property(m => m.ReleaseDate).HasColumnName("release_date");
+        builder.Property(m => m.Duration).HasColumnName("duration").HasColumnType("interval");
         builder.Property(m => m.DirectorId).HasColumnName("director_id");
 
         builder

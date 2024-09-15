@@ -39,7 +39,9 @@ internal class PersonRepository : BaseRepository<Person>, IPersonRepository
     {
         try
         {
-            return await _dbContext.Person.Include(p => p.MovieActors).ThenInclude(ma => ma.Movie)
+            return await _dbContext.Person
+                .Include(p => p.MovieActors).ThenInclude(ma => ma.Movie)
+                .Include(p => p.DirectedMovies)
                 .SingleOrDefaultAsync(p => p.Id == id);
         }
         catch (Exception e)

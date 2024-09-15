@@ -37,9 +37,9 @@ internal class MovieBuilder : IMovieBuilder
         return this;
     }
 
-    public IMovieBuilder SetDirector(string director)
+    public IMovieBuilder SetDirectorId(int directorId)
     {
-        _movie.Director = director;
+        _movie.DirectorId = directorId;
         return this;
     }
 

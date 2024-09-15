@@ -6,5 +6,6 @@ public class PersonWithDetailsAppResponseDto
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public DateTime BirthDate { get; set; }
-    public IEnumerable<PersonActedInAppResponseDto> actedIn;
+    public IEnumerable<PersonActedInAppResponseDto> ActedIn;
+    public IEnumerable<MovieDirectedAppResponseDto> DirectedMovies;
 }

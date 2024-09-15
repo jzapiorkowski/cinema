@@ -1,4 +1,5 @@
 using Cinema.Domain.Features.MovieActors.Entities;
+using Cinema.Domain.Features.Movies.Entities;
 
 namespace Cinema.Domain.Features.Persons.Entities;
 
@@ -9,4 +10,5 @@ public class Person
     public string LastName { get; set; }
     public DateTime BirthDate { get; set; }
     public ICollection<MovieActor> MovieActors { get; set; }
+    public ICollection<Movie> DirectedMovies { get; set; }
 }

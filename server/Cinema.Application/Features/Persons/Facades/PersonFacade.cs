@@ -43,6 +43,8 @@ internal class PersonFacade : IPersonFacade
     {
         await _movieRelatedEntityValidator.ValidateEntitiesAsync(
             createPersonAppDto.ActedIn.Select(actedIn => actedIn.MovieId).ToList());
+        var directedMovies = await _movieRelatedEntityValidator.ValidateEntitiesAsync(
+            createPersonAppDto.DirectedMovies.ToList());
 
         var person = _personBuilder
             .SetFirstName(createPersonAppDto.FirstName)
@@ -52,6 +54,7 @@ internal class PersonFacade : IPersonFacade
                     new MovieActor { MovieId = actedIn.MovieId, Role = actedIn.Role })
                 .ToList()
             )
+            .SetDirectedMovies(directedMovies)
             .Build();
 
         var createdPerson = await _personService.CreateAsync(person);
@@ -64,7 +67,9 @@ internal class PersonFacade : IPersonFacade
 
         await _movieRelatedEntityValidator.ValidateEntitiesAsync(
             updatePersonAppDto.ActedIn.Select(actedIn => actedIn.MovieId).ToList());
-
+        var directedMovies = await _movieRelatedEntityValidator.ValidateEntitiesAsync(
+            updatePersonAppDto.DirectedMovies.ToList());
+        
         var person = _personBuilder
             .SetId(existingPerson.Id)
             .SetFirstName(updatePersonAppDto.FirstName)
@@ -74,6 +79,7 @@ internal class PersonFacade : IPersonFacade
                     new MovieActor { MovieId = actedIn.MovieId, Role = actedIn.Role })
                 .ToList()
             )
+            .SetDirectedMovies(directedMovies)
             .Build();
 
         var updatedPerson = await _personService.UpdateAsync(person);

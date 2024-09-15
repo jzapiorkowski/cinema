@@ -8,7 +8,7 @@ internal interface IMovieBuilder
     public IMovieBuilder SetTitle(string title);
     public IMovieBuilder SetReleaseDate(DateTime releaseDate);
     public IMovieBuilder SetGenre(string genre);
-    public IMovieBuilder SetDirector(string director);
+    public IMovieBuilder SetDirectorId(int directorId);
     public IMovieBuilder AddActors(IEnumerable<(int actorId, string role)> actors);
     public Movie Build();
 }

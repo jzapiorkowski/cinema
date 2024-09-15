@@ -24,7 +24,9 @@ internal class MovieRepository : BaseRepository<Movie>, IMovieRepository
     {
         try
         {
-            return await _dbContext.Movie.Include(m => m.MovieActors).ThenInclude(ma => ma.Actor)
+            return await _dbContext.Movie
+                .Include(m => m.MovieActors).ThenInclude(ma => ma.Actor)
+                .Include(m => m.DirectedBy)
                 .SingleOrDefaultAsync(m => m.Id == id);
         }
         catch (Exception e)

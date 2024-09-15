@@ -1,5 +1,6 @@
 using Cinema.Application.Features.Persons.Interfaces;
 using Cinema.Domain.Features.MovieActors.Entities;
+using Cinema.Domain.Features.Movies.Entities;
 using Cinema.Domain.Features.Persons.Entities;
 
 namespace Cinema.Application.Features.Persons.Builders;
@@ -40,6 +41,12 @@ internal class PersonBuilder : IPersonBuilder
     public IPersonBuilder SetMovieActors(ICollection<MovieActor> movieActors)
     {
         _person.MovieActors = movieActors;
+        return this;
+    }
+    
+    public IPersonBuilder SetDirectedMovies(ICollection<Movie> directedMovies)
+    {
+        _person.DirectedMovies = directedMovies;
         return this;
     }
 

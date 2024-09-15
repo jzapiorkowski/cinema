@@ -10,7 +10,14 @@ internal class MovieProfile : Profile
     public MovieProfile()
     {
         CreateMap<Movie, MovieAppResponseDto>();
-        CreateMap<Movie, MovieWithActorAppResponseDto>()
+        CreateMap<Movie, MovieWithDetailsAppResponseDto>()
+            .ForMember(dest => dest.Director, opt => opt.MapFrom(src => new MovieDirectorAppResponseDto
+            {
+                Id = src.DirectedBy.Id,
+                FirstName = src.DirectedBy.FirstName,
+                LastName = src.DirectedBy.LastName,
+                BirthDate = src.DirectedBy.BirthDate
+            }))
             .ForMember(dest => dest.Actors, opt => opt.MapFrom(src => src.MovieActors.Select(ma =>
                 new MovieActorAppResponseDto
                 {
@@ -20,10 +27,12 @@ internal class MovieProfile : Profile
                     BirthDate = ma.Actor.BirthDate,
                     Role = ma.Role
                 }
-            )));
+            )))
+            .ForMember(dest => dest.Director, opt => opt.MapFrom(src => src.DirectedBy));
         CreateMap<CreateMovieAppDto, Movie>();
         CreateMap<UpdateMovieAppDto, Movie>();
 
         CreateMap<Person, MovieActorAppResponseDto>();
+        CreateMap<Person, MovieDirectorAppResponseDto>();
     }
 }

@@ -25,13 +25,14 @@ internal class MovieFacade : IMovieFacade
     {
         await _personRelatedEntityValidator.ValidateEntitiesAsync(
             createMovieAppDto.Actors.Select(actor => actor.Id).ToList(), "actor");
+        await _personRelatedEntityValidator.ValidateEntitiesAsync([createMovieAppDto.DirectorId], "director");
 
         var movie = _movieBuilder
             .SetTitle(createMovieAppDto.Title)
             .SetReleaseDate(createMovieAppDto.ReleaseDate)
             .AddActors(createMovieAppDto.Actors.Select(dto => (dto.Id, dto.Role)))
             .SetGenre(createMovieAppDto.Genre)
-            .SetDirector(createMovieAppDto.Director)
+            .SetDirectorId(createMovieAppDto.DirectorId)
             .Build();
 
         var createdMovie = await _movieService.CreateAsync(movie);
@@ -39,10 +40,10 @@ internal class MovieFacade : IMovieFacade
         return _mapper.Map<MovieAppResponseDto>(createdMovie);
     }
 
-    public async Task<MovieWithActorAppResponseDto> GetByIdAWithDetailsAsync(int movieId)
+    public async Task<MovieWithDetailsAppResponseDto> GetByIdAWithDetailsAsync(int movieId)
     {
         var movie = await _movieService.GetByIdAWithDetailsAsync(movieId);
-        return _mapper.Map<MovieWithActorAppResponseDto>(movie);
+        return _mapper.Map<MovieWithDetailsAppResponseDto>(movie);
     }
 
     public async Task<IEnumerable<MovieAppResponseDto>> GetAllAsync()
@@ -62,6 +63,7 @@ internal class MovieFacade : IMovieFacade
 
         await _personRelatedEntityValidator.ValidateEntitiesAsync(
             movieDto.Actors.Select(actor => actor.Id).ToList(), "actor");
+        await _personRelatedEntityValidator.ValidateEntitiesAsync([movieDto.DirectorId], "director");
 
         var movie = _movieBuilder
             .SetId(existingMovie.Id)
@@ -69,7 +71,7 @@ internal class MovieFacade : IMovieFacade
             .SetReleaseDate(movieDto.ReleaseDate)
             .AddActors(movieDto.Actors.Select(dto => (dto.Id, dto.Role)))
             .SetGenre(movieDto.Genre)
-            .SetDirector(movieDto.Director)
+            .SetDirectorId(movieDto.DirectorId)
             .Build();
 
         var updatedMovie = await _movieService.UpdateAsync(movie);

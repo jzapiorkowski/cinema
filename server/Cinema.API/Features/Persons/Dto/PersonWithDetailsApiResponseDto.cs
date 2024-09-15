@@ -6,5 +6,6 @@ public class PersonWithDetailsApiResponseDto
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public DateTime BirthDate { get; set; }
-    public IEnumerable<PersonActedInApiResponseDto> actedIn { get; set; }
+    public IEnumerable<PersonActedInApiResponseDto> ActedIn { get; set; }
+    public IEnumerable<MovieDirectedApiResponseDto> DirectedMovies { get; set; }
 }

@@ -9,7 +9,9 @@ internal class PersonProfile : Profile
     public PersonProfile()
     {
         CreateMap<PersonAppResponseDto, PersonApiResponseDto>();
-        CreateMap<PersonWithDetailsAppResponseDto, PersonWithDetailsApiResponseDto>();
+        CreateMap<PersonWithDetailsAppResponseDto, PersonWithDetailsApiResponseDto>()
+            .ForMember(dest => dest.DirectedMovies, opt => opt.MapFrom(src => src.DirectedMovies.Select(dm => dm)));
+
         CreateMap<PersonActedInAppResponseDto, PersonActedInApiResponseDto>();
         CreateMap<PersonMovieAppResponseDto, PersonMovieApiResponseDto>();
 
@@ -18,5 +20,7 @@ internal class PersonProfile : Profile
 
         CreateMap<UpdatePersonApiDto, UpdatePersonAppDto>();
         CreateMap<UpdatePersonActedInApiDto, UpdatePersonActedInAppDto>();
+
+        CreateMap<MovieDirectedAppResponseDto, MovieDirectedApiResponseDto>();
     }
 }

@@ -1,4 +1,5 @@
 using Cinema.Domain.Features.MovieActors.Entities;
+using Cinema.Domain.Features.Movies.Entities;
 using Cinema.Domain.Features.Persons.Entities;
 
 namespace Cinema.Application.Features.Persons.Interfaces;
@@ -10,5 +11,6 @@ internal interface IPersonBuilder
     public IPersonBuilder SetLastName(string name);
     public IPersonBuilder SetBirthDate(DateTime birthDate);
     public IPersonBuilder SetMovieActors(ICollection<MovieActor> movieActors);
+    public IPersonBuilder SetDirectedMovies(ICollection<Movie> directedMovies);
     public Person Build();
 }

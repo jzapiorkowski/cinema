@@ -6,4 +6,5 @@ public class UpdatePersonAppDto
     public string LastName { get; set; }
     public DateTime BirthDate { get; set; }
     public IEnumerable<UpdatePersonActedInAppDto> ActedIn { get; set; }
+    public IEnumerable<int> DirectedMovies { get; set; }
 }

@@ -1,6 +1,6 @@
-namespace Cinema.API.Features.Movies.Dto;
+namespace Cinema.API.Features.Persons.Dto;
 
-public class MovieApiResponseDto
+public class MovieDirectedApiResponseDto
 {
     public int Id { get; set; }
     public string Title { get; set; }

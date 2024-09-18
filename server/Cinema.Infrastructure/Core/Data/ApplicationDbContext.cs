@@ -1,9 +1,11 @@
 using Cinema.Domain.Core.Interfaces;
 using Cinema.Domain.Features.Movies.Entities;
 using Cinema.Domain.Features.Persons.Entities;
+using Cinema.Domain.Features.Screenings.Entities;
 using Cinema.Infrastructure.Features.MovieActors.ModelConfigurations;
 using Cinema.Infrastructure.Features.Movies.ModelConfigurations;
 using Cinema.Infrastructure.Features.Persons.ModelConfigurations;
+using Cinema.Infrastructure.Features.Screenings.ModelConfigurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Infrastructure.Core.Data;
@@ -29,6 +31,7 @@ internal class ApplicationDbContext : DbContext
         // register model configurations
         modelBuilder.ApplyConfiguration(new MovieConfiguration());
         modelBuilder.ApplyConfiguration(new PersonConfiguration());
+        modelBuilder.ApplyConfiguration(new ScreeningConfiguration());
 
         // register relationships configurations
         modelBuilder.ApplyConfiguration(new MovieActorConfiguration());
@@ -36,4 +39,5 @@ internal class ApplicationDbContext : DbContext
 
     public DbSet<Movie> Movie { get; set; }
     public DbSet<Person> Person { get; set; }
+    public DbSet<Screening> Screening { get; set; }
 }

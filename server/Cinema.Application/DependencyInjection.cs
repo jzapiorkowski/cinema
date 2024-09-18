@@ -8,6 +8,9 @@ using Cinema.Application.Features.Persons.Facades;
 using Cinema.Application.Features.Persons.Interfaces;
 using Cinema.Application.Features.Persons.Services;
 using Cinema.Application.Features.Persons.Validators;
+using Cinema.Application.Features.Screenings.Facades;
+using Cinema.Application.Features.Screenings.Interfaces;
+using Cinema.Application.Features.Screenings.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cinema.Application;
@@ -22,6 +25,7 @@ public static class DependencyInjection
         // register services
         serviceCollection.AddScoped<IMovieService, MovieService>();
         serviceCollection.AddScoped<IPersonService, PersonService>();
+        serviceCollection.AddScoped<IScreeningService, ScreeningService>();
         
         // register validators
         serviceCollection.AddTransient<IMovieRelatedEntityValidator, MovieRelatedEntityValidator>();
@@ -30,6 +34,7 @@ public static class DependencyInjection
         // register facades
         serviceCollection.AddScoped<IMovieFacade, MovieFacade>();
         serviceCollection.AddScoped<IPersonFacade, PersonFacade>();
+        serviceCollection.AddScoped<IScreeningFacade, ScreeningFacade>();
         
         // register builders
         serviceCollection.AddTransient<IMovieBuilder, MovieBuilder>();

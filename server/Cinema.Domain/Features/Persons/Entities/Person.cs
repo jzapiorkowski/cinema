@@ -9,6 +9,6 @@ public class Person
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public DateTime BirthDate { get; set; }
-    public ICollection<MovieActor> MovieActors { get; set; }
-    public ICollection<Movie> DirectedMovies { get; set; }
+    public ICollection<MovieActor> MovieActors { get; set; } = [];
+    public ICollection<Movie> DirectedMovies { get; set; } = [];
 }

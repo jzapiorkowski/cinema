@@ -42,4 +42,19 @@ internal class ScreeningService : IScreeningService
             throw new AppException($"An error occurred while retrieving screening with id {id}", e);
         }
     }
+
+    public async Task<IEnumerable<Screening>> GetAllWithDetailsAsync(DateTime date)
+    {
+        try
+        {
+            var screenings = await _unitOfWork.Repository<Screening, IScreeningRepository>().GetAllWithDetailsAsync(date);
+
+            return screenings;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while retrieving all screenings");
+            throw new AppException($"An error occurred while retrieving all screenings", e);
+        }
+    }
 }

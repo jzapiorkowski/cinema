@@ -8,6 +8,7 @@ namespace Cinema.API.Features.Movies.Controllers;
 
 [ApiController]
 [Route("movies")]
+[Produces("application/json")]
 public class MovieController : ControllerBase
 {
     private readonly IMovieFacade _movieFacade;

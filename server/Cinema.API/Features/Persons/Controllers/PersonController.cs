@@ -8,6 +8,7 @@ namespace Cinema.API.Features.Persons.Controllers;
 
 [ApiController]
 [Route("persons")]
+[Produces("application/json")]
 public class PersonController : ControllerBase
 {
     private readonly IMapper _mapper;

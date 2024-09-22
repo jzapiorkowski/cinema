@@ -6,4 +6,5 @@ namespace Cinema.Domain.Features.Screenings.Repositories;
 public interface IScreeningRepository : IBaseRepository<Screening>
 {
     public Task<Screening?> GetWithDetailsByIdAsync(int id);
+    public Task<IEnumerable<Screening>> GetAllWithDetailsAsync(DateTime date);
 }

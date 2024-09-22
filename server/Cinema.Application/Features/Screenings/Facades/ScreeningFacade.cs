@@ -18,7 +18,13 @@ internal class ScreeningFacade : IScreeningFacade
 
     public async Task<ScreeningWithDetailsAppResponseDto> GetWithDetailsByIdAsync(int id)
     {
-        var person = await _screeningService.GetWithDetailsByIdAsync(id);
-        return _mapper.Map<ScreeningWithDetailsAppResponseDto>(person);
+        var screening = await _screeningService.GetWithDetailsByIdAsync(id);
+        return _mapper.Map<ScreeningWithDetailsAppResponseDto>(screening);
+    }
+
+    public async Task<IEnumerable<ScreeningWithDetailsAppResponseDto>> GetAllWithDetailsAsync(DateTime date)
+    {
+        var screenings = await _screeningService.GetAllWithDetailsAsync(date);
+        return _mapper.Map<IEnumerable<ScreeningWithDetailsAppResponseDto>>(screenings);
     }
 }

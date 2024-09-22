@@ -1,9 +1,8 @@
 using Cinema.API.Core.Converters;
 using Cinema.API.Core.Middlewares;
+using Cinema.API.Core.SchemaFilters;
 using Cinema.Application;
 using Cinema.Infrastructure;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
 
 namespace Cinema.API;
 
@@ -12,11 +11,11 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen(c => c.MapType<TimeSpan>(() => new OpenApiSchema
+        services.AddSwaggerGen(c =>
         {
-            Type = "string",
-            Example = new OpenApiString("02:00:00")
-        }));
+            c.SchemaFilter<TimeSpanSchemaFilter>();
+            c.SchemaFilter<DateOnlySchemaFilter>();
+        });
 
         services.AddInfrastructureServices();
         services.AddAPIServices();

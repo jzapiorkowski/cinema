@@ -1,4 +1,5 @@
 using AutoMapper;
+using Cinema.API.Core.Validators;
 using Cinema.API.Features.Screenings.Dto;
 using Cinema.Application.Features.Screenings.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ namespace Cinema.API.Features.Screenings.Controllers;
 
 [ApiController]
 [Route("screenings")]
+[Produces("application/json")]
 public class ScreeningController : ControllerBase
 {
     private readonly IMapper _mapper;
@@ -18,12 +20,22 @@ public class ScreeningController : ControllerBase
         _screeningFacade = screeningFacade;
     }
     
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     [ProducesResponseType<ScreeningWithDetailsApiResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetWithDetailsByIdAsync(int id)
     {
         var screening = await _screeningFacade.GetWithDetailsByIdAsync(id);
         return Ok(_mapper.Map<ScreeningWithDetailsApiResponseDto>(screening));
+    }
+    
+    [HttpGet("date/{date:datetime}")]
+    [ProducesResponseType<IEnumerable<ScreeningWithDetailsApiResponseDto>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAllWithDetailsAsync([FromRoute, DateOnly] DateTime date)
+    {
+        date = DateTime.SpecifyKind(date.Date, DateTimeKind.Utc);
+
+        var screenings = await _screeningFacade.GetAllWithDetailsAsync(date);
+        return Ok(_mapper.Map<IEnumerable<ScreeningWithDetailsApiResponseDto>>(screenings));
     }
 }

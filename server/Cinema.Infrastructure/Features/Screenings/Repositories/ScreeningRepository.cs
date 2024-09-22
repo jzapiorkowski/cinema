@@ -36,4 +36,18 @@ internal class ScreeningRepository : BaseRepository<Screening>, IScreeningReposi
             throw new DatabaseException($"An error occurred while retrieving the screening with id {id}.", e);
         }
     }
+
+    public async Task<IEnumerable<Screening>> GetAllWithDetailsAsync(DateTime date)
+    {
+        try
+        {
+            return await _dbContext.Screening.AsNoTracking().Where(s => s.StartTime.Date == date.Date)
+                .Include(s => s.Movie).ToListAsync();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while retrieving all screenings.");
+            throw new DatabaseException($"An error occurred while retrieving all screenings.", e);
+        }
+    }
 }

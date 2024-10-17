@@ -1,3 +1,4 @@
+using Cinema.Application.Features.CinemaHalls.Builders;
 using Cinema.Application.Features.CinemaHalls.Facades;
 using Cinema.Application.Features.CinemaHalls.Interfaces;
 using Cinema.Application.Features.CinemaHalls.Services;
@@ -44,5 +45,6 @@ public static class DependencyInjection
         // register builders
         serviceCollection.AddTransient<IMovieBuilder, MovieBuilder>();
         serviceCollection.AddTransient<IPersonBuilder, PersonBuilder>();
+        serviceCollection.AddTransient<ICinemaHallBuilder, CinemaHallBuilder>();
     }
 }

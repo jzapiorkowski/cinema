@@ -1,7 +1,9 @@
 using Cinema.Domain.Core.Interfaces;
+using Cinema.Domain.Features.CinemaHalls.Entities;
 using Cinema.Domain.Features.Movies.Entities;
 using Cinema.Domain.Features.Persons.Entities;
 using Cinema.Domain.Features.Screenings.Entities;
+using Cinema.Infrastructure.Features.CinemaHalls.ModelConfigurations;
 using Cinema.Infrastructure.Features.MovieActors.ModelConfigurations;
 using Cinema.Infrastructure.Features.Movies.ModelConfigurations;
 using Cinema.Infrastructure.Features.Persons.ModelConfigurations;
@@ -23,7 +25,6 @@ internal class ApplicationDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(_config.GetDbConnectionString());
-
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,6 +33,7 @@ internal class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new MovieConfiguration());
         modelBuilder.ApplyConfiguration(new PersonConfiguration());
         modelBuilder.ApplyConfiguration(new ScreeningConfiguration());
+        modelBuilder.ApplyConfiguration(new CinemaHallConfiguration());
 
         // register relationships configurations
         modelBuilder.ApplyConfiguration(new MovieActorConfiguration());
@@ -40,4 +42,5 @@ internal class ApplicationDbContext : DbContext
     public DbSet<Movie> Movie { get; set; }
     public DbSet<Person> Person { get; set; }
     public DbSet<Screening> Screening { get; set; }
+    public DbSet<CinemaHall> CinemaHall { get; set; }
 }

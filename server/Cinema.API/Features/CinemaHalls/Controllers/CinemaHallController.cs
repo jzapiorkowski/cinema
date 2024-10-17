@@ -1,5 +1,6 @@
 using AutoMapper;
 using Cinema.API.Features.CinemaHalls.Dto;
+using Cinema.Application.Features.CinemaHalls.Dto;
 using Cinema.Application.Features.CinemaHalls.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,5 +35,25 @@ public class CinemaHallController : ControllerBase
     {
         var cinemaHall = await _cinemaHallFacade.GetByIdAWithDetailsAsync(cinemaHallId);
         return Ok(_mapper.Map<CinemaHallApiResponseDto>(cinemaHall));
+    }
+
+    [HttpDelete("{cinemaHallId:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteAsync(int cinemaHallId)
+    {
+        await _cinemaHallFacade.DeleteAsync(cinemaHallId);
+        return NoContent();
+    }
+
+    [HttpPost]
+    [ProducesResponseType<CinemaHallApiResponseDto>(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> CreateAsync([FromBody] CreateCinemaHallApiDto createCinemaHallApiDto)
+    {
+        var createCinemaHallAppDto = _mapper.Map<CreateCinemaHallAppDto>(createCinemaHallApiDto);
+        var createdCinemaHall = await _cinemaHallFacade.CreateAsync(createCinemaHallAppDto);
+        return CreatedAtAction(nameof(GetByIdAsync), new { cinemaHallId = createdCinemaHall.Id },
+            _mapper.Map<CinemaHallApiResponseDto>(createdCinemaHall));
     }
 }

@@ -8,12 +8,13 @@ internal class CinemaHallFacade : ICinemaHallFacade
 {
     private readonly ICinemaHallService _cinemaHallService;
     private readonly IMapper _mapper;
+    private readonly ICinemaHallBuilder _cinemaHallBuilder;
 
-
-    public CinemaHallFacade(ICinemaHallService cinemaHallService, IMapper mapper)
+    public CinemaHallFacade(ICinemaHallService cinemaHallService, IMapper mapper, ICinemaHallBuilder cinemaHallBuilder)
     {
         _cinemaHallService = cinemaHallService;
         _mapper = mapper;
+        _cinemaHallBuilder = cinemaHallBuilder;
     }
 
     public async Task<IEnumerable<CinemaHallAppResponseDto>> GetAllAsync()
@@ -31,5 +32,13 @@ internal class CinemaHallFacade : ICinemaHallFacade
     public async Task DeleteAsync(int id)
     {
         await _cinemaHallService.DeleteAsync(id);
+    }
+
+    public async Task<CinemaHallAppResponseDto> CreateAsync(CreateCinemaHallAppDto createCinemaHallAppDto)
+    {
+        var cinemaHall = _cinemaHallBuilder.Build();
+
+        var createdCinemaHall = await _cinemaHallService.CreateAsync(cinemaHall);
+        return _mapper.Map<CinemaHallAppResponseDto>(createdCinemaHall);
     }
 }

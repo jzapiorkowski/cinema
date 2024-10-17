@@ -9,5 +9,6 @@ public class CinemaHallProfile : Profile
     public CinemaHallProfile()
     {
         CreateMap<CinemaHallAppResponseDto, CinemaHallApiResponseDto>();
+        CreateMap<CreateCinemaHallApiDto, CreateCinemaHallAppDto>();
     }
 }

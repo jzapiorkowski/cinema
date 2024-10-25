@@ -47,6 +47,31 @@ internal class CinemaHallService : ICinemaHallService
         }
     }
 
+    public async Task<CinemaHall> GetByIdWithDetailsAsync(int id)
+    {
+        try
+        {
+            var cinemaHall = await _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>()
+                .GetWithDetailsByIdAsync(id);
+
+            if (cinemaHall == null)
+            {
+                throw new NotFoundException("cinema hall", id);
+            }
+
+            return cinemaHall;
+        }
+        catch (NotFoundException)
+        {
+            throw;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while retrieving the cinema hall with id {id}.", id);
+            throw new AppException($"An error occurred while retrieving the cinema hall with id {id}.", e);
+        }
+    }
+
     public async Task DeleteAsync(int id)
     {
         try
@@ -67,23 +92,8 @@ internal class CinemaHallService : ICinemaHallService
         }
     }
 
-    public async Task<CinemaHall> UpdateAsync(CinemaHall cinemaHall)
-    {
-        try
-        {
-            var updatedCinemaHall = _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>().Update(cinemaHall);
-            await _unitOfWork.CompleteAsync();
 
-            return updatedCinemaHall;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "An error occurred while updating the cinema hall with id {id}.", cinemaHall.Id);
-            throw new AppException($"An error occurred while updating the cinema hall with id {cinemaHall.Id}.", e);
-        }
-    }
-
-    public async Task<CinemaHall> GetByIdAsync(int id)
+    private async Task<CinemaHall> GetByIdAsync(int id)
     {
         try
         {

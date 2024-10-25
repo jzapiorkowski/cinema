@@ -6,4 +6,5 @@ namespace Cinema.Domain.Features.CinemaHalls.Repositories;
 
 public interface ICinemaHallRepository : IBaseRepository<CinemaHall>
 {
+    public Task<CinemaHall?> GetWithDetailsByIdAsync(int id);
 }

@@ -29,12 +29,12 @@ public class CinemaHallController : ControllerBase
     }
 
     [HttpGet("{cinemaHallId:int}")]
-    [ProducesResponseType<CinemaHallApiResponseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<CinemaHallWithDetailsApiResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByIdAsync(int cinemaHallId)
     {
         var cinemaHall = await _cinemaHallFacade.GetByIdAWithDetailsAsync(cinemaHallId);
-        return Ok(_mapper.Map<CinemaHallApiResponseDto>(cinemaHall));
+        return Ok(_mapper.Map<CinemaHallWithDetailsApiResponseDto>(cinemaHall));
     }
 
     [HttpDelete("{cinemaHallId:int}")]

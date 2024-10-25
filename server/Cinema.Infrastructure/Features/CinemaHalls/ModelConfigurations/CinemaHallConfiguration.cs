@@ -8,7 +8,12 @@ public class CinemaHallConfiguration : IEntityTypeConfiguration<CinemaHall>
 {
     public void Configure(EntityTypeBuilder<CinemaHall> builder)
     {
-        builder.ToTable("cinema_halls");
+        builder.ToTable("cinema_hall");
         builder.HasKey(ch => ch.Id);
+        builder.Property(ch => ch.Id).HasColumnName("id");
+
+        builder.HasMany(ch => ch.Screenings)
+            .WithOne(s => s.CinemaHall)
+            .HasForeignKey(s => s.CinemaHallId);
     }
 }

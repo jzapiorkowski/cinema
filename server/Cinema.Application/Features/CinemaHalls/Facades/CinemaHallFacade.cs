@@ -23,10 +23,10 @@ internal class CinemaHallFacade : ICinemaHallFacade
         return _mapper.Map<IEnumerable<CinemaHallAppResponseDto>>(cinemaHalls);
     }
 
-    public async Task<CinemaHallAppResponseDto> GetByIdAWithDetailsAsync(int id)
+    public async Task<CinemaHallWithDetailsAppResponseDto> GetByIdAWithDetailsAsync(int id)
     {
-        var person = await _cinemaHallService.GetByIdAsync(id);
-        return _mapper.Map<CinemaHallAppResponseDto>(person);
+        var person = await _cinemaHallService.GetByIdWithDetailsAsync(id);
+        return _mapper.Map<CinemaHallWithDetailsAppResponseDto>(person);
     }
 
     public async Task DeleteAsync(int id)

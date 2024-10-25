@@ -5,4 +5,5 @@ public class ScreeningWithDetailsApiResponseDto
     public int Id { get; set; }
     public DateTime StartTime { get; set; }
     public ScreeningMovieApiResponseDto Movie { get; set; }
+    public ScreeningCinemaHallApiResponseDto CinemaHall { get; set; }
 }

@@ -1,5 +1,6 @@
 using AutoMapper;
 using Cinema.Application.Features.Screenings.Dto;
+using Cinema.Domain.Features.CinemaHalls.Entities;
 using Cinema.Domain.Features.Movies.Entities;
 using Cinema.Domain.Features.Screenings.Entities;
 
@@ -12,5 +13,6 @@ internal class ScreeningProfile : Profile
         CreateMap<Screening, ScreeningWithDetailsAppResponseDto>();
 
         CreateMap<Movie, ScreeningMovieAppResponseDto>();
+        CreateMap<CinemaHall, ScreeningCinemaHallAppResponseDto>();
     }
 }

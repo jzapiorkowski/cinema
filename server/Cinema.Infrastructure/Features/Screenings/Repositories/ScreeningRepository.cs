@@ -27,6 +27,7 @@ internal class ScreeningRepository : BaseRepository<Screening>, IScreeningReposi
         {
             return await _dbContext.Screening
                 .Include(s => s.Movie)
+                .Include(s => s.CinemaHall)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
         catch (Exception e)
@@ -42,7 +43,7 @@ internal class ScreeningRepository : BaseRepository<Screening>, IScreeningReposi
         try
         {
             return await _dbContext.Screening.AsNoTracking().Where(s => s.StartTime.Date == date.Date)
-                .Include(s => s.Movie).ToListAsync();
+                .Include(s => s.Movie).Include(s => s.CinemaHall).ToListAsync();
         }
         catch (Exception e)
         {

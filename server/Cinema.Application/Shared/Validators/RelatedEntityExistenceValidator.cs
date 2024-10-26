@@ -23,6 +23,24 @@ internal abstract class RelatedEntityExistenceValidator<TEntity, TService> where
         throw new NotFoundException(entityName, missingIds);
     }
 
-    protected abstract Task<List<TEntity>> GetEntitiesByIdsAsync(IEnumerable<int> ids);
+    protected async Task<TEntity> ValidateEntityAsync(int id, string entityName)
+    {
+        var entity = await GetEntityByIdAsync(id);
+
+        if (entity != null) return entity;
+
+        throw new NotFoundException(entityName, id);
+    }
+
+    protected virtual Task<List<TEntity>> GetEntitiesByIdsAsync(IEnumerable<int> ids)
+    {
+        throw new NotImplementedException($"{nameof(GetEntitiesByIdsAsync)} is not implemented in {GetType().Name}.");
+    }
+
+    protected virtual Task<TEntity> GetEntityByIdAsync(int id)
+    {
+        throw new NotImplementedException($"{nameof(GetEntityByIdAsync)} is not implemented in {GetType().Name}.");
+    }
+
     protected abstract int GetEntityId(TEntity entity);
 }

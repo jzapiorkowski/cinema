@@ -9,6 +9,10 @@ public class ScreeningProfile : Profile
     public ScreeningProfile()
     {
         CreateMap<ScreeningWithDetailsAppResponseDto, ScreeningWithDetailsApiResponseDto>();
+        CreateMap<ScreeningAppResponseDto, ScreeningApiResponseDto>();
+
+        CreateMap<CreateScreeningApiDto, CreateScreeningAppDto>();
+
         CreateMap<ScreeningMovieAppResponseDto, ScreeningMovieApiResponseDto>();
         CreateMap<ScreeningCinemaHallAppResponseDto, ScreeningCinemaHallApiResponseDto>();
     }

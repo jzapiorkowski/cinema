@@ -40,9 +40,9 @@ internal class MovieFacade : IMovieFacade
         return _mapper.Map<MovieAppResponseDto>(createdMovie);
     }
 
-    public async Task<MovieWithDetailsAppResponseDto> GetByIdAWithDetailsAsync(int movieId)
+    public async Task<MovieWithDetailsAppResponseDto> GetByIdWithDetailsAsync(int movieId)
     {
-        var movie = await _movieService.GetByIdAWithDetailsAsync(movieId);
+        var movie = await _movieService.GetByIdWithDetailsAsync(movieId);
         return _mapper.Map<MovieWithDetailsAppResponseDto>(movie);
     }
 
@@ -59,7 +59,7 @@ internal class MovieFacade : IMovieFacade
 
     public async Task<MovieAppResponseDto> UpdateAsync(int movieId, UpdateMovieAppDto movieDto)
     {
-        var existingMovie = await _movieService.GetByIdAWithDetailsAsync(movieId);
+        var existingMovie = await _movieService.GetByIdWithDetailsAsync(movieId);
 
         await _personRelatedEntityValidator.ValidateEntitiesAsync(
             movieDto.Actors.Select(actor => actor.Id).ToList(), "actor");

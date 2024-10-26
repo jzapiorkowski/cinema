@@ -16,9 +16,19 @@ internal class MovieRelatedEntityValidator : RelatedEntityExistenceValidator<Mov
         return await base.ValidateEntitiesAsync(movieIds, "movie");
     }
 
+    public async Task<Movie> ValidateEntityAsync(int movieId)
+    {
+        return await base.ValidateEntityAsync(movieId, "movie");
+    }
+
     protected override async Task<List<Movie>> GetEntitiesByIdsAsync(IEnumerable<int> ids)
     {
         return await _service.GetByIdsAsync(ids.ToList());
+    }
+    
+    protected override async Task<Movie> GetEntityByIdAsync(int id)
+    {
+        return await _service.GetByIdAsync(id);
     }
 
     protected override int GetEntityId(Movie entity)

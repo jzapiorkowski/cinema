@@ -8,4 +8,5 @@ internal interface ICinemaHallService
     public Task<CinemaHall> GetByIdWithDetailsAsync(int cinemaHallId);
     public Task<IEnumerable<CinemaHall>> GetAllAsync();
     public Task DeleteAsync(int cinemaHallId);
+    public Task<CinemaHall> GetByIdAsync(int cinemaHallId);
 }

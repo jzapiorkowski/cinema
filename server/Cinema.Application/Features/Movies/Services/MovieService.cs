@@ -35,7 +35,7 @@ internal class MovieService : IMovieService
         }
     }
 
-    public async Task<Movie> GetByIdAWithDetailsAsync(int movieId)
+    public async Task<Movie> GetByIdWithDetailsAsync(int movieId)
     {
         try
         {
@@ -121,7 +121,7 @@ internal class MovieService : IMovieService
         }
     }
 
-    private async Task<Movie> GetByIdAsync(int movieId)
+    public async Task<Movie> GetByIdAsync(int movieId)
     {
         try
         {

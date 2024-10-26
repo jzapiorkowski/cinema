@@ -1,4 +1,6 @@
 using AutoMapper;
+using Cinema.Application.Features.CinemaHalls.Interfaces;
+using Cinema.Application.Features.Movies.Interfaces;
 using Cinema.Application.Features.Screenings.Dto;
 using Cinema.Application.Features.Screenings.Interfaces;
 
@@ -8,12 +10,21 @@ internal class ScreeningFacade : IScreeningFacade
 {
     private readonly IMapper _mapper;
     private readonly IScreeningService _screeningService;
+    private readonly IScreeningBuilder _screeningBuilder;
+    private readonly IMovieRelatedEntityValidator _movieRelatedEntityValidator;
+    private readonly ICinemaHallRelatedEntityValidator _cinemaHallRelatedEntityValidator;
 
-    public ScreeningFacade(IMapper mapper, IScreeningService screeningService
+
+    public ScreeningFacade(IMapper mapper, IScreeningService screeningService, IScreeningBuilder screeningBuilder,
+        IMovieRelatedEntityValidator movieRelatedEntityValidator,
+        ICinemaHallRelatedEntityValidator cinemaHallRelatedEntityValidator
     )
     {
         _mapper = mapper;
         _screeningService = screeningService;
+        _screeningBuilder = screeningBuilder;
+        _movieRelatedEntityValidator = movieRelatedEntityValidator;
+        _cinemaHallRelatedEntityValidator = cinemaHallRelatedEntityValidator;
     }
 
     public async Task<ScreeningWithDetailsAppResponseDto> GetWithDetailsByIdAsync(int id)
@@ -26,5 +37,20 @@ internal class ScreeningFacade : IScreeningFacade
     {
         var screenings = await _screeningService.GetAllWithDetailsAsync(date);
         return _mapper.Map<IEnumerable<ScreeningWithDetailsAppResponseDto>>(screenings);
+    }
+
+    public async Task<ScreeningAppResponseDto> CreateAsync(CreateScreeningAppDto createScreeningDto)
+    {
+        await _movieRelatedEntityValidator.ValidateEntityAsync(createScreeningDto.MovieId);
+        await _cinemaHallRelatedEntityValidator.ValidateEntityAsync(createScreeningDto.CinemaHallId);
+
+        var screening = _screeningBuilder
+            .SetStartTime(createScreeningDto.StartTime)
+            .SetMovieId(createScreeningDto.MovieId)
+            .SetCinemaHallId(createScreeningDto.CinemaHallId)
+            .Build();
+
+        var createdScreening = await _screeningService.CreateAsync(screening);
+        return _mapper.Map<ScreeningAppResponseDto>(createdScreening);
     }
 }

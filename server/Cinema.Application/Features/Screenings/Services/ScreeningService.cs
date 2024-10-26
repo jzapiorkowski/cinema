@@ -47,7 +47,8 @@ internal class ScreeningService : IScreeningService
     {
         try
         {
-            var screenings = await _unitOfWork.Repository<Screening, IScreeningRepository>().GetAllWithDetailsAsync(date);
+            var screenings = await _unitOfWork.Repository<Screening, IScreeningRepository>()
+                .GetAllWithDetailsAsync(date);
 
             return screenings;
         }
@@ -55,6 +56,22 @@ internal class ScreeningService : IScreeningService
         {
             _logger.LogError(e, "An error occurred while retrieving all screenings");
             throw new AppException($"An error occurred while retrieving all screenings", e);
+        }
+    }
+
+    public async Task<Screening> CreateAsync(Screening screening)
+    {
+        try
+        {
+            var createdScreening =
+                await _unitOfWork.Repository<Screening, IScreeningRepository>().CreateAsync(screening);
+            await _unitOfWork.CompleteAsync();
+            return createdScreening;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while creating screening");
+            throw new AppException($"An error occurred while creating screening", e);
         }
     }
 }

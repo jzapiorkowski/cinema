@@ -11,6 +11,7 @@ internal class ScreeningProfile : Profile
     public ScreeningProfile()
     {
         CreateMap<Screening, ScreeningWithDetailsAppResponseDto>();
+        CreateMap<Screening, ScreeningAppResponseDto>();
 
         CreateMap<Movie, ScreeningMovieAppResponseDto>();
         CreateMap<CinemaHall, ScreeningCinemaHallAppResponseDto>();

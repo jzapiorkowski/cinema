@@ -93,7 +93,7 @@ internal class CinemaHallService : ICinemaHallService
     }
 
 
-    private async Task<CinemaHall> GetByIdAsync(int id)
+    public async Task<CinemaHall> GetByIdAsync(int id)
     {
         try
         {

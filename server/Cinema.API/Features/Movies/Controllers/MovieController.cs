@@ -33,7 +33,7 @@ public class MovieController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByIdWithDetailsAsync(int movieId)
     {
-        var movie = await _movieFacade.GetByIdAWithDetailsAsync(movieId);
+        var movie = await _movieFacade.GetByIdWithDetailsAsync(movieId);
         return Ok(_mapper.Map<MovieWithDetailsApiResponseDto>(movie));
     }
 

@@ -52,4 +52,14 @@ public class ScreeningController : ControllerBase
         return CreatedAtAction(nameof(GetWithDetailsByIdAsync), new { id = screeningApiResponse.Id },
             screeningApiResponse);
     }
+    
+    [HttpPut("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ScreeningApiResponseDto>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateScreeningApiDto screening)
+    {
+        var updatedScreening = await _screeningFacade.UpdateAsync(id, _mapper.Map<UpdateScreeningAppDto>(screening));
+        return Ok(_mapper.Map<ScreeningApiResponseDto>(updatedScreening));
+    }
 }

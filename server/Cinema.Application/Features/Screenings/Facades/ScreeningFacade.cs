@@ -51,6 +51,24 @@ internal class ScreeningFacade : IScreeningFacade
             .Build();
 
         var createdScreening = await _screeningService.CreateAsync(screening);
+
         return _mapper.Map<ScreeningAppResponseDto>(createdScreening);
+    }
+
+    public async Task<ScreeningAppResponseDto> UpdateAsync(int id, UpdateScreeningAppDto updateScreeningDto)
+    {
+        await _movieRelatedEntityValidator.ValidateEntityAsync(updateScreeningDto.MovieId);
+        await _cinemaHallRelatedEntityValidator.ValidateEntityAsync(updateScreeningDto.CinemaHallId);
+
+        var screening = _screeningBuilder
+            .SetId(id)
+            .SetStartTime(updateScreeningDto.StartTime)
+            .SetMovieId(updateScreeningDto.MovieId)
+            .SetCinemaHallId(updateScreeningDto.CinemaHallId)
+            .Build();
+
+        var updatedScreening = await _screeningService.UpdateAsync(screening);
+
+        return _mapper.Map<ScreeningAppResponseDto>(updatedScreening);
     }
 }

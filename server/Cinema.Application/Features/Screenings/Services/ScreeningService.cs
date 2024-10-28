@@ -66,12 +66,30 @@ internal class ScreeningService : IScreeningService
             var createdScreening =
                 await _unitOfWork.Repository<Screening, IScreeningRepository>().CreateAsync(screening);
             await _unitOfWork.CompleteAsync();
+            
             return createdScreening;
         }
         catch (Exception e)
         {
             _logger.LogError(e, "An error occurred while creating screening");
             throw new AppException($"An error occurred while creating screening", e);
+        }
+    }
+
+    public async Task<Screening> UpdateAsync(Screening screening)
+    {
+        try
+        {
+            var updatedScreening =
+                _unitOfWork.Repository<Screening, IScreeningRepository>().Update(screening);
+            await _unitOfWork.CompleteAsync();
+
+            return updatedScreening;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while updating screening");
+            throw new AppException($"An error occurred while updating screening", e);
         }
     }
 }

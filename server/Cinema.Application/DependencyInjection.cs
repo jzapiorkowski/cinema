@@ -17,6 +17,7 @@ using Cinema.Application.Features.Screenings.Builders;
 using Cinema.Application.Features.Screenings.Facades;
 using Cinema.Application.Features.Screenings.Interfaces;
 using Cinema.Application.Features.Screenings.Services;
+using Cinema.Application.Features.Screenings.Validators;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cinema.Application;
@@ -38,6 +39,8 @@ public static class DependencyInjection
         serviceCollection.AddTransient<IMovieRelatedEntityValidator, MovieRelatedEntityValidator>();
         serviceCollection.AddTransient<IPersonRelatedEntityValidator, PersonRelatedEntityValidator>();
         serviceCollection.AddTransient<ICinemaHallRelatedEntityValidator, CinemaHallRelatedEntityValidator>();
+        serviceCollection.AddTransient<IScreeningTimeSlotValidator, ScreeningTimeSlotValidator>();
+        serviceCollection.AddTransient<IScreeningValidator, ScreeningValidator>();
 
         // register facades
         serviceCollection.AddScoped<IMovieFacade, MovieFacade>();

@@ -66,7 +66,7 @@ internal class ScreeningService : IScreeningService
             var createdScreening =
                 await _unitOfWork.Repository<Screening, IScreeningRepository>().CreateAsync(screening);
             await _unitOfWork.CompleteAsync();
-            
+
             return createdScreening;
         }
         catch (Exception e)
@@ -90,6 +90,27 @@ internal class ScreeningService : IScreeningService
         {
             _logger.LogError(e, "An error occurred while updating screening");
             throw new AppException($"An error occurred while updating screening", e);
+        }
+    }
+
+    public async Task<bool> IsTimeSlotAvailableAsync(int cinemaHallId, DateTime startTime, DateTime endTime)
+    {
+        try
+        {
+            if (startTime >= endTime)
+                throw new ArgumentException("Start time must be before end time");
+
+            return await _unitOfWork.Repository<Screening, IScreeningRepository>()
+                .IsTimeSlotAvailableAsync(cinemaHallId, startTime, endTime);
+        }
+        catch(ArgumentException)
+        {
+            throw;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while checking if screening time slot is available");
+            throw new AppException($"An error occurred while checking if screening time slot is available", e);
         }
     }
 }

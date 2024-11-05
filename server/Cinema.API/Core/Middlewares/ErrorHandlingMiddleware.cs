@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using Cinema.Application.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,16 @@ public class ErrorHandlingMiddleware
             _logger.LogError(e, "Application error: {Message}", e.Message);
             await HandleExceptionAsync(context, HttpStatusCode.InternalServerError, "Internal Server Error",
                 "An application error occurred.");
+        }
+        catch (ArgumentException e)
+        {
+            _logger.LogError("Argument error: {Message}", e.Message);
+            await HandleExceptionAsync(context, HttpStatusCode.BadRequest, "Bad Request", e.Message);
+        }
+        catch (ValidationException e)
+        {
+            _logger.LogError("Validation error: {Message}", e.Message);
+            await HandleExceptionAsync(context, HttpStatusCode.BadRequest, "Bad Request", e.Message);
         }
         catch (Exception e)
         {

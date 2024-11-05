@@ -7,4 +7,5 @@ public interface IScreeningRepository : IBaseRepository<Screening>
 {
     public Task<Screening?> GetWithDetailsByIdAsync(int id);
     public Task<IEnumerable<Screening>> GetAllWithDetailsAsync(DateTime date);
+    public Task<bool> IsTimeSlotAvailableAsync(int cinemaHallId, DateTime startTime, DateTime endTime);
 }

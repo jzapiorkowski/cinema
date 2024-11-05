@@ -5,5 +5,6 @@ namespace Cinema.Application.Features.CinemaHalls.Interfaces;
 public interface ICinemaHallBuilder
 {
     public ICinemaHallBuilder SetId(int id);
+    public ICinemaHallBuilder SetCinemaBuildingId(int cinemaBuildingId);
     public CinemaHall Build();
 }

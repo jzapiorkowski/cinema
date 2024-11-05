@@ -36,7 +36,7 @@ internal class CinemaHallFacade : ICinemaHallFacade
 
     public async Task<CinemaHallAppResponseDto> CreateAsync(CreateCinemaHallAppDto createCinemaHallAppDto)
     {
-        var cinemaHall = _cinemaHallBuilder.Build();
+        var cinemaHall = _cinemaHallBuilder.SetCinemaBuildingId(createCinemaHallAppDto.CinemaBuildingId).Build();
 
         var createdCinemaHall = await _cinemaHallService.CreateAsync(cinemaHall);
         return _mapper.Map<CinemaHallAppResponseDto>(createdCinemaHall);

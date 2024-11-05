@@ -1,5 +1,6 @@
 using AutoMapper;
 using Cinema.Application.Features.CinemaHalls.Dto;
+using Cinema.Domain.Features.CinemaBuildings.Entities;
 using Cinema.Domain.Features.CinemaHalls.Entities;
 using Cinema.Domain.Features.Screenings.Entities;
 
@@ -13,5 +14,6 @@ public class CinemaHallProfile : Profile
         CreateMap<CinemaHall, CinemaHallWithDetailsAppResponseDto>()
             .ForMember(dest => dest.Screenings, opt => opt.MapFrom(src => src.Screenings));
         CreateMap<Screening, CinemaHallScreeningAppResponseDto>();
+        CreateMap<CinemaBuilding, CinemaHallBuildingAppResponseDto>();
     }
 }

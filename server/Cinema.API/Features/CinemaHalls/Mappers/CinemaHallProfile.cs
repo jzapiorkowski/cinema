@@ -12,5 +12,7 @@ public class CinemaHallProfile : Profile
         CreateMap<CreateCinemaHallApiDto, CreateCinemaHallAppDto>();
         CreateMap<CinemaHallWithDetailsAppResponseDto, CinemaHallWithDetailsApiResponseDto>();
         CreateMap<CinemaHallScreeningAppResponseDto, CinemaHallScreeningApiResponseDto>();
+        CreateMap<CinemaHallBuildingAppResponseDto, CinemaHallBuildingApiResponseDto>();
+        CreateMap<CreateCinemaHallApiDto, CreateCinemaHallAppDto>();
     }
 }

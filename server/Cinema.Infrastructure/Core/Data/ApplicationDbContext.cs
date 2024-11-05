@@ -1,8 +1,10 @@
 using Cinema.Domain.Core.Interfaces;
+using Cinema.Domain.Features.CinemaBuildings.Entities;
 using Cinema.Domain.Features.CinemaHalls.Entities;
 using Cinema.Domain.Features.Movies.Entities;
 using Cinema.Domain.Features.Persons.Entities;
 using Cinema.Domain.Features.Screenings.Entities;
+using Cinema.Infrastructure.Features.CinemaBuildings.ModelConfigurations;
 using Cinema.Infrastructure.Features.CinemaHalls.ModelConfigurations;
 using Cinema.Infrastructure.Features.MovieActors.ModelConfigurations;
 using Cinema.Infrastructure.Features.Movies.ModelConfigurations;
@@ -34,6 +36,7 @@ internal class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new PersonConfiguration());
         modelBuilder.ApplyConfiguration(new ScreeningConfiguration());
         modelBuilder.ApplyConfiguration(new CinemaHallConfiguration());
+        modelBuilder.ApplyConfiguration(new CinemaBuildingConfiguration());
 
         // register relationships configurations
         modelBuilder.ApplyConfiguration(new MovieActorConfiguration());
@@ -43,4 +46,5 @@ internal class ApplicationDbContext : DbContext
     public DbSet<Person> Person { get; set; }
     public DbSet<Screening> Screening { get; set; }
     public DbSet<CinemaHall> CinemaHall { get; set; }
+    public DbSet<CinemaBuilding> CinemaBuilding { get; set; }
 }

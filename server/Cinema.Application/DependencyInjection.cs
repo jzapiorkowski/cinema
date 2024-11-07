@@ -1,3 +1,7 @@
+using Cinema.Application.Features.CinemaBuildings.Builders;
+using Cinema.Application.Features.CinemaBuildings.Facades;
+using Cinema.Application.Features.CinemaBuildings.Interfaces;
+using Cinema.Application.Features.CinemaBuildings.Services;
 using Cinema.Application.Features.CinemaHalls.Builders;
 using Cinema.Application.Features.CinemaHalls.Facades;
 using Cinema.Application.Features.CinemaHalls.Interfaces;
@@ -34,6 +38,7 @@ public static class DependencyInjection
         serviceCollection.AddScoped<IPersonService, PersonService>();
         serviceCollection.AddScoped<IScreeningService, ScreeningService>();
         serviceCollection.AddScoped<ICinemaHallService, CinemaHallService>();
+        serviceCollection.AddScoped<ICinemaBuildingService, CinemaBuildingService>();
 
         // register validators
         serviceCollection.AddTransient<IMovieRelatedEntityValidator, MovieRelatedEntityValidator>();
@@ -47,11 +52,13 @@ public static class DependencyInjection
         serviceCollection.AddScoped<IPersonFacade, PersonFacade>();
         serviceCollection.AddScoped<IScreeningFacade, ScreeningFacade>();
         serviceCollection.AddScoped<ICinemaHallFacade, CinemaHallFacade>();
+        serviceCollection.AddScoped<ICinemaBuildingFacade, CinemaBuildingFacade>();
 
         // register builders
         serviceCollection.AddTransient<IMovieBuilder, MovieBuilder>();
         serviceCollection.AddTransient<IPersonBuilder, PersonBuilder>();
         serviceCollection.AddTransient<ICinemaHallBuilder, CinemaHallBuilder>();
         serviceCollection.AddTransient<IScreeningBuilder, ScreeningBuilder>();
+        serviceCollection.AddTransient<ICinemaBuildingBuilder, CinemaBuildingBuilder>();
     }
 }

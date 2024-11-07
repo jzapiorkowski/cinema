@@ -25,8 +25,8 @@ internal class CinemaHallFacade : ICinemaHallFacade
 
     public async Task<CinemaHallWithDetailsAppResponseDto> GetByIdWithDetailsAsync(int id)
     {
-        var person = await _cinemaHallService.GetByIdWithDetailsAsync(id);
-        return _mapper.Map<CinemaHallWithDetailsAppResponseDto>(person);
+        var cinemaHall = await _cinemaHallService.GetByIdWithDetailsAsync(id);
+        return _mapper.Map<CinemaHallWithDetailsAppResponseDto>(cinemaHall);
     }
 
     public async Task DeleteAsync(int id)

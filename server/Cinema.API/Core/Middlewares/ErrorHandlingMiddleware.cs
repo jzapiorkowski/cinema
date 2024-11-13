@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using Cinema.Application.Shared.Exceptions;
+using Cinema.Domain.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.API.Core.Middlewares;
@@ -42,6 +43,11 @@ public class ErrorHandlingMiddleware
         {
             _logger.LogError("Validation error: {Message}", e.Message);
             await HandleExceptionAsync(context, HttpStatusCode.BadRequest, "Bad Request", e.Message);
+        }
+        catch (DuplicateEntityException e)
+        {
+            _logger.LogError("Duplicate entity error: {Message}", e.Message);
+            await HandleExceptionAsync(context, HttpStatusCode.Conflict, "Conflict", e.Message);
         }
         catch (Exception e)
         {

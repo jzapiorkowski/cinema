@@ -3,6 +3,7 @@ using Cinema.Domain.Shared.Interfaces;
 using Cinema.Infrastructure.Core.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 
 namespace Cinema.Infrastructure.Shared.Repositories;
 
@@ -23,6 +24,10 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
         {
             var createdEntity = await _dbContext.Set<TEntity>().AddAsync(entity);
             return createdEntity.Entity;
+        }
+        catch (DbUpdateException e) when (e.InnerException is PostgresException)
+        {
+            throw new DuplicateEntityException(e.Message, e.InnerException);
         }
         catch (Exception e)
         {

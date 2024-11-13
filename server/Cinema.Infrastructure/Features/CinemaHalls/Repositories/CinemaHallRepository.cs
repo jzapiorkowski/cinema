@@ -20,7 +20,6 @@ internal class CinemaHallRepository : BaseRepository<CinemaHall>, ICinemaHallRep
         _logger = logger;
     }
 
-
     public async Task<CinemaHall?> GetWithDetailsByIdAsync(int id)
     {
         try

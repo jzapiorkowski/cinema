@@ -6,4 +6,7 @@ public class CreateCinemaHallApiDto
 {
     [Required]
     public int CinemaBuildingId { get; set; }
+    
+    [Required]
+    public int Number { get; set; }
 }

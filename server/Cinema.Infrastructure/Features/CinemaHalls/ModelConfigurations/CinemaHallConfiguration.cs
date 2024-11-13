@@ -11,6 +11,7 @@ public class CinemaHallConfiguration : IEntityTypeConfiguration<CinemaHall>
         builder.ToTable("cinema_hall");
         builder.HasKey(ch => ch.Id);
         builder.Property(ch => ch.Id).HasColumnName("id");
+        builder.Property(ch => ch.Number).HasColumnName("number");
 
         builder.HasMany(ch => ch.Screenings)
             .WithOne(s => s.CinemaHall)
@@ -18,5 +19,7 @@ public class CinemaHallConfiguration : IEntityTypeConfiguration<CinemaHall>
         builder.HasOne(ch => ch.CinemaBuilding)
             .WithMany(cb => cb.CinemaHalls)
             .HasForeignKey(cb => cb.CinemaBuildingId);
+
+        builder.HasIndex(ch => new { ch.CinemaBuildingId, ch.Number }).IsUnique();
     }
 }

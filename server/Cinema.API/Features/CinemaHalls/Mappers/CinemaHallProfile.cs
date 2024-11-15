@@ -17,5 +17,7 @@ public class CinemaHallProfile : Profile
         CreateMap<CreateCinemaHallApiDto, CreateCinemaHallAppDto>();
         CreateMap<CreateCinemaHallApiDto, CreateCinemaHallAppDto>();
         CreateMap<CreateCinemaHallSeatApiDto, CreateCinemaHallSeatAppDto>();
+
+        CreateMap<UpdateCinemaHallApiDto, UpdateCinemaHallAppDto>();
     }
 }

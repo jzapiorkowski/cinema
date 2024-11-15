@@ -28,16 +28,16 @@ public class CinemaHallController : ControllerBase
         return Ok(_mapper.Map<List<CinemaHallApiResponseDto>>(cinemaHalls));
     }
 
-    [HttpGet("{cinemaHallId:int}")]
+    [HttpGet("{id:int}")]
     [ProducesResponseType<CinemaHallWithDetailsApiResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetByIdAsync(int cinemaHallId)
+    public async Task<IActionResult> GetByIdAsync(int id)
     {
-        var cinemaHall = await _cinemaHallFacade.GetByIdWithDetailsAsync(cinemaHallId);
+        var cinemaHall = await _cinemaHallFacade.GetByIdWithDetailsAsync(id);
         return Ok(_mapper.Map<CinemaHallWithDetailsApiResponseDto>(cinemaHall));
     }
 
-    [HttpDelete("{cinemaHallId:int}")]
+    [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteAsync(int cinemaHallId)
@@ -55,5 +55,16 @@ public class CinemaHallController : ControllerBase
         var createdCinemaHall = await _cinemaHallFacade.CreateAsync(createCinemaHallAppDto);
         return CreatedAtAction(nameof(GetByIdAsync), new { cinemaHallId = createdCinemaHall.Id },
             _mapper.Map<CinemaHallApiResponseDto>(createdCinemaHall));
+    }
+    
+    [HttpPut("{id:int}")]
+    [ProducesResponseType<CinemaHallApiResponseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateCinemaHallApiDto updateCinemaHallApiDto)
+    {
+        var updateCinemaHallAppDto = _mapper.Map<UpdateCinemaHallAppDto>(updateCinemaHallApiDto);
+        var updatedCinemaHall = await _cinemaHallFacade.UpdateAsync(id, updateCinemaHallAppDto);
+        return Ok(_mapper.Map<CinemaHallApiResponseDto>(updatedCinemaHall));
     }
 }

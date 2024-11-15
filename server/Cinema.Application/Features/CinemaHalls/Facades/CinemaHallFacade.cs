@@ -34,6 +34,27 @@ internal class CinemaHallFacade : ICinemaHallFacade
         return _mapper.Map<IEnumerable<CinemaHallAppResponseDto>>(cinemaHalls);
     }
 
+    public async Task<CinemaHallAppResponseDto> UpdateAsync(int cinemaHallId,
+        UpdateCinemaHallAppDto updateCinemaHallDto)
+    {
+      var existingCinemaHall =  await _cinemaHallService.GetByIdWithDetailsAsync(cinemaHallId);
+
+        var cinemaHall = _cinemaHallBuilder
+            .SetCinemaBuildingId(updateCinemaHallDto.CinemaBuildingId)
+            .SetNumber(updateCinemaHallDto.Number)
+            .SetCapacity(updateCinemaHallDto.Capacity)
+            .Build();
+
+        if (!existingCinemaHall.CanChangeCapacity(updateCinemaHallDto.Capacity))
+        {
+            throw new InvalidCinemaHallCapacityException(updateCinemaHallDto.Capacity);
+        }
+
+        var updatedCinemaHall = await _cinemaHallService.UpdateAsync(cinemaHall);
+
+        return _mapper.Map<CinemaHallAppResponseDto>(updatedCinemaHall);
+    }
+
     public async Task<CinemaHallWithDetailsAppResponseDto> GetByIdWithDetailsAsync(int id)
     {
         var cinemaHall = await _cinemaHallService.GetByIdWithDetailsAsync(id);

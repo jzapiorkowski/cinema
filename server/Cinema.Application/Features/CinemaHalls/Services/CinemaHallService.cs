@@ -34,6 +34,22 @@ internal class CinemaHallService : ICinemaHallService
         }
     }
 
+    public async Task<CinemaHall> UpdateAsync(CinemaHall cinemaHall)
+    {
+        try
+        {
+            var updatedCinemaHall =
+                _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>().Update(cinemaHall);
+            await _unitOfWork.CompleteAsync();
+            return updatedCinemaHall;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while updating the cinema hall.");
+            throw new AppException("An error occurred while updating the cinema hall.", e);
+        }
+    }
+
     public async Task<IEnumerable<CinemaHall>> GetAllAsync()
     {
         try

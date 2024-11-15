@@ -19,4 +19,9 @@ public class CinemaHall
     {
         return (Seats.Count + additionalSeats) <= Capacity;
     }
+    
+    public bool CanChangeCapacity(int newCapacity)
+    {
+        return Seats.Count <= newCapacity;
+    }
 }

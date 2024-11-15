@@ -5,11 +5,11 @@ namespace Cinema.Application.Features.CinemaBuildings.Builders;
 
 internal class CinemaBuildingBuilder : ICinemaBuildingBuilder
 {
-    private readonly CinemaBuilding _cinemaBuilding;
+    private CinemaBuilding _cinemaBuilding;
 
     public CinemaBuildingBuilder()
     {
-        _cinemaBuilding = new CinemaBuilding();
+        Reset();
     }
 
     public ICinemaBuildingBuilder SetId(int id)
@@ -26,6 +26,14 @@ internal class CinemaBuildingBuilder : ICinemaBuildingBuilder
 
     public CinemaBuilding Build()
     {
-        return _cinemaBuilding;
+        var result = _cinemaBuilding;
+        Reset();
+
+        return result;
+    }
+
+    private void Reset()
+    {
+        _cinemaBuilding = new CinemaBuilding();
     }
 }

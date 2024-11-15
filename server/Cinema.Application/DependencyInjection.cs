@@ -22,6 +22,9 @@ using Cinema.Application.Features.Screenings.Facades;
 using Cinema.Application.Features.Screenings.Interfaces;
 using Cinema.Application.Features.Screenings.Services;
 using Cinema.Application.Features.Screenings.Validators;
+using Cinema.Application.Features.Seats.Builders;
+using Cinema.Application.Features.Seats.Interfaces;
+using Cinema.Application.Features.Seats.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cinema.Application;
@@ -39,6 +42,7 @@ public static class DependencyInjection
         serviceCollection.AddScoped<IScreeningService, ScreeningService>();
         serviceCollection.AddScoped<ICinemaHallService, CinemaHallService>();
         serviceCollection.AddScoped<ICinemaBuildingService, CinemaBuildingService>();
+        serviceCollection.AddScoped<ISeatService, SeatService>();
 
         // register validators
         serviceCollection.AddTransient<IMovieRelatedEntityValidator, MovieRelatedEntityValidator>();
@@ -60,5 +64,6 @@ public static class DependencyInjection
         serviceCollection.AddTransient<ICinemaHallBuilder, CinemaHallBuilder>();
         serviceCollection.AddTransient<IScreeningBuilder, ScreeningBuilder>();
         serviceCollection.AddTransient<ICinemaBuildingBuilder, CinemaBuildingBuilder>();
+        serviceCollection.AddTransient<ISeatBuilder, SeatBuilder>();
     }
 }

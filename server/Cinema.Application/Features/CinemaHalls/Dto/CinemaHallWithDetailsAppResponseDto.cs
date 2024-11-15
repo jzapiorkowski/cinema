@@ -6,4 +6,5 @@ public class CinemaHallWithDetailsAppResponseDto
     public int Number { get; set; }
     public CinemaHallBuildingAppResponseDto CinemaBuilding { get; set; }
     public IEnumerable<CinemaHallScreeningAppResponseDto> Screenings { get; set; }
+    public IEnumerable<CinemaHallSeatAppResponseDto> Seats { get; set; }
 }

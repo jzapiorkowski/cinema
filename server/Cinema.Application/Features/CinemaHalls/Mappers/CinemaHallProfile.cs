@@ -3,6 +3,7 @@ using Cinema.Application.Features.CinemaHalls.Dto;
 using Cinema.Domain.Features.CinemaBuildings.Entities;
 using Cinema.Domain.Features.CinemaHalls.Entities;
 using Cinema.Domain.Features.Screenings.Entities;
+using Cinema.Domain.Features.Seats.Entities;
 
 namespace Cinema.Application.Features.CinemaHalls.Mappers;
 
@@ -15,5 +16,6 @@ public class CinemaHallProfile : Profile
             .ForMember(dest => dest.Screenings, opt => opt.MapFrom(src => src.Screenings));
         CreateMap<Screening, CinemaHallScreeningAppResponseDto>();
         CreateMap<CinemaBuilding, CinemaHallBuildingAppResponseDto>();
+        CreateMap<Seat, CinemaHallSeatAppResponseDto>();
     }
 }

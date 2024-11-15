@@ -4,6 +4,7 @@ using Cinema.Domain.Features.CinemaHalls.Repositories;
 using Cinema.Domain.Features.Movies.Interfaces;
 using Cinema.Domain.Features.Persons.Repositories;
 using Cinema.Domain.Features.Screenings.Repositories;
+using Cinema.Domain.Features.Seats.Repositories;
 using Cinema.Domain.Shared.Interfaces;
 using Cinema.Infrastructure.Core.Configs;
 using Cinema.Infrastructure.Core.Data;
@@ -12,6 +13,7 @@ using Cinema.Infrastructure.Features.CinemaHalls.Repositories;
 using Cinema.Infrastructure.Features.Movies.Repositories;
 using Cinema.Infrastructure.Features.Persons.Repositories;
 using Cinema.Infrastructure.Features.Screenings.Repositories;
+using Cinema.Infrastructure.Features.Seats.Repositories;
 using Cinema.Infrastructure.Shared.UnitOfWork;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,7 +29,7 @@ public static class DependencyInjection
         // register unit of work
         serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
         serviceCollection.AddScoped<ITransactionalUnitOfWork, TransactionalUnitOfWork>();
-        
+
         // register configurations
         serviceCollection.AddSingleton<IAppConfiguration, AppConfiguration>();
 
@@ -37,5 +39,6 @@ public static class DependencyInjection
         serviceCollection.AddScoped<IScreeningRepository, ScreeningRepository>();
         serviceCollection.AddScoped<ICinemaHallRepository, CinemaHallRepository>();
         serviceCollection.AddScoped<ICinemaBuildingRepository, CinemaBuildingRepository>();
+        serviceCollection.AddScoped<ISeatRepository, SeatRepository>();
     }
 }

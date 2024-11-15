@@ -9,10 +9,13 @@ public class CinemaHallProfile : Profile
     public CinemaHallProfile()
     {
         CreateMap<CinemaHallAppResponseDto, CinemaHallApiResponseDto>();
-        CreateMap<CreateCinemaHallApiDto, CreateCinemaHallAppDto>();
         CreateMap<CinemaHallWithDetailsAppResponseDto, CinemaHallWithDetailsApiResponseDto>();
         CreateMap<CinemaHallScreeningAppResponseDto, CinemaHallScreeningApiResponseDto>();
         CreateMap<CinemaHallBuildingAppResponseDto, CinemaHallBuildingApiResponseDto>();
+        CreateMap<CinemaHallSeatAppResponseDto, CinemaHallSeatApiResponseDto>();
+
         CreateMap<CreateCinemaHallApiDto, CreateCinemaHallAppDto>();
+        CreateMap<CreateCinemaHallApiDto, CreateCinemaHallAppDto>();
+        CreateMap<CreateCinemaHallSeatApiDto, CreateCinemaHallSeatAppDto>();
     }
 }

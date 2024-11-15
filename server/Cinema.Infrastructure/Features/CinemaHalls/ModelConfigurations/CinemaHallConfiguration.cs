@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cinema.Infrastructure.Features.CinemaHalls.ModelConfigurations;
 
-public class CinemaHallConfiguration : IEntityTypeConfiguration<CinemaHall>
+internal class CinemaHallConfiguration : IEntityTypeConfiguration<CinemaHall>
 {
     public void Configure(EntityTypeBuilder<CinemaHall> builder)
     {
@@ -12,6 +12,8 @@ public class CinemaHallConfiguration : IEntityTypeConfiguration<CinemaHall>
         builder.HasKey(ch => ch.Id);
         builder.Property(ch => ch.Id).HasColumnName("id");
         builder.Property(ch => ch.Number).HasColumnName("number");
+        builder.Property(ch => ch.CinemaBuildingId).HasColumnName("cinema_building_id");
+        builder.Property(ch => ch.Capacity).HasColumnName("capacity");
 
         builder.HasMany(ch => ch.Screenings)
             .WithOne(s => s.CinemaHall)
@@ -19,6 +21,9 @@ public class CinemaHallConfiguration : IEntityTypeConfiguration<CinemaHall>
         builder.HasOne(ch => ch.CinemaBuilding)
             .WithMany(cb => cb.CinemaHalls)
             .HasForeignKey(cb => cb.CinemaBuildingId);
+        builder.HasMany(ch => ch.Seats)
+            .WithOne(s => s.CinemaHall)
+            .HasForeignKey(s => s.CinemaHallId);
 
         builder.HasIndex(ch => new { ch.CinemaBuildingId, ch.Number }).IsUnique();
     }

@@ -6,11 +6,11 @@ namespace Cinema.Application.Features.Movies.Builders;
 
 internal class MovieBuilder : IMovieBuilder
 {
-    private readonly Movie _movie;
+    private Movie _movie;
 
     public MovieBuilder()
     {
-        _movie = new Movie();
+        Reset();
     }
 
     public IMovieBuilder SetId(int id)
@@ -18,7 +18,7 @@ internal class MovieBuilder : IMovieBuilder
         _movie.Id = id;
         return this;
     }
-    
+
     public IMovieBuilder SetTitle(string title)
     {
         _movie.Title = title;
@@ -56,6 +56,14 @@ internal class MovieBuilder : IMovieBuilder
 
     public Movie Build()
     {
-        return _movie;
+        var result = _movie;
+        Reset();
+
+        return result;
+    }
+
+    private void Reset()
+    {
+        _movie = new Movie();
     }
 }

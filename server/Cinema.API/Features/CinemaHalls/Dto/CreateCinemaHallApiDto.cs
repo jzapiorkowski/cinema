@@ -8,5 +8,13 @@ public class CreateCinemaHallApiDto
     public int CinemaBuildingId { get; set; }
     
     [Required]
+    [Range(1, int.MaxValue)]
     public int Number { get; set; }
+    
+    [Required]
+    [Range(1, int.MaxValue)]
+    public int Capacity { get; set; }
+    
+    [Required]
+    public List<CreateCinemaHallSeatApiDto> Seats { get; set; }
 }

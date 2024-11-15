@@ -7,11 +7,11 @@ namespace Cinema.Application.Features.Persons.Builders;
 
 internal class PersonBuilder : IPersonBuilder
 {
-    private readonly Person _person;
+    private Person _person;
 
     public PersonBuilder()
     {
-        _person = new Person();
+        Reset();
     }
 
     public IPersonBuilder SetId(int id)
@@ -43,7 +43,7 @@ internal class PersonBuilder : IPersonBuilder
         _person.MovieActors = movieActors;
         return this;
     }
-    
+
     public IPersonBuilder SetDirectedMovies(ICollection<Movie> directedMovies)
     {
         _person.DirectedMovies = directedMovies;
@@ -52,6 +52,14 @@ internal class PersonBuilder : IPersonBuilder
 
     public Person Build()
     {
-        return _person;
+        var result = _person;
+        Reset();
+
+        return result;
+    }
+
+    private void Reset()
+    {
+        _person = new Person();
     }
 }

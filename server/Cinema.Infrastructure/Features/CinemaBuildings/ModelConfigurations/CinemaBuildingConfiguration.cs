@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cinema.Infrastructure.Features.CinemaBuildings.ModelConfigurations;
 
-public class CinemaBuildingConfiguration : IEntityTypeConfiguration<CinemaBuilding>
+internal class CinemaBuildingConfiguration : IEntityTypeConfiguration<CinemaBuilding>
 {
     public void Configure(EntityTypeBuilder<CinemaBuilding> builder)
     {

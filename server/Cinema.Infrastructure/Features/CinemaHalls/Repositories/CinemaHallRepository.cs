@@ -27,6 +27,7 @@ internal class CinemaHallRepository : BaseRepository<CinemaHall>, ICinemaHallRep
             return await _dbContext.CinemaHall
                 .Include(ch => ch.Screenings)
                 .Include(ch => ch.CinemaBuilding)
+                .Include(ch => ch.Seats)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
         catch (Exception e)

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cinema.Infrastructure.Features.Screenings.ModelConfigurations;
 
-public class ScreeningConfiguration : IEntityTypeConfiguration<Screening>
+internal class ScreeningConfiguration : IEntityTypeConfiguration<Screening>
 {
     public void Configure(EntityTypeBuilder<Screening> builder)
     {

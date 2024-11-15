@@ -5,11 +5,11 @@ namespace Cinema.Application.Features.CinemaHalls.Builders;
 
 public class CinemaHallBuilder : ICinemaHallBuilder
 {
-    private readonly CinemaHall _cinemaHall;
+    private CinemaHall _cinemaHall;
 
     public CinemaHallBuilder()
     {
-        _cinemaHall = new CinemaHall();
+        Reset();
     }
 
     public ICinemaHallBuilder SetId(int id)
@@ -24,8 +24,28 @@ public class CinemaHallBuilder : ICinemaHallBuilder
         return this;
     }
 
+    public ICinemaHallBuilder SetNumber(int number)
+    {
+        _cinemaHall.Number = number;
+        return this;
+    }
+
+    public ICinemaHallBuilder SetCapacity(int capacity)
+    {
+        _cinemaHall.Capacity = capacity;
+        return this;
+    }
+
     public CinemaHall Build()
     {
-        return _cinemaHall;
+        var result = _cinemaHall;
+        Reset();
+
+        return result;
+    }
+
+    private void Reset()
+    {
+        _cinemaHall = new CinemaHall();
     }
 }

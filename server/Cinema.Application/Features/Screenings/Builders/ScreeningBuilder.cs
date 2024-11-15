@@ -5,31 +5,31 @@ namespace Cinema.Application.Features.Screenings.Builders;
 
 internal class ScreeningBuilder : IScreeningBuilder
 {
-    private readonly Screening _screening;
-    
+    private Screening _screening;
+
     public ScreeningBuilder()
     {
-        _screening = new Screening();
+        Reset();
     }
-    
+
     public IScreeningBuilder SetId(int id)
     {
         _screening.Id = id;
         return this;
     }
-    
+
     public IScreeningBuilder SetStartTime(DateTime startTime)
     {
         _screening.StartTime = startTime;
         return this;
     }
-    
+
     public IScreeningBuilder SetMovieId(int movieId)
     {
         _screening.MovieId = movieId;
         return this;
     }
-    
+
     public IScreeningBuilder SetCinemaHallId(int cinemaHallId)
     {
         _screening.CinemaHallId = cinemaHallId;
@@ -38,6 +38,14 @@ internal class ScreeningBuilder : IScreeningBuilder
 
     public Screening Build()
     {
-        return _screening;
+        var result = _screening;
+        Reset();
+
+        return result;
+    }
+
+    private void Reset()
+    {
+        _screening = new Screening();
     }
 }

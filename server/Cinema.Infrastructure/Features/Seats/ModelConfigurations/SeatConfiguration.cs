@@ -20,5 +20,7 @@ internal class SeatConfiguration : IEntityTypeConfiguration<Seat>
             .WithMany(ch => ch.Seats)
             .HasForeignKey(s => s.CinemaHallId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(s => new { s.CinemaHallId, s.Row, s.Column }).IsUnique();
     }
 }

@@ -1,5 +1,6 @@
 using AutoMapper;
 using Cinema.Application.Features.CinemaHalls.Dto;
+using Cinema.Application.Features.CinemaHalls.Exceptions;
 using Cinema.Application.Features.CinemaHalls.Interfaces;
 using Cinema.Application.Features.Seats.Interfaces;
 using Cinema.Domain.Shared.Interfaces;
@@ -53,6 +54,11 @@ internal class CinemaHallFacade : ICinemaHallFacade
             .SetNumber(createCinemaHallAppDto.Number)
             .SetCapacity(createCinemaHallAppDto.Capacity)
             .Build();
+
+        if (!cinemaHall.CanAddSeats(createCinemaHallAppDto.Seats.Count))
+        {
+            throw new CinemaHallCapacityExceededException(cinemaHall.Capacity, createCinemaHallAppDto.Seats.Count);
+        }
 
         var createdCinemaHall = await _cinemaHallService.CreateAsync(cinemaHall);
 

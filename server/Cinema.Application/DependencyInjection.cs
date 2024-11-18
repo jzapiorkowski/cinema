@@ -57,6 +57,7 @@ public static class DependencyInjection
         serviceCollection.AddScoped<IScreeningFacade, ScreeningFacade>();
         serviceCollection.AddScoped<ICinemaHallFacade, CinemaHallFacade>();
         serviceCollection.AddScoped<ICinemaBuildingFacade, CinemaBuildingFacade>();
+        serviceCollection.AddScoped<ICinemaHallSeatFacade, CinemaHallSeatFacade>();
 
         // register builders
         serviceCollection.AddTransient<IMovieBuilder, MovieBuilder>();

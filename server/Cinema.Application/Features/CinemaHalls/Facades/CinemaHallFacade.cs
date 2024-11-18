@@ -2,7 +2,6 @@ using AutoMapper;
 using Cinema.Application.Features.CinemaHalls.Dto;
 using Cinema.Application.Features.CinemaHalls.Exceptions;
 using Cinema.Application.Features.CinemaHalls.Interfaces;
-using Cinema.Application.Features.Seats.Interfaces;
 using Cinema.Domain.Shared.Interfaces;
 
 namespace Cinema.Application.Features.CinemaHalls.Facades;
@@ -12,20 +11,18 @@ internal class CinemaHallFacade : ICinemaHallFacade
     private readonly ICinemaHallService _cinemaHallService;
     private readonly IMapper _mapper;
     private readonly ICinemaHallBuilder _cinemaHallBuilder;
-    private readonly ISeatBuilder _seatBuilder;
-    private readonly ISeatService _seatService;
     private readonly ITransactionalUnitOfWork _transactionalUnitOfWork;
+    private readonly ICinemaHallSeatFacade _cinemaHallSeatFacade;
 
     public CinemaHallFacade(ICinemaHallService cinemaHallService, IMapper mapper, ICinemaHallBuilder cinemaHallBuilder,
-        ISeatBuilder seatBuilder, ISeatService seatService, ITransactionalUnitOfWork transactionalUnitOfWork
+        ITransactionalUnitOfWork transactionalUnitOfWork, ICinemaHallSeatFacade cinemaHallSeatFacade
     )
     {
         _cinemaHallService = cinemaHallService;
         _mapper = mapper;
         _cinemaHallBuilder = cinemaHallBuilder;
-        _seatBuilder = seatBuilder;
-        _seatService = seatService;
         _transactionalUnitOfWork = transactionalUnitOfWork;
+        _cinemaHallSeatFacade = cinemaHallSeatFacade;
     }
 
     public async Task<IEnumerable<CinemaHallAppResponseDto>> GetAllAsync()
@@ -37,9 +34,10 @@ internal class CinemaHallFacade : ICinemaHallFacade
     public async Task<CinemaHallAppResponseDto> UpdateAsync(int cinemaHallId,
         UpdateCinemaHallAppDto updateCinemaHallDto)
     {
-      var existingCinemaHall =  await _cinemaHallService.GetByIdWithDetailsAsync(cinemaHallId);
+        var existingCinemaHall = await _cinemaHallService.GetByIdWithDetailsAsync(cinemaHallId);
 
         var cinemaHall = _cinemaHallBuilder
+            .SetId(cinemaHallId)
             .SetCinemaBuildingId(updateCinemaHallDto.CinemaBuildingId)
             .SetNumber(updateCinemaHallDto.Number)
             .SetCapacity(updateCinemaHallDto.Capacity)
@@ -85,14 +83,7 @@ internal class CinemaHallFacade : ICinemaHallFacade
 
         foreach (var createSeatDto in createCinemaHallAppDto.Seats)
         {
-            var seat = _seatBuilder
-                .SetColumn(createSeatDto.Column)
-                .SetRow(createSeatDto.Row)
-                .SetSeatType(createSeatDto.Type)
-                .SetCinemaHallId(createdCinemaHall.Id)
-                .Build();
-
-            await _seatService.CreateAsync(seat);
+            await _cinemaHallSeatFacade.CreateForValidatedCinemaHallAsync(createdCinemaHall.Id, createSeatDto);
         }
 
         await _transactionalUnitOfWork.CommitTransactionAsync();

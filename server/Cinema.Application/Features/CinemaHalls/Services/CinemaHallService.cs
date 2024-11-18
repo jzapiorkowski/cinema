@@ -38,6 +38,8 @@ internal class CinemaHallService : ICinemaHallService
     {
         try
         {
+            await GetByIdAsync(cinemaHall.Id);
+            
             var updatedCinemaHall =
                 _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>().Update(cinemaHall);
             await _unitOfWork.CompleteAsync();

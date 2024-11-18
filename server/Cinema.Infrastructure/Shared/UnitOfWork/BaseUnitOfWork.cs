@@ -35,8 +35,8 @@ internal abstract class BaseUnitOfWork : IBaseUnitOfWork
         _repositories.TryAdd(type, repository);
         return repository;
     }
-
-    public async void Dispose()
+    
+    public async ValueTask DisposeAsync()
     {
         await _context.DisposeAsync();
 

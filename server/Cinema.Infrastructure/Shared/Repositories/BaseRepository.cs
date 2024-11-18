@@ -49,11 +49,17 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
         }
     }
 
-    public async Task<List<TEntity>> GetAllAsync()
+    public async Task<List<TEntity>> GetAllAsync(bool asNoTracking = false)
     {
         try
         {
-            return await _dbContext.Set<TEntity>().AsNoTracking().ToListAsync();
+            IQueryable<TEntity> query = _dbContext.Set<TEntity>();
+
+            if (asNoTracking)
+                query = query.AsNoTracking();
+
+
+            return await query.ToListAsync();
         }
         catch (Exception e)
         {
@@ -62,11 +68,16 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
         }
     }
 
-    public async Task<TEntity?> GetByIdAsync(int id)
+    public async Task<TEntity?> GetByIdAsync(int id, bool asNoTracking = false)
     {
         try
         {
-            return await _dbContext.Set<TEntity>().FindAsync(id);
+            IQueryable<TEntity> query = _dbContext.Set<TEntity>();
+
+            if (asNoTracking)
+                query = query.AsNoTracking();
+
+            return await query.FirstOrDefaultAsync(entity => EF.Property<object>(entity, "Id").Equals(id));
         }
         catch (Exception e)
         {
@@ -86,7 +97,7 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
         catch (Exception e)
         {
             _logger.LogError(e, "An error occurred while updating the {entityName}.", GetEntityName());
-            throw new DatabaseException("An error occurred while updating the movie with id {movie.Id}.", e);
+            throw new DatabaseException($"An error occurred while updating the {GetEntityName()}.", e);
         }
     }
 

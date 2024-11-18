@@ -33,7 +33,7 @@ public class CinemaBuildingController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByIdAsync(int id)
     {
-        var cinemaBuilding = await _cinemaBuildingFacade.GetByIdWithDetailsAsync(id);
+        var cinemaBuilding = await _cinemaBuildingFacade.GetByIdAsync(id);
         return Ok(_mapper.Map<CinemaBuildingWithDetailsApiResponseDto>(cinemaBuilding));
     }
     

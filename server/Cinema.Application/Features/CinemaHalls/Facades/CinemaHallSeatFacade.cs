@@ -26,7 +26,7 @@ internal class CinemaHallSeatFacade : ICinemaHallSeatFacade
     public async Task<CinemaHallSeatAppResponseDto> CreateAsync(int cinemaHallId,
         CreateCinemaHallSeatAppDto createSeatDto)
     {
-        var existingCinemaHall = await _cinemaHallService.GetByIdWithDetailsAsync(cinemaHallId);
+        var existingCinemaHall = await _cinemaHallService.GetByIdAsync(cinemaHallId);
 
         if (!existingCinemaHall.CanAddSeats(1))
         {
@@ -56,7 +56,7 @@ internal class CinemaHallSeatFacade : ICinemaHallSeatFacade
     public async Task<CinemaHallSeatAppResponseDto> UpdateAsync(int cinemaHallId, int seatId,
         UpdateCinemaHallSeatAppDto updateCinemaHallSeatDto)
     {
-        var existingCinemaHall = await _cinemaHallService.GetByIdWithDetailsAsync(cinemaHallId);
+        var existingCinemaHall = await _cinemaHallService.GetByIdAsync(cinemaHallId);
 
         var seat = _seatBuilder
             .SetId(seatId)

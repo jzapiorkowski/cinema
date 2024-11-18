@@ -39,8 +39,8 @@ internal class SeatService : ISeatService
     {
         try
         {
-           await GetByIdAsync(seat.Id);
-            
+            await GetByIdAsync(seat.Id, true, false);
+
             var createdSeat =
                 _unitOfWork.Repository<Seat, ISeatRepository>().Update(seat);
             await _unitOfWork.CompleteAsync();
@@ -58,7 +58,7 @@ internal class SeatService : ISeatService
     {
         try
         {
-            var seat = await GetByIdAsync(id);
+            var seat = await GetByIdAsync(id, false, false);
 
             _unitOfWork.Repository<Seat, ISeatRepository>().Delete(seat);
             await _unitOfWork.CompleteAsync();
@@ -76,9 +76,16 @@ internal class SeatService : ISeatService
 
     public async Task<Seat> GetByIdAsync(int id)
     {
+        return await GetByIdAsync(id, true, true);
+    }
+
+    private async Task<Seat> GetByIdAsync(int id, bool asNoTracking, bool includeAllRelations)
+    {
         try
         {
-            var seat = await _unitOfWork.Repository<Seat, ISeatRepository>().GetByIdAsync(id);
+            var seat = await (includeAllRelations
+                ? _unitOfWork.Repository<Seat, ISeatRepository>().GetWithDetailsByIdAsync(id, asNoTracking)
+                : _unitOfWork.Repository<Seat, ISeatRepository>().GetByIdAsync(id, asNoTracking));
 
             if (seat == null)
             {

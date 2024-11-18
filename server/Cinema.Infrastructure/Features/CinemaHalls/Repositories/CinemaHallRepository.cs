@@ -20,11 +20,16 @@ internal class CinemaHallRepository : BaseRepository<CinemaHall>, ICinemaHallRep
         _logger = logger;
     }
 
-    public async Task<CinemaHall?> GetWithDetailsByIdAsync(int id)
+    public async Task<CinemaHall?> GetWithDetailsByIdAsync(int id, bool asNoTracking)
     {
         try
         {
-            return await _dbContext.CinemaHall
+            IQueryable<CinemaHall> query = _dbContext.CinemaHall;
+
+            if (asNoTracking)
+                query = query.AsNoTracking();
+            
+            return await query
                 .Include(ch => ch.Screenings)
                 .Include(ch => ch.CinemaBuilding)
                 .Include(ch => ch.Seats)

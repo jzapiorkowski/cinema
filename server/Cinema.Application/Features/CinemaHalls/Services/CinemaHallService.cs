@@ -25,6 +25,7 @@ internal class CinemaHallService : ICinemaHallService
             var createdCinemaHall =
                 await _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>().CreateAsync(cinemaHall);
             await _unitOfWork.CompleteAsync();
+
             return createdCinemaHall;
         }
         catch (Exception e)
@@ -38,11 +39,12 @@ internal class CinemaHallService : ICinemaHallService
     {
         try
         {
-            await GetByIdAsync(cinemaHall.Id);
-            
+            await GetByIdAsync(cinemaHall.Id, true, false);
+
             var updatedCinemaHall =
                 _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>().Update(cinemaHall);
             await _unitOfWork.CompleteAsync();
+
             return updatedCinemaHall;
         }
         catch (Exception e)
@@ -65,36 +67,11 @@ internal class CinemaHallService : ICinemaHallService
         }
     }
 
-    public async Task<CinemaHall> GetByIdWithDetailsAsync(int id)
-    {
-        try
-        {
-            var cinemaHall = await _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>()
-                .GetWithDetailsByIdAsync(id);
-
-            if (cinemaHall == null)
-            {
-                throw new NotFoundException("cinema hall", id);
-            }
-
-            return cinemaHall;
-        }
-        catch (NotFoundException)
-        {
-            throw;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "An error occurred while retrieving the cinema hall with id {id}.", id);
-            throw new AppException($"An error occurred while retrieving the cinema hall with id {id}.", e);
-        }
-    }
-
     public async Task DeleteAsync(int id)
     {
         try
         {
-            var cinemaHall = await GetByIdAsync(id);
+            var cinemaHall = await GetByIdAsync(id, false, false);
 
             _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>().Delete(cinemaHall);
             await _unitOfWork.CompleteAsync();
@@ -110,12 +87,20 @@ internal class CinemaHallService : ICinemaHallService
         }
     }
 
-
     public async Task<CinemaHall> GetByIdAsync(int id)
+    {
+        return await GetByIdAsync(id, true, true);
+    }
+
+    private async Task<CinemaHall> GetByIdAsync(int id, bool asNoTracking, bool includeAllRelations)
     {
         try
         {
-            var cinemaHall = await _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>().GetByIdAsync(id);
+            var cinemaHall = await (includeAllRelations
+                ? _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>()
+                    .GetWithDetailsByIdAsync(id, asNoTracking)
+                : _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>()
+                    .GetByIdAsync(id, asNoTracking));
 
             if (cinemaHall == null)
             {

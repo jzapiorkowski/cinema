@@ -20,11 +20,16 @@ internal class MovieRepository : BaseRepository<Movie>, IMovieRepository
         _logger = logger;
     }
 
-    public async Task<Movie?> GetWithDetailsByIdAsync(int id)
+    public async Task<Movie?> GetWithDetailsByIdAsync(int id, bool asNoTracking)
     {
         try
         {
-            return await _dbContext.Movie
+            IQueryable<Movie> query = _dbContext.Movie;
+
+            if (asNoTracking)
+                query = query.AsNoTracking();
+
+            return await query
                 .Include(m => m.MovieActors).ThenInclude(ma => ma.Actor)
                 .Include(m => m.DirectedBy)
                 .SingleOrDefaultAsync(m => m.Id == id);

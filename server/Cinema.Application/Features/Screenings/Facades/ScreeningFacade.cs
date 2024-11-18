@@ -22,9 +22,9 @@ internal class ScreeningFacade : IScreeningFacade
         _screeningValidator = screeningValidator;
     }
 
-    public async Task<ScreeningWithDetailsAppResponseDto> GetWithDetailsByIdAsync(int id)
+    public async Task<ScreeningWithDetailsAppResponseDto> GetByIdAsync(int id)
     {
-        var screening = await _screeningService.GetWithDetailsByIdAsync(id);
+        var screening = await _screeningService.GetByIdAsync(id);
         return _mapper.Map<ScreeningWithDetailsAppResponseDto>(screening);
     }
 

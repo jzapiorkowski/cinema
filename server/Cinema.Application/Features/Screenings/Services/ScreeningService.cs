@@ -19,28 +19,9 @@ internal class ScreeningService : IScreeningService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Screening> GetWithDetailsByIdAsync(int id)
+    public async Task<Screening> GetByIdAsync(int id)
     {
-        try
-        {
-            var screening = await _unitOfWork.Repository<Screening, IScreeningRepository>().GetWithDetailsByIdAsync(id);
-
-            if (screening == null)
-            {
-                throw new NotFoundException("screening", id);
-            }
-
-            return screening;
-        }
-        catch (NotFoundException)
-        {
-            throw;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "An error occurred while retrieving screening with id {id}", id);
-            throw new AppException($"An error occurred while retrieving screening with id {id}", e);
-        }
+        return await GetByIdAsync(id, true, true);
     }
 
     public async Task<IEnumerable<Screening>> GetAllWithDetailsAsync(DateTime date)
@@ -80,6 +61,8 @@ internal class ScreeningService : IScreeningService
     {
         try
         {
+            await GetByIdAsync(screening.Id, true, false);
+
             var updatedScreening =
                 _unitOfWork.Repository<Screening, IScreeningRepository>().Update(screening);
             await _unitOfWork.CompleteAsync();
@@ -103,7 +86,7 @@ internal class ScreeningService : IScreeningService
             return await _unitOfWork.Repository<Screening, IScreeningRepository>()
                 .IsTimeSlotAvailableAsync(cinemaHallId, startTime, endTime);
         }
-        catch(ArgumentException)
+        catch (ArgumentException)
         {
             throw;
         }
@@ -111,6 +94,34 @@ internal class ScreeningService : IScreeningService
         {
             _logger.LogError(e, "An error occurred while checking if screening time slot is available");
             throw new AppException($"An error occurred while checking if screening time slot is available", e);
+        }
+    }
+
+    private async Task<Screening> GetByIdAsync(int id, bool asNoTracking, bool includeAllRelations)
+    {
+        try
+        {
+            var screening = await (includeAllRelations
+                ? _unitOfWork.Repository<Screening, IScreeningRepository>().GetWithDetailsByIdAsync(id,
+                    asNoTracking)
+                : _unitOfWork.Repository<Screening, IScreeningRepository>().GetByIdAsync(id,
+                    asNoTracking));
+
+            if (screening == null)
+            {
+                throw new NotFoundException("screening", id);
+            }
+
+            return screening;
+        }
+        catch (NotFoundException)
+        {
+            throw;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while retrieving screening with id {id}", id);
+            throw new AppException($"An error occurred while retrieving screening with id {id}", e);
         }
     }
 }

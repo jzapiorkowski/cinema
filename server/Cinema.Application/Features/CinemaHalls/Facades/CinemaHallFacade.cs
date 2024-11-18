@@ -34,7 +34,7 @@ internal class CinemaHallFacade : ICinemaHallFacade
     public async Task<CinemaHallAppResponseDto> UpdateAsync(int cinemaHallId,
         UpdateCinemaHallAppDto updateCinemaHallDto)
     {
-        var existingCinemaHall = await _cinemaHallService.GetByIdWithDetailsAsync(cinemaHallId);
+        var existingCinemaHall = await _cinemaHallService.GetByIdAsync(cinemaHallId);
 
         var cinemaHall = _cinemaHallBuilder
             .SetId(cinemaHallId)
@@ -53,9 +53,9 @@ internal class CinemaHallFacade : ICinemaHallFacade
         return _mapper.Map<CinemaHallAppResponseDto>(updatedCinemaHall);
     }
 
-    public async Task<CinemaHallWithDetailsAppResponseDto> GetByIdWithDetailsAsync(int id)
+    public async Task<CinemaHallWithDetailsAppResponseDto> GetByIdAsync(int id)
     {
-        var cinemaHall = await _cinemaHallService.GetByIdWithDetailsAsync(id);
+        var cinemaHall = await _cinemaHallService.GetByIdAsync(id);
         return _mapper.Map<CinemaHallWithDetailsAppResponseDto>(cinemaHall);
     }
 
@@ -66,8 +66,6 @@ internal class CinemaHallFacade : ICinemaHallFacade
 
     public async Task<CinemaHallAppResponseDto> CreateAsync(CreateCinemaHallAppDto createCinemaHallAppDto)
     {
-        await _transactionalUnitOfWork.BeginTransactionAsync();
-
         var cinemaHall = _cinemaHallBuilder
             .SetCinemaBuildingId(createCinemaHallAppDto.CinemaBuildingId)
             .SetNumber(createCinemaHallAppDto.Number)
@@ -78,7 +76,8 @@ internal class CinemaHallFacade : ICinemaHallFacade
         {
             throw new CinemaHallCapacityExceededException(cinemaHall.Capacity, createCinemaHallAppDto.Seats.Count);
         }
-
+        
+        await _transactionalUnitOfWork.BeginTransactionAsync();
         var createdCinemaHall = await _cinemaHallService.CreateAsync(cinemaHall);
 
         foreach (var createSeatDto in createCinemaHallAppDto.Seats)

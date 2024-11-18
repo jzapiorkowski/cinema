@@ -12,7 +12,7 @@ internal class PersonRepository : BaseRepository<Person>, IPersonRepository
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly ILogger<PersonRepository> _logger;
-    
+
     public PersonRepository(ApplicationDbContext dbContext, ILogger<PersonRepository> logger) : base(dbContext,
         logger)
     {
@@ -31,16 +31,20 @@ internal class PersonRepository : BaseRepository<Person>, IPersonRepository
             _logger.LogError(e, "An error occurred while retrieving the actors with ids {ids}.",
                 ids);
             throw new DatabaseException($"An error occurred while retrieving the actors with ids {ids}.", e);
-
         }
     }
 
-    public async Task<Person?> GetWithDetailsByIdAsync(int id)
+    public async Task<Person?> GetWithDetailsByIdAsync(int id, bool asNoTracking)
     {
         try
         {
-            return await _dbContext.Person
-                .Include(p => p.MovieActors).ThenInclude(ma => ma.Movie)
+            IQueryable<Person> query = _dbContext.Person;
+
+            if (asNoTracking)
+                query = query.AsNoTracking();
+
+            return await query
+                .Include(p => p.MovieActors).ThenInclude(ma => ma.Movie).ThenInclude(m => m.DirectedBy)
                 .Include(p => p.DirectedMovies)
                 .SingleOrDefaultAsync(p => p.Id == id);
         }
@@ -48,6 +52,6 @@ internal class PersonRepository : BaseRepository<Person>, IPersonRepository
         {
             Console.WriteLine(e);
             throw;
-        }        
+        }
     }
 }

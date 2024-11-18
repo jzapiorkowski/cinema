@@ -21,11 +21,16 @@ internal class ScreeningRepository : BaseRepository<Screening>, IScreeningReposi
     }
 
 
-    public async Task<Screening?> GetWithDetailsByIdAsync(int id)
+    public async Task<Screening?> GetWithDetailsByIdAsync(int id, bool asNoTracking)
     {
         try
         {
-            return await _dbContext.Screening
+            IQueryable<Screening> query = _dbContext.Screening;
+
+            if (asNoTracking)
+                query = query.AsNoTracking();
+            
+            return await query
                 .Include(s => s.Movie)
                 .Include(s => s.CinemaHall)
                 .FirstOrDefaultAsync(s => s.Id == id);

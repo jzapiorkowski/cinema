@@ -24,9 +24,9 @@ public class ScreeningController : ControllerBase
     [HttpGet("{id:int}")]
     [ProducesResponseType<ScreeningWithDetailsApiResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetWithDetailsByIdAsync(int id)
+    public async Task<IActionResult> GetByIdAsync(int id)
     {
-        var screening = await _screeningFacade.GetWithDetailsByIdAsync(id);
+        var screening = await _screeningFacade.GetByIdAsync(id);
         return Ok(_mapper.Map<ScreeningWithDetailsApiResponseDto>(screening));
     }
 
@@ -49,7 +49,7 @@ public class ScreeningController : ControllerBase
         var createdScreening = await _screeningFacade.CreateAsync(_mapper.Map<CreateScreeningAppDto>(screening));
         var screeningApiResponse = _mapper.Map<ScreeningApiResponseDto>(createdScreening);
 
-        return CreatedAtAction(nameof(GetWithDetailsByIdAsync), new { id = screeningApiResponse.Id },
+        return CreatedAtAction(nameof(GetByIdAsync), new { id = screeningApiResponse.Id },
             screeningApiResponse);
     }
     

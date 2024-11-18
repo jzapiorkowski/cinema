@@ -31,9 +31,9 @@ public class MovieController : ControllerBase
     [HttpGet("{movieId:int}")]
     [ProducesResponseType<MovieWithDetailsApiResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetByIdWithDetailsAsync(int movieId)
+    public async Task<IActionResult> GetByIdAsync(int movieId)
     {
-        var movie = await _movieFacade.GetByIdWithDetailsAsync(movieId);
+        var movie = await _movieFacade.GetByIdAsync(movieId);
         return Ok(_mapper.Map<MovieWithDetailsApiResponseDto>(movie));
     }
 
@@ -46,7 +46,7 @@ public class MovieController : ControllerBase
         var createdMovie = await _movieFacade.CreateAsync(_mapper.Map<CreateMovieAppDto>(movie));
         var movieApiResponse = _mapper.Map<MovieApiResponseDto>(createdMovie);
 
-        return CreatedAtAction(nameof(GetByIdWithDetailsAsync), new { movieId = movieApiResponse.Id },
+        return CreatedAtAction(nameof(GetByIdAsync), new { movieId = movieApiResponse.Id },
             movieApiResponse);
     }
 

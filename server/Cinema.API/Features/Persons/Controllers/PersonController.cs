@@ -31,9 +31,9 @@ public class PersonController : ControllerBase
     [HttpGet("{id:int}")]
     [ProducesResponseType<PersonWithDetailsApiResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetByIdWithDetailsAsync(int id)
+    public async Task<IActionResult> GetByIdAsync(int id)
     {
-        var person = await _personFacade.GetWithDetailsByIdAsync(id);
+        var person = await _personFacade.GetByIdAsync(id);
         return Ok(_mapper.Map<PersonWithDetailsApiResponseDto>(person));
     }
 
@@ -55,7 +55,7 @@ public class PersonController : ControllerBase
         var createdPerson = await _personFacade.CreateAsync(_mapper.Map<CreatePersonAppDto>(person));
         var personApiResponse = _mapper.Map<PersonApiResponseDto>(createdPerson);
 
-        return CreatedAtAction(nameof(GetByIdWithDetailsAsync), new { id = personApiResponse.Id },
+        return CreatedAtAction(nameof(GetByIdAsync), new { id = personApiResponse.Id },
             personApiResponse);
     }
     

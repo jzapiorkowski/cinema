@@ -35,30 +35,6 @@ internal class MovieService : IMovieService
         }
     }
 
-    public async Task<Movie> GetByIdWithDetailsAsync(int movieId)
-    {
-        try
-        {
-            var movie = await _movieRepository.GetWithDetailsByIdAsync(movieId);
-
-            if (movie == null)
-            {
-                throw new NotFoundException("movie", movieId);
-            }
-
-            return movie;
-        }
-        catch (NotFoundException)
-        {
-            throw;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "An error occurred while retrieving the movie with id {movieId}.", movieId);
-            throw new AppException($"An error occurred while retrieving the movie with id {movieId}.", e);
-        } 
-    }
-
     public async Task<IEnumerable<Movie>> GetAllAsync()
     {
         try
@@ -96,6 +72,8 @@ internal class MovieService : IMovieService
     {
         try
         {
+            await GetByIdAsync(movie.Id, true, false);
+
             var updatedMovie = _movieRepository.Update(movie);
             await _unitOfWork.CompleteAsync();
 
@@ -121,15 +99,22 @@ internal class MovieService : IMovieService
         }
     }
 
-    public async Task<Movie> GetByIdAsync(int movieId)
+    public async Task<Movie?> GetByIdAsync(int id)
+    {
+        return await GetByIdAsync(id, true, true);
+    }
+
+    private async Task<Movie?> GetByIdAsync(int id, bool asNoTracking, bool includeAllRelations)
     {
         try
         {
-            var movie = await _movieRepository.GetByIdAsync(movieId);
+            var movie = await (includeAllRelations
+                ? _movieRepository.GetWithDetailsByIdAsync(id, asNoTracking)
+                : _movieRepository.GetByIdAsync(id, asNoTracking));
 
             if (movie == null)
             {
-                throw new NotFoundException("movie", movieId);
+                throw new NotFoundException("movie", id);
             }
 
             return movie;
@@ -140,8 +125,8 @@ internal class MovieService : IMovieService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "An error occurred while retrieving the movie with id {movieId}.", movieId);
-            throw new AppException($"An error occurred while retrieving the movie with id {movieId}.", e);
+            _logger.LogError(e, "An error occurred while retrieving the movie with id {id}.", id);
+            throw new AppException($"An error occurred while retrieving the movie with id {id}.", e);
         }
     }
 }

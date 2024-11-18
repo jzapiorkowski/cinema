@@ -47,32 +47,6 @@ internal class CinemaBuildingService : ICinemaBuildingService
         }
     }
 
-    public async Task<CinemaBuilding> GetByIdWithDetailsAsync(int id)
-    {
-        try
-        {
-            var cinemaBuilding = await _unitOfWork.Repository<CinemaBuilding, ICinemaBuildingRepository>()
-                .GetWithDetailsByIdAsync(id);
-
-            if (cinemaBuilding == null)
-            {
-                throw new NotFoundException("cinema building", id);
-            }
-
-            return cinemaBuilding;
-        }
-        catch (NotFoundException)
-        {
-            throw;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "An error occurred while retrieving the cinema building with id {id}.", id);
-            throw new AppException($"An error occurred while retrieving the cinema building with id {id}.", e);
-        }
-    }
-
-
     public async Task DeleteAsync(int id)
     {
         try
@@ -92,13 +66,22 @@ internal class CinemaBuildingService : ICinemaBuildingService
             throw new AppException($"An error occurred while deleting the cinema building with id {id}.", e);
         }
     }
+    
+    public async Task<CinemaBuilding?> GetByIdAsync(int id)
+    {
+        return await GetByIdAsync(id, true, true);
+    }
 
-    private async Task<CinemaBuilding> GetByIdAsync(int id)
+    private async Task<CinemaBuilding?> GetByIdAsync(int id, bool asNoTracking, bool includeAllRelations)
     {
         try
         {
             var cinemaBuilding =
-                await _unitOfWork.Repository<CinemaBuilding, ICinemaBuildingRepository>().GetByIdAsync(id);
+                await (includeAllRelations
+                    ? _unitOfWork.Repository<CinemaBuilding, ICinemaBuildingRepository>()
+                        .GetWithDetailsByIdAsync(id, asNoTracking)
+                    : _unitOfWork.Repository<CinemaBuilding, ICinemaBuildingRepository>()
+                        .GetByIdAsync(id, asNoTracking));
 
             if (cinemaBuilding == null)
             {

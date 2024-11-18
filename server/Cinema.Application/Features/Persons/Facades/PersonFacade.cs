@@ -28,9 +28,9 @@ internal class PersonFacade : IPersonFacade
         return _mapper.Map<IEnumerable<PersonAppResponseDto>>(persons);
     }
 
-    public async Task<PersonWithDetailsAppResponseDto> GetWithDetailsByIdAsync(int id)
+    public async Task<PersonWithDetailsAppResponseDto> GetByIdAsync(int id)
     {
-        var person = await _personService.GetWithDetailsByIdAsync(id);
+        var person = await _personService.GetByIdAsync(id);
         return _mapper.Map<PersonWithDetailsAppResponseDto>(person);
     }
 
@@ -63,7 +63,7 @@ internal class PersonFacade : IPersonFacade
 
     public async Task<PersonAppResponseDto> UpdateAsync(int id, UpdatePersonAppDto updatePersonAppDto)
     {
-        var existingPerson = await _personService.GetWithDetailsByIdAsync(id);
+        var existingPerson = await _personService.GetByIdAsync(id);
 
         await _movieRelatedEntityValidator.ValidateEntitiesAsync(
             updatePersonAppDto.ActedIn.Select(actedIn => actedIn.MovieId).ToList());

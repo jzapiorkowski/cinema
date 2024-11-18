@@ -5,4 +5,5 @@ namespace Cinema.Domain.Features.Seats.Repositories;
 
 public interface ISeatRepository : IBaseRepository<Seat>
 {
+    public Task<Seat?> GetWithDetailsByIdAsync(int id, bool asNoTracking);
 }

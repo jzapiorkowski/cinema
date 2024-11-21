@@ -12,7 +12,8 @@ internal class CinemaBuildingConfiguration : IEntityTypeConfiguration<CinemaBuil
         builder.HasKey(cb => cb.Id);
         builder.Property(cb => cb.Address).HasColumnName("address");
         
-        builder.HasMany(cb => cb.CinemaHalls)
+        builder
+            .HasMany(cb => cb.CinemaHalls)
             .WithOne(ch => ch.CinemaBuilding)
             .HasForeignKey(ch => ch.CinemaBuildingId);
     }

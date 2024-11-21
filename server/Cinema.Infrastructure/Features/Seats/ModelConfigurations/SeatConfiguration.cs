@@ -19,7 +19,7 @@ internal class SeatConfiguration : IEntityTypeConfiguration<Seat>
         builder.HasOne(s => s.CinemaHall)
             .WithMany(ch => ch.Seats)
             .HasForeignKey(s => s.CinemaHallId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(s => new { s.CinemaHallId, s.Row, s.Column }).IsUnique();
     }

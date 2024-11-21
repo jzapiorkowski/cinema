@@ -13,15 +13,17 @@ internal class MovieActorConfiguration : IEntityTypeConfiguration<MovieActor>
         builder.Property(ma => ma.MovieId).HasColumnName("movie_id");
         builder.Property(ma => ma.ActorId).HasColumnName("actor_id");
         builder.Property(ma => ma.Role).HasColumnName("role");
-        
+
         builder
             .HasOne(ma => ma.Movie)
             .WithMany(m => m.MovieActors)
-            .HasForeignKey(ma => ma.MovieId);
+            .HasForeignKey(ma => ma.MovieId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder
             .HasOne(ma => ma.Actor)
             .WithMany(a => a.MovieActors)
-            .HasForeignKey(a => a.ActorId);
+            .HasForeignKey(a => a.ActorId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

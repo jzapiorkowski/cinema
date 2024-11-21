@@ -22,6 +22,6 @@ internal class ScreeningConfiguration : IEntityTypeConfiguration<Screening>
         builder.HasOne(s => s.CinemaHall)
             .WithMany(ch => ch.Screenings)
             .HasForeignKey(s => s.CinemaHallId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

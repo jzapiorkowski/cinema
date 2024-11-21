@@ -20,7 +20,8 @@ internal class CinemaHallConfiguration : IEntityTypeConfiguration<CinemaHall>
             .HasForeignKey(s => s.CinemaHallId);
         builder.HasOne(ch => ch.CinemaBuilding)
             .WithMany(cb => cb.CinemaHalls)
-            .HasForeignKey(cb => cb.CinemaBuildingId);
+            .HasForeignKey(cb => cb.CinemaBuildingId)
+            .OnDelete(DeleteBehavior.Restrict);
         builder.HasMany(ch => ch.Seats)
             .WithOne(s => s.CinemaHall)
             .HasForeignKey(s => s.CinemaHallId);

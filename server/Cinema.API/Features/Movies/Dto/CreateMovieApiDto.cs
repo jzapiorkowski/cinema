@@ -14,8 +14,7 @@ public class CreateMovieApiDto
     public int DirectorId { get; set; }
 
     [Required]
-    [DataType(DataType.DateTime)]
-    public DateTime? ReleaseDate { get; set; }
+    public DateOnly ReleaseDate { get; set; }
 
     [Required]
     public TimeSpan Duration { get; set; }

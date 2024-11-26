@@ -32,6 +32,7 @@ internal class MovieFacade : IMovieFacade
             .SetReleaseDate(createMovieAppDto.ReleaseDate)
             .AddActors(createMovieAppDto.Actors.Select(dto => (dto.Id, dto.Role)))
             .SetGenre(createMovieAppDto.Genre)
+            .SetDuration(createMovieAppDto.Duration)
             .SetDirectorId(createMovieAppDto.DirectorId)
             .Build();
 

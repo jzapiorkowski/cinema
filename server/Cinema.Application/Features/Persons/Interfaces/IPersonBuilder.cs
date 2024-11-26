@@ -9,7 +9,7 @@ internal interface IPersonBuilder
     public IPersonBuilder SetId(int id);
     public IPersonBuilder SetFirstName(string name);
     public IPersonBuilder SetLastName(string name);
-    public IPersonBuilder SetBirthDate(DateTime birthDate);
+    public IPersonBuilder SetBirthDate(DateOnly birthDate);
     public IPersonBuilder SetMovieActors(ICollection<MovieActor> movieActors);
     public IPersonBuilder SetDirectedMovies(ICollection<Movie> directedMovies);
     public Person Build();

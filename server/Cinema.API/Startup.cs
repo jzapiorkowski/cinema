@@ -14,8 +14,8 @@ public class Startup
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
         {
-            c.SchemaFilter<TimeSpanSchemaFilter>();
-            c.SchemaFilter<DateOnlySchemaFilter>();
+            c.SchemaFilter<Iso8601TimeSpanSchemaFilter>();
+            c.SchemaFilter<Iso8601DateOnlySchemaFilter>();
         });
 
         services.AddInfrastructureServices();
@@ -27,7 +27,7 @@ public class Startup
             )
             .AddJsonOptions(options =>
             {
-                options.JsonSerializerOptions.Converters.Add(new TimeSpanConverter());
+                options.JsonSerializerOptions.Converters.Add(new Iso8601TimeSpanConverter());
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
     }

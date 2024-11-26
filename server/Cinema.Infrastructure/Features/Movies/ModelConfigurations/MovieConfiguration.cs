@@ -13,7 +13,7 @@ internal class MovieConfiguration : IEntityTypeConfiguration<Movie>
         builder.Property(m => m.Id).HasColumnName("id");
         builder.Property(m => m.Title).HasColumnName("title");
         builder.Property(m => m.Genre).HasColumnName("genre");
-        builder.Property(m => m.ReleaseDate).HasColumnName("release_date").HasColumnType("timestamp with time zone");
+        builder.Property(m => m.ReleaseDate).HasColumnName("release_date").HasColumnType("date");
         builder.Property(m => m.Duration).HasColumnName("duration").HasColumnType("interval");
         builder.Property(m => m.DirectorId).HasColumnName("director_id");
 

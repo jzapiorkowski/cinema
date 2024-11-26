@@ -17,8 +17,7 @@ public class UpdateMovieApiDto
     public TimeSpan Duration { get; set; }
 
     [Required]
-    [DataType(DataType.DateTime)]
-    public DateTime? ReleaseDate { get; set; }
+    public DateOnly ReleaseDate { get; set; }
     
     [Required]
     [MinLength(0)]

@@ -11,7 +11,7 @@ public class CreatePersonApiDto
     public string LastName { get; set; }
     
     [Required]
-    public DateTime BirthDate { get; set; }
+    public DateOnly BirthDate { get; set; }
     
     [Required]
     public IEnumerable<CreatePersonActedInApiDto> ActedIn { get; set; }

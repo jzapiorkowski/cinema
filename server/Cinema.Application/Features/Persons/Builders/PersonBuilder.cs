@@ -32,7 +32,7 @@ internal class PersonBuilder : IPersonBuilder
         return this;
     }
 
-    public IPersonBuilder SetBirthDate(DateTime birthDate)
+    public IPersonBuilder SetBirthDate(DateOnly birthDate)
     {
         _person.BirthDate = birthDate;
         return this;

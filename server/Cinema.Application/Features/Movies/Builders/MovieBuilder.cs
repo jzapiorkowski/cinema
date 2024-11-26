@@ -25,9 +25,15 @@ internal class MovieBuilder : IMovieBuilder
         return this;
     }
 
-    public IMovieBuilder SetReleaseDate(DateTime releaseDate)
+    public IMovieBuilder SetReleaseDate(DateOnly releaseDate)
     {
         _movie.ReleaseDate = releaseDate;
+        return this;
+    }
+
+    public IMovieBuilder SetDuration(TimeSpan duration)
+    {
+        _movie.Duration = duration;
         return this;
     }
 

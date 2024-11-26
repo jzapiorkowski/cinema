@@ -11,7 +11,7 @@ public class UpdatePersonApiDto
     public string LastName { get; set; }
 
     [Required]
-    public DateTime BirthDate { get; set; }
+    public DateOnly BirthDate { get; set; }
 
     [Required]
     public IEnumerable<UpdatePersonActedInApiDto> ActedIn { get; set; }

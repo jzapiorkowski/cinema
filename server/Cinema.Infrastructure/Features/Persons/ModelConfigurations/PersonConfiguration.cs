@@ -13,7 +13,7 @@ internal class PersonConfiguration : IEntityTypeConfiguration<Person>
         builder.Property(p => p.Id).HasColumnName("id");
         builder.Property(p => p.FirstName).HasColumnName("first_name");
         builder.Property(p => p.LastName).HasColumnName("last_name");
-        builder.Property(p => p.BirthDate).HasColumnName("birth_date");
+        builder.Property(p => p.BirthDate).HasColumnName("birth_date").HasColumnType("date");
 
         builder
             .HasMany(p => p.MovieActors)

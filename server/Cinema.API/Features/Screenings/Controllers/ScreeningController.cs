@@ -1,5 +1,4 @@
 using AutoMapper;
-using Cinema.API.Core.Validators;
 using Cinema.API.Features.Screenings.Dto;
 using Cinema.Application.Features.Screenings.Dto;
 using Cinema.Application.Features.Screenings.Interfaces;
@@ -32,7 +31,7 @@ public class ScreeningController : ControllerBase
 
     [HttpGet("date/{date:datetime}")]
     [ProducesResponseType<IEnumerable<ScreeningWithDetailsApiResponseDto>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAllWithDetailsAsync([FromRoute, DateOnly] DateTime date)
+    public async Task<IActionResult> GetAllWithDetailsAsync([FromRoute] DateTime date)
     {
         date = DateTime.SpecifyKind(date.Date, DateTimeKind.Utc);
 

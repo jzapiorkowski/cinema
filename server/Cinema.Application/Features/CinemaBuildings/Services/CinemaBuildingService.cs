@@ -24,7 +24,7 @@ internal class CinemaBuildingService : ICinemaBuildingService
         {
             var createdCinemaBuilding =
                 await _unitOfWork.Repository<CinemaBuilding, ICinemaBuildingRepository>().CreateAsync(cinemaBuilding);
-            await _unitOfWork.CompleteAsync();
+
             return createdCinemaBuilding;
         }
         catch (Exception e)
@@ -53,8 +53,7 @@ internal class CinemaBuildingService : ICinemaBuildingService
         {
             var cinemaBuilding = await GetByIdAsync(id);
 
-            _unitOfWork.Repository<CinemaBuilding, ICinemaBuildingRepository>().Delete(cinemaBuilding);
-            await _unitOfWork.CompleteAsync();
+            await _unitOfWork.Repository<CinemaBuilding, ICinemaBuildingRepository>().DeleteAsync(cinemaBuilding);
         }
         catch (NotFoundException)
         {

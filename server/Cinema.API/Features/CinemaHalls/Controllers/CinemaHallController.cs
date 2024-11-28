@@ -55,7 +55,7 @@ public class CinemaHallController : ControllerBase
     {
         var createCinemaHallAppDto = _mapper.Map<CreateCinemaHallAppDto>(createCinemaHallApiDto);
         var createdCinemaHall = await _cinemaHallFacade.CreateAsync(createCinemaHallAppDto);
-        return CreatedAtAction(nameof(GetByIdAsync), new { cinemaHallId = createdCinemaHall.Id },
+        return CreatedAtAction(nameof(GetByIdAsync), new { id = createdCinemaHall.Id },
             _mapper.Map<CinemaHallApiResponseDto>(createdCinemaHall));
     }
 

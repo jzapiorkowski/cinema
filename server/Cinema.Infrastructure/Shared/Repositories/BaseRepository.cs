@@ -25,6 +25,8 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
         try
         {
             var createdEntity = await _dbContext.Set<TEntity>().AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
+            
             return createdEntity.Entity;
         }
         catch (DbUpdateException e) when (e.InnerException is PostgresException)
@@ -38,11 +40,12 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
         }
     }
 
-    public void Delete(TEntity entity)
+    public async Task DeleteAsync(TEntity entity)
     {
         try
         {
             _dbContext.Set<TEntity>().Remove(entity);
+            await _dbContext.SaveChangesAsync();
         }
         catch (Exception e)
         {
@@ -94,11 +97,13 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
         }
     }
 
-    public TEntity Update(TEntity entity)
+    public async Task<TEntity> UpdateAsync(TEntity entity)
     {
         try
         {
             var updatedEntity = _dbContext.Set<TEntity>().Update(entity);
+            await _dbContext.SaveChangesAsync();
+
             return updatedEntity.Entity;
         }
         catch (Exception e)

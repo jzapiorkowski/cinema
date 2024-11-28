@@ -25,7 +25,7 @@ internal class MovieService : IMovieService
         try
         {
             var createdMovie = await _movieRepository.CreateAsync(movie);
-            await _unitOfWork.CompleteAsync();
+
             return createdMovie;
         }
         catch (Exception e)
@@ -54,8 +54,7 @@ internal class MovieService : IMovieService
         {
             var movie = await GetByIdAsync(movieId);
 
-            _movieRepository.Delete(movie);
-            await _unitOfWork.CompleteAsync();
+            await _movieRepository.DeleteAsync(movie);
         }
         catch (NotFoundException)
         {
@@ -74,8 +73,7 @@ internal class MovieService : IMovieService
         {
             await GetByIdAsync(movie.Id, true, false);
 
-            var updatedMovie = _movieRepository.Update(movie);
-            await _unitOfWork.CompleteAsync();
+            var updatedMovie = await _movieRepository.UpdateAsync(movie);
 
             return updatedMovie;
         }

@@ -24,7 +24,6 @@ internal class CinemaHallService : ICinemaHallService
         {
             var createdCinemaHall =
                 await _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>().CreateAsync(cinemaHall);
-            await _unitOfWork.CompleteAsync();
 
             return createdCinemaHall;
         }
@@ -42,8 +41,7 @@ internal class CinemaHallService : ICinemaHallService
             await GetByIdAsync(cinemaHall.Id, true, false);
 
             var updatedCinemaHall =
-                _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>().Update(cinemaHall);
-            await _unitOfWork.CompleteAsync();
+                await _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>().UpdateAsync(cinemaHall);
 
             return updatedCinemaHall;
         }
@@ -73,8 +71,7 @@ internal class CinemaHallService : ICinemaHallService
         {
             var cinemaHall = await GetByIdAsync(id, false, false);
 
-            _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>().Delete(cinemaHall);
-            await _unitOfWork.CompleteAsync();
+            await _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>().DeleteAsync(cinemaHall);
         }
         catch (NotFoundException)
         {

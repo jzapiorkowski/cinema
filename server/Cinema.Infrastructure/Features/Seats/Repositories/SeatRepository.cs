@@ -1,6 +1,5 @@
 using Cinema.Domain.Features.Seats.Entities;
 using Cinema.Domain.Features.Seats.Repositories;
-using Cinema.Domain.Shared.Exceptions;
 using Cinema.Infrastructure.Core.Data;
 using Cinema.Infrastructure.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;

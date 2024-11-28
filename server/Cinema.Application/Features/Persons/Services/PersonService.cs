@@ -50,8 +50,7 @@ internal class PersonService : IPersonService
         {
             var person = await GetByIdAsync(id);
 
-            _unitOfWork.Repository<Person, IPersonRepository>().Delete(person);
-            await _unitOfWork.CompleteAsync();
+            await _unitOfWork.Repository<Person, IPersonRepository>().DeleteAsync(person);
         }
         catch (NotFoundException)
         {
@@ -69,7 +68,7 @@ internal class PersonService : IPersonService
         try
         {
             var createdPerson = await _unitOfWork.Repository<Person, IPersonRepository>().CreateAsync(person);
-            await _unitOfWork.CompleteAsync();
+
             return createdPerson;
         }
         catch (Exception e)
@@ -85,8 +84,7 @@ internal class PersonService : IPersonService
         {
             await GetByIdAsync(person.Id, true, false);
 
-            var updatedPerson = _unitOfWork.Repository<Person, IPersonRepository>().Update(person);
-            await _unitOfWork.CompleteAsync();
+            var updatedPerson = await _unitOfWork.Repository<Person, IPersonRepository>().UpdateAsync(person);
 
             return updatedPerson;
         }

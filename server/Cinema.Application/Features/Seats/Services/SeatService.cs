@@ -2,6 +2,7 @@ using Cinema.Application.Features.Seats.Interfaces;
 using Cinema.Application.Shared.Exceptions;
 using Cinema.Domain.Features.Seats.Entities;
 using Cinema.Domain.Features.Seats.Repositories;
+using Cinema.Domain.Shared.Exceptions;
 using Cinema.Domain.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -24,9 +25,12 @@ internal class SeatService : ISeatService
         {
             var createdSeat =
                 await _unitOfWork.Repository<Seat, ISeatRepository>().CreateAsync(seat);
-            await _unitOfWork.CompleteAsync();
 
             return createdSeat;
+        }
+        catch (DuplicateEntityException)
+        {
+            throw;
         }
         catch (Exception e)
         {
@@ -42,8 +46,7 @@ internal class SeatService : ISeatService
             await GetByIdAsync(seat.Id, true, false);
 
             var createdSeat =
-                _unitOfWork.Repository<Seat, ISeatRepository>().Update(seat);
-            await _unitOfWork.CompleteAsync();
+                await _unitOfWork.Repository<Seat, ISeatRepository>().UpdateAsync(seat);
 
             return createdSeat;
         }
@@ -60,8 +63,7 @@ internal class SeatService : ISeatService
         {
             var seat = await GetByIdAsync(id, false, false);
 
-            _unitOfWork.Repository<Seat, ISeatRepository>().Delete(seat);
-            await _unitOfWork.CompleteAsync();
+            await _unitOfWork.Repository<Seat, ISeatRepository>().DeleteAsync(seat);
         }
         catch (NotFoundException)
         {

@@ -46,7 +46,6 @@ internal class ScreeningService : IScreeningService
         {
             var createdScreening =
                 await _unitOfWork.Repository<Screening, IScreeningRepository>().CreateAsync(screening);
-            await _unitOfWork.CompleteAsync();
 
             return createdScreening;
         }
@@ -64,8 +63,7 @@ internal class ScreeningService : IScreeningService
             await GetByIdAsync(screening.Id, true, false);
 
             var updatedScreening =
-                _unitOfWork.Repository<Screening, IScreeningRepository>().Update(screening);
-            await _unitOfWork.CompleteAsync();
+                await _unitOfWork.Repository<Screening, IScreeningRepository>().UpdateAsync(screening);
 
             return updatedScreening;
         }

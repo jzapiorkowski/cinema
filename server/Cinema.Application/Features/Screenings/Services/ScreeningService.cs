@@ -101,11 +101,8 @@ internal class ScreeningService : IScreeningService
     {
         try
         {
-            var screening = await (includeAllRelations
-                ? _unitOfWork.Repository<Screening, IScreeningRepository>().GetWithDetailsByIdAsync(id,
-                    asNoTracking)
-                : _unitOfWork.Repository<Screening, IScreeningRepository>().GetByIdAsync(id,
-                    asNoTracking));
+            var screening = await _unitOfWork.Repository<Screening, IScreeningRepository>()
+                .GetByIdAsync(id, asNoTracking, includeAllRelations);
 
             if (screening == null)
             {

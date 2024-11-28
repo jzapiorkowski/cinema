@@ -20,29 +20,6 @@ internal class ScreeningRepository : BaseRepository<Screening>, IScreeningReposi
         _logger = logger;
     }
 
-
-    public async Task<Screening?> GetWithDetailsByIdAsync(int id, bool asNoTracking)
-    {
-        try
-        {
-            IQueryable<Screening> query = _dbContext.Screening;
-
-            if (asNoTracking)
-                query = query.AsNoTracking();
-            
-            return await query
-                .Include(s => s.Movie)
-                .Include(s => s.CinemaHall)
-                .FirstOrDefaultAsync(s => s.Id == id);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "An error occurred while retrieving the screening with id {id}.",
-                id);
-            throw new DatabaseException($"An error occurred while retrieving the screening with id {id}.", e);
-        }
-    }
-
     public async Task<IEnumerable<Screening>> GetAllWithDetailsAsync(DateTime date)
     {
         try
@@ -71,5 +48,12 @@ internal class ScreeningRepository : BaseRepository<Screening>, IScreeningReposi
             _logger.LogError(e, "An error occurred while checking if screening time slot is available.");
             throw new DatabaseException($"An error occurred while checking if screening time slot is available.", e);
         }
+    }
+
+    protected override IQueryable<Screening> BuildIncludesQuery(IQueryable<Screening> query)
+    {
+        return query
+            .Include(s => s.Movie)
+            .Include(s => s.CinemaHall);
     }
 }

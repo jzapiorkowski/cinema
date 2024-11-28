@@ -20,28 +20,6 @@ internal class MovieRepository : BaseRepository<Movie>, IMovieRepository
         _logger = logger;
     }
 
-    public async Task<Movie?> GetWithDetailsByIdAsync(int id, bool asNoTracking)
-    {
-        try
-        {
-            IQueryable<Movie> query = _dbContext.Movie;
-
-            if (asNoTracking)
-                query = query.AsNoTracking();
-
-            return await query
-                .Include(m => m.MovieActors).ThenInclude(ma => ma.Actor)
-                .Include(m => m.DirectedBy)
-                .SingleOrDefaultAsync(m => m.Id == id);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "An error occurred while retrieving the movie with id {id}.",
-                id);
-            throw new DatabaseException($"An error occurred while retrieving the movie with id {id}.", e);
-        }
-    }
-
     public async Task<List<Movie>> GetByIdsAsync(IEnumerable<int> ids)
     {
         try
@@ -54,5 +32,12 @@ internal class MovieRepository : BaseRepository<Movie>, IMovieRepository
                 ids);
             throw new DatabaseException($"An error occurred while retrieving the movies with ids {ids}.", e);
         }
+    }
+
+    protected override IQueryable<Movie> BuildIncludesQuery(IQueryable<Movie> query)
+    {
+        return query
+            .Include(m => m.MovieActors).ThenInclude(ma => ma.Actor)
+            .Include(m => m.DirectedBy);
     }
 }

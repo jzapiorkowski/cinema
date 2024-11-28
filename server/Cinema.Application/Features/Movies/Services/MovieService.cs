@@ -108,9 +108,8 @@ internal class MovieService : IMovieService
     {
         try
         {
-            var movie = await (includeAllRelations
-                ? _movieRepository.GetWithDetailsByIdAsync(id, asNoTracking)
-                : _movieRepository.GetByIdAsync(id, asNoTracking));
+            var movie = await
+                _movieRepository.GetByIdAsync(id, asNoTracking, includeAllRelations);
 
             if (movie == null)
             {

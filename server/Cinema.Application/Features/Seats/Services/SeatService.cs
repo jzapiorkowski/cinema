@@ -83,9 +83,8 @@ internal class SeatService : ISeatService
     {
         try
         {
-            var seat = await (includeAllRelations
-                ? _unitOfWork.Repository<Seat, ISeatRepository>().GetWithDetailsByIdAsync(id, asNoTracking)
-                : _unitOfWork.Repository<Seat, ISeatRepository>().GetByIdAsync(id, asNoTracking));
+            var seat = await _unitOfWork.Repository<Seat, ISeatRepository>()
+                .GetByIdAsync(id, asNoTracking, includeAllRelations);
 
             if (seat == null)
             {

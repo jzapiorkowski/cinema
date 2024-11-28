@@ -34,24 +34,10 @@ internal class PersonRepository : BaseRepository<Person>, IPersonRepository
         }
     }
 
-    public async Task<Person?> GetWithDetailsByIdAsync(int id, bool asNoTracking)
+    protected override IQueryable<Person> BuildIncludesQuery(IQueryable<Person> query)
     {
-        try
-        {
-            IQueryable<Person> query = _dbContext.Person;
-
-            if (asNoTracking)
-                query = query.AsNoTracking();
-
-            return await query
-                .Include(p => p.MovieActors).ThenInclude(ma => ma.Movie).ThenInclude(m => m.DirectedBy)
-                .Include(p => p.DirectedMovies)
-                .SingleOrDefaultAsync(p => p.Id == id);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        return query
+            .Include(p => p.MovieActors).ThenInclude(ma => ma.Movie).ThenInclude(m => m.DirectedBy)
+            .Include(p => p.DirectedMovies);
     }
 }

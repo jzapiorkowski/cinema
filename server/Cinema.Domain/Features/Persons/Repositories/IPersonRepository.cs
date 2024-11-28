@@ -6,5 +6,4 @@ namespace Cinema.Domain.Features.Persons.Repositories;
 public interface IPersonRepository : IBaseRepository<Person>
 {
     public Task<List<Person>> GetByIdsAsync(IEnumerable<int> ids);
-    public Task<Person?> GetWithDetailsByIdAsync(int id, bool asNoTracking);
 }

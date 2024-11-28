@@ -96,11 +96,9 @@ internal class CinemaHallService : ICinemaHallService
     {
         try
         {
-            var cinemaHall = await (includeAllRelations
-                ? _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>()
-                    .GetWithDetailsByIdAsync(id, asNoTracking)
-                : _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>()
-                    .GetByIdAsync(id, asNoTracking));
+            var cinemaHall = await
+                _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>()
+                    .GetByIdAsync(id, asNoTracking, includeAllRelations);
 
             if (cinemaHall == null)
             {

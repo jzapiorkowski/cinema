@@ -17,6 +17,8 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
         _dbContext = dbContext;
         _logger = logger;
     }
+    
+    protected abstract IQueryable<TEntity> BuildIncludesQuery(IQueryable<TEntity> query);
 
     public async Task<TEntity> CreateAsync(TEntity entity)
     {
@@ -49,7 +51,7 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
         }
     }
 
-    public async Task<List<TEntity>> GetAllAsync(bool asNoTracking = false)
+    public async Task<List<TEntity>> GetAllAsync(bool asNoTracking = true, bool includeAllRelations = false)
     {
         try
         {
@@ -58,6 +60,8 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
             if (asNoTracking)
                 query = query.AsNoTracking();
 
+            if (includeAllRelations) 
+                query = BuildIncludesQuery(query);
 
             return await query.ToListAsync();
         }
@@ -68,7 +72,7 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
         }
     }
 
-    public async Task<TEntity?> GetByIdAsync(int id, bool asNoTracking = false)
+    public async Task<TEntity?> GetByIdAsync(int id, bool asNoTracking = false, bool includeAllRelations = false)
     {
         try
         {
@@ -76,6 +80,9 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
 
             if (asNoTracking)
                 query = query.AsNoTracking();
+            
+            if (includeAllRelations) 
+                query = BuildIncludesQuery(query);
 
             return await query.FirstOrDefaultAsync(entity => EF.Property<object>(entity, "Id").Equals(id));
         }

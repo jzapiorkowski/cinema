@@ -84,7 +84,7 @@ internal class PersonService : IPersonService
         try
         {
             await GetByIdAsync(person.Id, true, false);
-            
+
             var updatedPerson = _unitOfWork.Repository<Person, IPersonRepository>().Update(person);
             await _unitOfWork.CompleteAsync();
 
@@ -107,11 +107,9 @@ internal class PersonService : IPersonService
     {
         try
         {
-            var person = await (includeAllRelations
-                    ? _unitOfWork.Repository<Person, IPersonRepository>().GetWithDetailsByIdAsync(id, asNoTracking)
-                    : _unitOfWork.Repository<Person, IPersonRepository>().GetByIdAsync(id, asNoTracking)
-                );
-            
+            var person = await _unitOfWork.Repository<Person, IPersonRepository>()
+                .GetByIdAsync(id, asNoTracking, includeAllRelations);
+
             if (person == null)
             {
                 throw new NotFoundException("person", id);

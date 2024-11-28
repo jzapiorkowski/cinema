@@ -66,7 +66,7 @@ internal class CinemaBuildingService : ICinemaBuildingService
             throw new AppException($"An error occurred while deleting the cinema building with id {id}.", e);
         }
     }
-    
+
     public async Task<CinemaBuilding?> GetByIdAsync(int id)
     {
         return await GetByIdAsync(id, true, true);
@@ -77,11 +77,8 @@ internal class CinemaBuildingService : ICinemaBuildingService
         try
         {
             var cinemaBuilding =
-                await (includeAllRelations
-                    ? _unitOfWork.Repository<CinemaBuilding, ICinemaBuildingRepository>()
-                        .GetWithDetailsByIdAsync(id, asNoTracking)
-                    : _unitOfWork.Repository<CinemaBuilding, ICinemaBuildingRepository>()
-                        .GetByIdAsync(id, asNoTracking));
+                await _unitOfWork.Repository<CinemaBuilding, ICinemaBuildingRepository>()
+                    .GetByIdAsync(id, asNoTracking, includeAllRelations);
 
             if (cinemaBuilding == null)
             {

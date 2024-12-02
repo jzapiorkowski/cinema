@@ -1,4 +1,5 @@
 using Cinema.Domain.Features.Movies.Entities;
+using Cinema.Infrastructure.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -26,7 +27,9 @@ internal class MovieConfiguration : IEntityTypeConfiguration<Movie>
             .HasOne(m => m.DirectedBy)
             .WithMany(p => p.DirectedMovies)
             .HasForeignKey(m => m.DirectorId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired()
+            .HasConstraintName(DatabaseConstraints.FKMovieDirector);
         builder
             .HasMany(m => m.Screenings)
             .WithOne(s => s.Movie)

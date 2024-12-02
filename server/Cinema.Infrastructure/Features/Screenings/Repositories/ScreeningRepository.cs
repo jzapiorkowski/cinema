@@ -22,32 +22,22 @@ internal class ScreeningRepository : BaseRepository<Screening>, IScreeningReposi
 
     public async Task<IEnumerable<Screening>> GetAllWithDetailsAsync(DateTime date)
     {
-        try
+        return await ExecuteDbOperation(async () =>
         {
             return await _dbContext.Screening.AsNoTracking().Where(s => s.StartTime.Date == date.Date)
                 .Include(s => s.Movie).Include(s => s.CinemaHall).ToListAsync();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "An error occurred while retrieving all screenings.");
-            throw new DatabaseException($"An error occurred while retrieving all screenings.", e);
-        }
+        }, "retrieving all screenings with details");
     }
 
     public async Task<bool> IsTimeSlotAvailableAsync(int cinemaHallId, DateTime startTime, DateTime endTime)
     {
-        try
+        return await ExecuteDbOperation(async () =>
         {
             return !await _dbContext.Screening
                 .Where(s => s.CinemaHallId == cinemaHallId)
                 .AnyAsync(s =>
                     s.StartTime < endTime && s.StartTime.AddMinutes(s.Movie.Duration.TotalMinutes) > startTime);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "An error occurred while checking if screening time slot is available.");
-            throw new DatabaseException($"An error occurred while checking if screening time slot is available.", e);
-        }
+        }, "checking if screening time slot is available");
     }
 
     protected override IQueryable<Screening> BuildIncludesQuery(IQueryable<Screening> query)

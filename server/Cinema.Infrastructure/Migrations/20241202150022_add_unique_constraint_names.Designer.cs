@@ -3,6 +3,7 @@ using System;
 using Cinema.Infrastructure.Core.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cinema.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241202150022_add_unique_constraint_names")]
+    partial class add_unique_constraint_names
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,7 +70,7 @@ namespace Cinema.Infrastructure.Migrations
 
                     b.HasIndex("CinemaBuildingId", "Number")
                         .IsUnique()
-                        .HasDatabaseName("IX_UQ_cinema_hall_cinema_building_id_number");
+                        .HasDatabaseName("IX_UQ_CinemaHall_CinemaBuildingId_Number");
 
                     b.ToTable("cinema_hall", (string)null);
                 });
@@ -225,7 +228,7 @@ namespace Cinema.Infrastructure.Migrations
 
                     b.HasIndex("CinemaHallId", "Row", "Column")
                         .IsUnique()
-                        .HasDatabaseName("IX_UQ_seat_cinema_hall_row_column");
+                        .HasDatabaseName("IX_UQ_Seat_CinemaHall_Row_Column");
 
                     b.ToTable("seat", (string)null);
                 });
@@ -236,8 +239,7 @@ namespace Cinema.Infrastructure.Migrations
                         .WithMany("CinemaHalls")
                         .HasForeignKey("CinemaBuildingId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("FK_cinema_hall_cinema_building_id");
+                        .IsRequired();
 
                     b.Navigation("CinemaBuilding");
                 });
@@ -248,15 +250,13 @@ namespace Cinema.Infrastructure.Migrations
                         .WithMany("MovieActors")
                         .HasForeignKey("ActorId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_movie_actor_actor_id");
+                        .IsRequired();
 
                     b.HasOne("Cinema.Domain.Features.Movies.Entities.Movie", "Movie")
                         .WithMany("MovieActors")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_movie_actor_movie_id");
+                        .IsRequired();
 
                     b.Navigation("Actor");
 
@@ -269,8 +269,7 @@ namespace Cinema.Infrastructure.Migrations
                         .WithMany("DirectedMovies")
                         .HasForeignKey("DirectorId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("FK_movie_director_id");
+                        .IsRequired();
 
                     b.Navigation("DirectedBy");
                 });
@@ -281,15 +280,13 @@ namespace Cinema.Infrastructure.Migrations
                         .WithMany("Screenings")
                         .HasForeignKey("CinemaHallId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_screening_cinema_hall_id");
+                        .IsRequired();
 
                     b.HasOne("Cinema.Domain.Features.Movies.Entities.Movie", "Movie")
                         .WithMany("Screenings")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("FK_screening_movie_id");
+                        .IsRequired();
 
                     b.Navigation("CinemaHall");
 
@@ -302,8 +299,7 @@ namespace Cinema.Infrastructure.Migrations
                         .WithMany("Seats")
                         .HasForeignKey("CinemaHallId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_seat_cinema_hall_id");
+                        .IsRequired();
 
                     b.Navigation("CinemaHall");
                 });

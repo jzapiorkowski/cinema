@@ -1,4 +1,5 @@
 using Cinema.Domain.Features.Seats.Entities;
+using Cinema.Infrastructure.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -20,8 +21,12 @@ internal class SeatConfiguration : IEntityTypeConfiguration<Seat>
         builder.HasOne(s => s.CinemaHall)
             .WithMany(ch => ch.Seats)
             .HasForeignKey(s => s.CinemaHallId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired()
+            .HasConstraintName(DatabaseConstraints.FKSeatCinemaHall);
 
-        builder.HasIndex(s => new { s.CinemaHallId, s.Row, s.Column }).IsUnique();
+        builder.HasIndex(s => new { s.CinemaHallId, s.Row, s.Column })
+            .IsUnique()
+            .HasDatabaseName(DatabaseConstraints.UQSeatCinemaHallRowColumn);
     }
 }

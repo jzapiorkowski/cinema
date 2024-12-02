@@ -2,6 +2,7 @@ using Cinema.Application.Features.Movies.Interfaces;
 using Cinema.Application.Shared.Exceptions;
 using Cinema.Domain.Features.Movies.Entities;
 using Cinema.Domain.Features.Movies.Interfaces;
+using Cinema.Domain.Shared.Exceptions;
 using Cinema.Domain.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -57,6 +58,10 @@ internal class MovieService : IMovieService
             await _movieRepository.DeleteAsync(movie);
         }
         catch (NotFoundException)
+        {
+            throw;
+        }
+        catch (EntityReferenceViolationException)
         {
             throw;
         }

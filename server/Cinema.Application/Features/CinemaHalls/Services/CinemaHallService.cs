@@ -2,6 +2,7 @@ using Cinema.Application.Features.CinemaHalls.Interfaces;
 using Cinema.Application.Shared.Exceptions;
 using Cinema.Domain.Features.CinemaHalls.Entities;
 using Cinema.Domain.Features.CinemaHalls.Repositories;
+using Cinema.Domain.Shared.Exceptions;
 using Cinema.Domain.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -27,6 +28,10 @@ internal class CinemaHallService : ICinemaHallService
 
             return createdCinemaHall;
         }
+        catch (DuplicateEntityException)
+        {
+            throw;
+        }
         catch (Exception e)
         {
             _logger.LogError(e, "An error occurred while creating the cinema hall.");
@@ -44,6 +49,14 @@ internal class CinemaHallService : ICinemaHallService
                 await _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>().UpdateAsync(cinemaHall);
 
             return updatedCinemaHall;
+        }
+        catch (NotFoundException)
+        {
+            throw;
+        }
+        catch (DuplicateEntityException)
+        {
+            throw;
         }
         catch (Exception e)
         {
@@ -74,6 +87,10 @@ internal class CinemaHallService : ICinemaHallService
             await _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>().DeleteAsync(cinemaHall);
         }
         catch (NotFoundException)
+        {
+            throw;
+        }
+        catch (EntityReferenceViolationException)
         {
             throw;
         }

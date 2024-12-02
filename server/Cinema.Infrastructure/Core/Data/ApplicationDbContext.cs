@@ -12,6 +12,7 @@ using Cinema.Infrastructure.Features.Movies.ModelConfigurations;
 using Cinema.Infrastructure.Features.Persons.ModelConfigurations;
 using Cinema.Infrastructure.Features.Screenings.ModelConfigurations;
 using Cinema.Infrastructure.Features.Seats.ModelConfigurations;
+using EntityFramework.Exceptions.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Infrastructure.Core.Data;
@@ -28,7 +29,7 @@ internal class ApplicationDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(_config.GetDbConnectionString());
+        optionsBuilder.UseNpgsql(_config.GetDbConnectionString()).UseExceptionProcessor();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

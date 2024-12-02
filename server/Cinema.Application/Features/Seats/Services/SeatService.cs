@@ -50,6 +50,10 @@ internal class SeatService : ISeatService
 
             return createdSeat;
         }
+        catch (DuplicateEntityException)
+        {
+            throw;
+        }
         catch (Exception e)
         {
             _logger.LogError(e, "An error occurred while updating seat");

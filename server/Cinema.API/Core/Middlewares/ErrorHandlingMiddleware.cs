@@ -49,6 +49,11 @@ public class ErrorHandlingMiddleware
             _logger.LogError("Duplicate entity error: {Message}", e.Message);
             await HandleExceptionAsync(context, HttpStatusCode.Conflict, "Conflict", e.Message);
         }
+        catch (EntityReferenceViolationException e)
+        {
+            _logger.LogError("Entity reference violation error: {Message}", e.Message);
+            await HandleExceptionAsync(context, HttpStatusCode.Conflict, "Conflict", e.Message);
+        }
         catch (Exception e)
         {
             _logger.LogError(e, "An unexpected error occurred.");

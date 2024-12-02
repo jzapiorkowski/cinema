@@ -1,6 +1,8 @@
 using Cinema.Domain.Shared.Exceptions;
 using Cinema.Domain.Shared.Interfaces;
 using Cinema.Infrastructure.Core.Data;
+using Cinema.Infrastructure.Shared.Exceptions;
+using EntityFramework.Exceptions.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Npgsql;
@@ -17,99 +19,110 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
         _dbContext = dbContext;
         _logger = logger;
     }
-    
+
     protected abstract IQueryable<TEntity> BuildIncludesQuery(IQueryable<TEntity> query);
 
     public async Task<TEntity> CreateAsync(TEntity entity)
     {
-        try
+        return await ExecuteDbOperation(async () =>
         {
             var createdEntity = await _dbContext.Set<TEntity>().AddAsync(entity);
             await _dbContext.SaveChangesAsync();
-            
             return createdEntity.Entity;
-        }
-        catch (DbUpdateException e) when (e.InnerException is PostgresException)
-        {
-            throw new DuplicateEntityException(e.Message, e.InnerException);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "An error occurred while creating the {entityName}.", GetEntityName());
-            throw new DatabaseException($"An error occurred while creating the {GetEntityName()}.", e);
-        }
+        }, "creating");
     }
 
     public async Task DeleteAsync(TEntity entity)
     {
-        try
+        await ExecuteDbOperation(async () =>
         {
             _dbContext.Set<TEntity>().Remove(entity);
             await _dbContext.SaveChangesAsync();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "An error occurred while deleting the {entityName}.", GetEntityName());
-            throw new DatabaseException($"An error occurred while deleting the {GetEntityName()}.", e);
-        }
+            return Task.CompletedTask;
+        }, "deleting");
     }
 
     public async Task<List<TEntity>> GetAllAsync(bool asNoTracking = true, bool includeAllRelations = false)
     {
-        try
+        return await ExecuteDbOperation(async () =>
         {
             IQueryable<TEntity> query = _dbContext.Set<TEntity>();
 
             if (asNoTracking)
                 query = query.AsNoTracking();
 
-            if (includeAllRelations) 
+            if (includeAllRelations)
                 query = BuildIncludesQuery(query);
 
             return await query.ToListAsync();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "An error occurred while retrieving all {entityName}.", GetEntityName());
-            throw new DatabaseException($"An error occurred while retrieving all {GetEntityName()}.", e);
-        }
+        }, "retrieving all");
     }
 
     public async Task<TEntity?> GetByIdAsync(int id, bool asNoTracking = false, bool includeAllRelations = false)
     {
-        try
-        {
-            IQueryable<TEntity> query = _dbContext.Set<TEntity>();
+        return await ExecuteDbOperation(async () =>
+            {
+                IQueryable<TEntity> query = _dbContext.Set<TEntity>();
 
-            if (asNoTracking)
-                query = query.AsNoTracking();
-            
-            if (includeAllRelations) 
-                query = BuildIncludesQuery(query);
+                if (asNoTracking)
+                    query = query.AsNoTracking();
 
-            return await query.FirstOrDefaultAsync(entity => EF.Property<object>(entity, "Id").Equals(id));
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "An error occurred while retrieving the {entityName} with id {id}.", GetEntityName(),
-                id);
-            throw new DatabaseException($"An error occurred while retrieving the {GetEntityName()} with id {id}.", e);
-        }
+                if (includeAllRelations)
+                    query = BuildIncludesQuery(query);
+
+                return await query.FirstOrDefaultAsync(entity => EF.Property<object>(entity, "Id").Equals(id));
+            }, $"retrieving by id {id}");
     }
 
     public async Task<TEntity> UpdateAsync(TEntity entity)
     {
-        try
+        return await ExecuteDbOperation(async () =>
         {
             var updatedEntity = _dbContext.Set<TEntity>().Update(entity);
             await _dbContext.SaveChangesAsync();
-
             return updatedEntity.Entity;
+        }, "updating");
+    }
+
+    protected async Task<T> ExecuteDbOperation<T>(Func<Task<T>> operation, string operationDescription)
+    {
+        try
+        {
+            return await operation();
+        }
+        catch (UniqueConstraintException e)
+        {
+            var postgresEx = e.InnerException as PostgresException;
+            _logger.LogError(e, "Constraint violation ({constraintName}) while {operation} the {entityName}.",
+                postgresEx.ConstraintName, operationDescription, GetEntityName());
+
+            if (postgresEx is { ConstraintName: not null })
+            {
+                var errorMessage = ConstraintErrorMessages.GetErrorMessage(postgresEx.ConstraintName);
+                throw new DuplicateEntityException(errorMessage, e);
+            }
+
+            throw new DuplicateEntityException($"A unique constraint violation occurred: {e.Message}", e);
+        }
+        catch (ReferenceConstraintException e)
+        {
+            var postgresEx = e.InnerException as PostgresException;
+            _logger.LogError(e, "Reference constraint violation while {operation} the {entityName}.", operationDescription,
+                GetEntityName());
+
+            if (postgresEx is { ConstraintName: not null })
+            {
+                var errorMessage = ConstraintErrorMessages.GetErrorMessage(postgresEx.ConstraintName);
+                throw new EntityReferenceViolationException(errorMessage, e);
+            }
+
+            throw new EntityReferenceViolationException($"A reference constraint violation occurred: {e.Message}", e);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "An error occurred while updating the {entityName}.", GetEntityName());
-            throw new DatabaseException($"An error occurred while updating the {GetEntityName()}.", e);
+            _logger.LogError(e, "An error occurred while {operation} the {entityName}.",
+                operationDescription, GetEntityName());
+            throw new DatabaseException($"An error occurred while {operationDescription} the {GetEntityName()}.", e);
         }
     }
 

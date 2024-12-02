@@ -1,4 +1,5 @@
 using Cinema.Domain.Features.MovieActors.Entities;
+using Cinema.Infrastructure.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,12 +20,16 @@ internal class MovieActorConfiguration : IEntityTypeConfiguration<MovieActor>
             .HasOne(ma => ma.Movie)
             .WithMany(m => m.MovieActors)
             .HasForeignKey(ma => ma.MovieId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired()
+            .HasConstraintName(DatabaseConstraints.FKMovieActorMovie);
 
         builder
             .HasOne(ma => ma.Actor)
             .WithMany(a => a.MovieActors)
             .HasForeignKey(a => a.ActorId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired()
+            .HasConstraintName(DatabaseConstraints.FKMovieActorActor);
     }
 }

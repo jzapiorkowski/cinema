@@ -1,4 +1,5 @@
 using Cinema.Domain.Features.Screenings.Entities;
+using Cinema.Infrastructure.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,10 +20,14 @@ internal class ScreeningConfiguration : IEntityTypeConfiguration<Screening>
         builder.HasOne(s => s.Movie)
             .WithMany(m => m.Screenings)
             .HasForeignKey(s => s.MovieId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired()
+            .HasConstraintName(DatabaseConstraints.FKScreeningMovie);
         builder.HasOne(s => s.CinemaHall)
             .WithMany(ch => ch.Screenings)
             .HasForeignKey(s => s.CinemaHallId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired()
+            .HasConstraintName(DatabaseConstraints.FKScreeningCinemaHall);
     }
 }

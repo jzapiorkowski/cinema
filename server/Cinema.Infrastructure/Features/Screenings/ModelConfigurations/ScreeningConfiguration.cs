@@ -10,10 +10,11 @@ internal class ScreeningConfiguration : IEntityTypeConfiguration<Screening>
     {
         builder.ToTable("screening");
         builder.HasKey(s => s.Id);
-        builder.Property(s => s.Id).HasColumnName("id");
-        builder.Property(s => s.StartTime).HasColumnName("start_time").HasColumnType("timestamp with time zone");
-        builder.Property(s => s.MovieId).HasColumnName("movie_id");
-        builder.Property(s => s.CinemaHallId).HasColumnName("cinema_hall_id");
+        builder.Property(s => s.Id).HasColumnName("id").ValueGeneratedOnAdd();
+
+        builder.Property(s => s.StartTime).HasColumnName("start_time").HasColumnType("timestamp with time zone").IsRequired();
+        builder.Property(s => s.MovieId).HasColumnName("movie_id").IsRequired();
+        builder.Property(s => s.CinemaHallId).HasColumnName("cinema_hall_id").IsRequired();
 
         builder.HasOne(s => s.Movie)
             .WithMany(m => m.Screenings)

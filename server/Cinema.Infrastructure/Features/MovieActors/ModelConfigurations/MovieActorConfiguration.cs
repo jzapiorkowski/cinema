@@ -10,9 +10,10 @@ internal class MovieActorConfiguration : IEntityTypeConfiguration<MovieActor>
     {
         builder.ToTable("movie_actor");
         builder.HasKey(ma => new { ma.MovieId, ma.ActorId });
-        builder.Property(ma => ma.MovieId).HasColumnName("movie_id");
-        builder.Property(ma => ma.ActorId).HasColumnName("actor_id");
-        builder.Property(ma => ma.Role).HasColumnName("role");
+        
+        builder.Property(ma => ma.MovieId).HasColumnName("movie_id").IsRequired();
+        builder.Property(ma => ma.ActorId).HasColumnName("actor_id").IsRequired();
+        builder.Property(ma => ma.Role).HasColumnName("role").HasMaxLength(255).IsRequired();
 
         builder
             .HasOne(ma => ma.Movie)

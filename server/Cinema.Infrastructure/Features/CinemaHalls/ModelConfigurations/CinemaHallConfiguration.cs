@@ -10,10 +10,12 @@ internal class CinemaHallConfiguration : IEntityTypeConfiguration<CinemaHall>
     {
         builder.ToTable("cinema_hall");
         builder.HasKey(ch => ch.Id);
-        builder.Property(ch => ch.Id).HasColumnName("id");
-        builder.Property(ch => ch.Number).HasColumnName("number");
-        builder.Property(ch => ch.CinemaBuildingId).HasColumnName("cinema_building_id");
-        builder.Property(ch => ch.Capacity).HasColumnName("capacity");
+
+        builder.Property(ch => ch.Id).HasColumnName("id").ValueGeneratedOnAdd();
+
+        builder.Property(ch => ch.Number).HasColumnName("number").HasColumnType("integer").IsRequired();
+        builder.Property(ch => ch.CinemaBuildingId).HasColumnName("cinema_building_id").IsRequired();
+        builder.Property(ch => ch.Capacity).HasColumnName("capacity").HasColumnType("integer").IsRequired();
 
         builder.HasMany(ch => ch.Screenings)
             .WithOne(s => s.CinemaHall)

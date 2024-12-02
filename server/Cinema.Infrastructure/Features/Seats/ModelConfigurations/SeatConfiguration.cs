@@ -11,10 +11,11 @@ internal class SeatConfiguration : IEntityTypeConfiguration<Seat>
         builder.ToTable("seat");
         builder.HasKey(s => s.Id);
         builder.Property(s => s.Id).HasColumnName("id").ValueGeneratedOnAdd();
-        builder.Property(s => s.Row).HasColumnName("row");
-        builder.Property(s => s.Column).HasColumnName("column");
-        builder.Property(s => s.CinemaHallId).HasColumnName("cinema_hall_id");
-        builder.Property(s => s.Type).HasColumnName("type").HasConversion<string>();
+
+        builder.Property(s => s.Row).HasColumnName("row").HasColumnType("integer").IsRequired();
+        builder.Property(s => s.Column).HasColumnName("column").HasColumnType("integer").IsRequired();
+        builder.Property(s => s.CinemaHallId).HasColumnName("cinema_hall_id").IsRequired();
+        builder.Property(s => s.Type).HasColumnName("type").HasConversion<string>().IsRequired();
 
         builder.HasOne(s => s.CinemaHall)
             .WithMany(ch => ch.Seats)

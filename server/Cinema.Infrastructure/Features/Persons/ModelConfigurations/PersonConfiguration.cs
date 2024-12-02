@@ -10,10 +10,11 @@ internal class PersonConfiguration : IEntityTypeConfiguration<Person>
     {
         builder.ToTable("person");
         builder.HasKey(p => p.Id);
-        builder.Property(p => p.Id).HasColumnName("id");
-        builder.Property(p => p.FirstName).HasColumnName("first_name");
-        builder.Property(p => p.LastName).HasColumnName("last_name");
-        builder.Property(p => p.BirthDate).HasColumnName("birth_date").HasColumnType("date");
+        builder.Property(p => p.Id).HasColumnName("id").ValueGeneratedOnAdd();
+
+        builder.Property(p => p.FirstName).HasColumnName("first_name").HasMaxLength(100).IsRequired();
+        builder.Property(p => p.LastName).HasColumnName("last_name").HasMaxLength(100).IsRequired();
+        builder.Property(p => p.BirthDate).HasColumnName("birth_date").HasColumnType("date").IsRequired();
 
         builder
             .HasMany(p => p.MovieActors)

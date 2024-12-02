@@ -10,7 +10,9 @@ internal class CinemaBuildingConfiguration : IEntityTypeConfiguration<CinemaBuil
     {
         builder.ToTable("cinema_building");
         builder.HasKey(cb => cb.Id);
-        builder.Property(cb => cb.Address).HasColumnName("address");
+        builder.Property(cb => cb.Id).HasColumnName("id").ValueGeneratedOnAdd();
+
+        builder.Property(cb => cb.Address).HasColumnName("address").HasMaxLength(255).IsRequired();
         
         builder
             .HasMany(cb => cb.CinemaHalls)

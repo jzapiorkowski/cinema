@@ -1,7 +1,9 @@
 using Cinema.Application.Features.Persons.Interfaces;
 using Cinema.Application.Shared.Exceptions;
+using Cinema.Domain.Core.Pagination;
 using Cinema.Domain.Features.Persons.Entities;
 using Cinema.Domain.Features.Persons.Repositories;
+using Cinema.Domain.Shared.Exceptions;
 using Cinema.Domain.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -31,11 +33,15 @@ internal class PersonService : IPersonService
         }
     }
 
-    public async Task<IEnumerable<Person>> GetAllAsync()
+    public async Task<PaginationResponse<Person>> GetAllAsync(PaginationRequest paginationRequest)
     {
         try
         {
-            return await _unitOfWork.Repository<Person, IPersonRepository>().GetAllAsync();
+            return await _unitOfWork.Repository<Person, IPersonRepository>().GetAllAsync(paginationRequest);
+        }
+        catch (InvalidSortByException)
+        {
+            throw;
         }
         catch (Exception e)
         {

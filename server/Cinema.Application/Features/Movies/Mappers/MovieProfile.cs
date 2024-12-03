@@ -1,5 +1,6 @@
 using AutoMapper;
 using Cinema.Application.Features.Movies.Dto;
+using Cinema.Domain.Core.Pagination;
 using Cinema.Domain.Features.Movies.Entities;
 using Cinema.Domain.Features.Persons.Entities;
 
@@ -10,6 +11,17 @@ internal class MovieProfile : Profile
     public MovieProfile()
     {
         CreateMap<Movie, MovieAppResponseDto>();
+
+        CreateMap<PaginationResponse<Movie>, PaginationResponse<MovieAppResponseDto>>()
+            .ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data.Select(m => new MovieAppResponseDto
+            {
+                Id = m.Id,
+                Title = m.Title,
+                Genre = m.Genre,
+                ReleaseDate = m.ReleaseDate,
+                Duration = m.Duration
+            })));
+        
         CreateMap<Movie, MovieWithDetailsAppResponseDto>()
             .ForMember(dest => dest.Director, opt => opt.MapFrom(src => new MovieDirectorAppResponseDto
             {

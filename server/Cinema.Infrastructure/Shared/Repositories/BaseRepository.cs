@@ -1,6 +1,8 @@
+using Cinema.Domain.Core.Pagination;
 using Cinema.Domain.Shared.Exceptions;
 using Cinema.Domain.Shared.Interfaces;
 using Cinema.Infrastructure.Core.Data;
+using Cinema.Infrastructure.Core.Pagination;
 using Cinema.Infrastructure.Shared.Exceptions;
 using EntityFramework.Exceptions.Common;
 using Microsoft.EntityFrameworkCore;
@@ -42,7 +44,9 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
         }, "deleting");
     }
 
-    public async Task<List<TEntity>> GetAllAsync(bool asNoTracking = true, bool includeAllRelations = false)
+    public async Task<PaginationResponse<TEntity>> GetAllAsync(PaginationRequest paginationRequest,
+        bool asNoTracking = true,
+        bool includeAllRelations = false)
     {
         return await ExecuteDbOperation(async () =>
         {
@@ -54,7 +58,7 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
             if (includeAllRelations)
                 query = BuildIncludesQuery(query);
 
-            return await query.ToListAsync();
+            return await Paginator.PaginateAsync(query, paginationRequest);
         }, "retrieving all");
     }
 
@@ -107,7 +111,8 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
         catch (ReferenceConstraintException e)
         {
             var postgresEx = e.InnerException as PostgresException;
-            _logger.LogError(e, "Reference constraint violation while {operation} the {entityName}.", operationDescription,
+            _logger.LogError(e, "Reference constraint violation while {operation} the {entityName}.",
+                operationDescription,
                 GetEntityName());
 
             if (postgresEx is { ConstraintName: not null })
@@ -117,6 +122,12 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
             }
 
             throw new EntityReferenceViolationException($"A reference constraint violation occurred: {e.Message}", e);
+        }
+        catch (InvalidSortByException e)
+        {
+            _logger.LogError(e, "Invalid SortBy property while {operation} the {entityName}.",
+                operationDescription, GetEntityName());
+            throw;
         }
         catch (Exception e)
         {

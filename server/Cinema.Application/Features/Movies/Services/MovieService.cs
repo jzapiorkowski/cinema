@@ -1,5 +1,6 @@
 using Cinema.Application.Features.Movies.Interfaces;
 using Cinema.Application.Shared.Exceptions;
+using Cinema.Domain.Core.Pagination;
 using Cinema.Domain.Features.Movies.Entities;
 using Cinema.Domain.Features.Movies.Interfaces;
 using Cinema.Domain.Shared.Exceptions;
@@ -36,11 +37,15 @@ internal class MovieService : IMovieService
         }
     }
 
-    public async Task<IEnumerable<Movie>> GetAllAsync()
+    public async Task<PaginationResponse<Movie>> GetAllAsync(PaginationRequest paginationRequest)
     {
         try
         {
-            return await _movieRepository.GetAllAsync();
+            return await _movieRepository.GetAllAsync(paginationRequest);
+        }
+        catch (InvalidSortByException)
+        {
+            throw;
         }
         catch (Exception e)
         {

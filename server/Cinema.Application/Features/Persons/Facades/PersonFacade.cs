@@ -2,6 +2,7 @@ using AutoMapper;
 using Cinema.Application.Features.Movies.Interfaces;
 using Cinema.Application.Features.Persons.Dto;
 using Cinema.Application.Features.Persons.Interfaces;
+using Cinema.Domain.Core.Pagination;
 using Cinema.Domain.Features.MovieActors.Entities;
 
 namespace Cinema.Application.Features.Persons.Facades;
@@ -22,10 +23,10 @@ internal class PersonFacade : IPersonFacade
         _movieRelatedEntityValidator = movieRelatedEntityValidator;
     }
 
-    public async Task<IEnumerable<PersonAppResponseDto>> GetAllAsync()
+    public async Task<PaginationResponse<PersonAppResponseDto>> GetAllAsync(PaginationRequest paginationRequest)
     {
-        var persons = await _personService.GetAllAsync();
-        return _mapper.Map<IEnumerable<PersonAppResponseDto>>(persons);
+        var persons = await _personService.GetAllAsync(paginationRequest);
+        return _mapper.Map<PaginationResponse<PersonAppResponseDto>>(persons);
     }
 
     public async Task<PersonWithDetailsAppResponseDto> GetByIdAsync(int id)

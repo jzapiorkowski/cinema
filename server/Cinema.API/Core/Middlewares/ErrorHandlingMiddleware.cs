@@ -54,6 +54,11 @@ public class ErrorHandlingMiddleware
             _logger.LogError("Entity reference violation error: {Message}", e.Message);
             await HandleExceptionAsync(context, HttpStatusCode.Conflict, "Conflict", e.Message);
         }
+        catch (InvalidSortByException e)
+        {
+            _logger.LogError("Invalid SortBy property: {Message}", e.Message);
+            await HandleExceptionAsync(context, HttpStatusCode.BadRequest, "Bad Request", e.Message);
+        }
         catch (Exception e)
         {
             _logger.LogError(e, "An unexpected error occurred.");

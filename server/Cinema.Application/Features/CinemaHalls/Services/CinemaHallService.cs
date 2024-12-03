@@ -1,5 +1,6 @@
 using Cinema.Application.Features.CinemaHalls.Interfaces;
 using Cinema.Application.Shared.Exceptions;
+using Cinema.Domain.Core.Pagination;
 using Cinema.Domain.Features.CinemaHalls.Entities;
 using Cinema.Domain.Features.CinemaHalls.Repositories;
 using Cinema.Domain.Shared.Exceptions;
@@ -65,11 +66,15 @@ internal class CinemaHallService : ICinemaHallService
         }
     }
 
-    public async Task<IEnumerable<CinemaHall>> GetAllAsync()
+    public async Task<PaginationResponse<CinemaHall>> GetAllAsync(PaginationRequest paginationRequest)
     {
         try
         {
-            return await _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>().GetAllAsync();
+            return await _unitOfWork.Repository<CinemaHall, ICinemaHallRepository>().GetAllAsync(paginationRequest);
+        }
+        catch (InvalidSortByException)
+        {
+            throw;
         }
         catch (Exception e)
         {

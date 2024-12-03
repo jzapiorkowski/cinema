@@ -16,6 +16,7 @@ public class Startup
         {
             c.SchemaFilter<Iso8601TimeSpanSchemaFilter>();
             c.SchemaFilter<Iso8601DateOnlySchemaFilter>();
+            c.DescribeAllParametersInCamelCase();
         });
 
         services.AddInfrastructureServices();

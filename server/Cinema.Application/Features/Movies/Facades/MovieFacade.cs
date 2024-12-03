@@ -2,6 +2,7 @@ using AutoMapper;
 using Cinema.Application.Features.Movies.Dto;
 using Cinema.Application.Features.Movies.Interfaces;
 using Cinema.Application.Features.Persons.Interfaces;
+using Cinema.Domain.Core.Pagination;
 
 namespace Cinema.Application.Features.Movies.Facades;
 
@@ -47,10 +48,10 @@ internal class MovieFacade : IMovieFacade
         return _mapper.Map<MovieWithDetailsAppResponseDto>(movie);
     }
 
-    public async Task<IEnumerable<MovieAppResponseDto>> GetAllAsync()
+    public async Task<PaginationResponse<MovieAppResponseDto>> GetAllAsync(PaginationRequest paginationRequest)
     {
-        var movies = await _movieService.GetAllAsync();
-        return _mapper.Map<IEnumerable<MovieAppResponseDto>>(movies);
+        var movies = await _movieService.GetAllAsync(paginationRequest);
+        return _mapper.Map<PaginationResponse<MovieAppResponseDto>>(movies);
     }
 
     public async Task DeleteAsync(int movieId)

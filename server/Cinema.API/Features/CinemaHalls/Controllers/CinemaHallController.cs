@@ -2,6 +2,7 @@ using AutoMapper;
 using Cinema.API.Features.CinemaHalls.Dto;
 using Cinema.Application.Features.CinemaHalls.Dto;
 using Cinema.Application.Features.CinemaHalls.Interfaces;
+using Cinema.Domain.Core.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.API.Features.CinemaHalls.Controllers;
@@ -23,11 +24,11 @@ public class CinemaHallController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType<List<CinemaHallApiResponseDto>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAllAsync()
+    [ProducesResponseType<PaginationResponse<CinemaHallApiResponseDto>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAllAsync([FromQuery] PaginationRequest paginationRequest)
     {
-        var cinemaHalls = await _cinemaHallFacade.GetAllAsync();
-        return Ok(_mapper.Map<List<CinemaHallApiResponseDto>>(cinemaHalls));
+        var cinemaHalls = await _cinemaHallFacade.GetAllAsync(paginationRequest);
+        return Ok(_mapper.Map<PaginationResponse<CinemaHallApiResponseDto>>(cinemaHalls));
     }
 
     [HttpGet("{id:int}")]

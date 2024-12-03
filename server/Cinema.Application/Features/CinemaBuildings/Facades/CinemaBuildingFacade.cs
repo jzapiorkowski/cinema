@@ -1,6 +1,7 @@
 using AutoMapper;
 using Cinema.Application.Features.CinemaBuildings.Dto;
 using Cinema.Application.Features.CinemaBuildings.Interfaces;
+using Cinema.Domain.Core.Pagination;
 
 namespace Cinema.Application.Features.CinemaBuildings.Facades;
 
@@ -26,10 +27,10 @@ internal class CinemaBuildingFacade : ICinemaBuildingFacade
         return _mapper.Map<CinemaBuildingAppResponseDto>(createdCinemaBuilding);
     }
 
-    public async Task<IEnumerable<CinemaBuildingAppResponseDto>> GetAllAsync()
+    public async Task<PaginationResponse<CinemaBuildingAppResponseDto>> GetAllAsync(PaginationRequest paginationRequest)
     {
-        var cinemaBuildings = await _cinemaBuildingService.GetAllAsync();
-        return _mapper.Map<IEnumerable<CinemaBuildingAppResponseDto>>(cinemaBuildings);
+        var cinemaBuildings = await _cinemaBuildingService.GetAllAsync(paginationRequest);
+        return _mapper.Map<PaginationResponse<CinemaBuildingAppResponseDto>>(cinemaBuildings);
     }
 
     public async Task<CinemaBuildingWithDetailsAppResponseDto> GetByIdAsync(int cinemaBuildingId)

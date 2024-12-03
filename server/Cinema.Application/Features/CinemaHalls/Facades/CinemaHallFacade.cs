@@ -2,6 +2,7 @@ using AutoMapper;
 using Cinema.Application.Features.CinemaHalls.Dto;
 using Cinema.Application.Features.CinemaHalls.Exceptions;
 using Cinema.Application.Features.CinemaHalls.Interfaces;
+using Cinema.Domain.Core.Pagination;
 using Cinema.Domain.Shared.Interfaces;
 
 namespace Cinema.Application.Features.CinemaHalls.Facades;
@@ -25,10 +26,10 @@ internal class CinemaHallFacade : ICinemaHallFacade
         _cinemaHallSeatFacade = cinemaHallSeatFacade;
     }
 
-    public async Task<IEnumerable<CinemaHallAppResponseDto>> GetAllAsync()
+    public async Task<PaginationResponse<CinemaHallAppResponseDto>> GetAllAsync(PaginationRequest paginationRequest)
     {
-        var cinemaHalls = await _cinemaHallService.GetAllAsync();
-        return _mapper.Map<IEnumerable<CinemaHallAppResponseDto>>(cinemaHalls);
+        var cinemaHalls = await _cinemaHallService.GetAllAsync(paginationRequest);
+        return _mapper.Map<PaginationResponse<CinemaHallAppResponseDto>>(cinemaHalls);
     }
 
     public async Task<CinemaHallAppResponseDto> UpdateAsync(int cinemaHallId,

@@ -14,8 +14,8 @@ public class UpdatePersonApiDto
     public DateOnly BirthDate { get; set; }
 
     [Required]
-    public IEnumerable<UpdatePersonActedInApiDto> ActedIn { get; set; }
+    public List<UpdatePersonActedInApiDto> ActedIn { get; set; }
     
     [Required]
-    public IEnumerable<int> DirectedMovies { get; set; }
+    public List<int> DirectedMovies { get; set; }
 }

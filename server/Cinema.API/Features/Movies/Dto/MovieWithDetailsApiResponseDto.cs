@@ -7,6 +7,6 @@ public class MovieWithDetailsApiResponseDto
     public string Genre { get; set; }
     public DateOnly ReleaseDate { get; set; }
     public TimeSpan Duration { get; set; }
-    public ICollection<MovieActorApiResponseDto> Actors { get; set; }
+    public IEnumerable<MovieActorApiResponseDto> Actors { get; set; }
     public MovieDirectorApiResponseDto Director { get; set; }
 }

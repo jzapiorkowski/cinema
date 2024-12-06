@@ -8,7 +8,9 @@ public class CreateScreeningApiDto
     [DataType(DataType.DateTime)]
     public DateTime StartTime { get; set; }
 
-    [Required] public int MovieId { get; set; }
+    [Required]
+    public int MovieId { get; set; }
 
-    [Required] public int CinemaHallId { get; set; }
+    [Required] 
+    public int CinemaHallId { get; set; }
 }

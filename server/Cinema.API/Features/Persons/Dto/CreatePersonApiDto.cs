@@ -14,8 +14,8 @@ public class CreatePersonApiDto
     public DateOnly BirthDate { get; set; }
     
     [Required]
-    public IEnumerable<CreatePersonActedInApiDto> ActedIn { get; set; }
+    public List<CreatePersonActedInApiDto> ActedIn { get; set; }
     
     [Required]
-    public IEnumerable<int> DirectedMovies { get; set; }
+    public List<int> DirectedMovies { get; set; }
 }

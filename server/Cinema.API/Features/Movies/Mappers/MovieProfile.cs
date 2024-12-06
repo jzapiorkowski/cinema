@@ -10,17 +10,16 @@ internal class MovieProfile : Profile
     public MovieProfile()
     {
         CreateMap<MovieAppResponseDto, MovieApiResponseDto>();
-        CreateMap<PaginationResponse<MovieAppResponseDto>, PaginationResponse<MovieApiResponseDto>>()
-            .ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data));
+        CreateMap<PaginationResponse<MovieAppResponseDto>, PaginationResponse<MovieApiResponseDto>>();
 
         CreateMap<MovieWithDetailsAppResponseDto, MovieWithDetailsApiResponseDto>();
-        CreateMap<CreateMovieApiDto, CreateMovieAppDto>();
-        CreateMap<UpdateMovieApiDto, UpdateMovieAppDto>();
-
         CreateMap<MovieActorAppResponseDto, MovieActorApiResponseDto>();
         CreateMap<MovieDirectorAppResponseDto, MovieDirectorApiResponseDto>();
 
+        CreateMap<CreateMovieApiDto, CreateMovieAppDto>();
         CreateMap<CreateMovieActorApiDto, CreateMovieActorAppDto>();
+        
+        CreateMap<UpdateMovieApiDto, UpdateMovieAppDto>();
         CreateMap<UpdateMovieActorApiDto, UpdateMovieActorAppDto>();
     }
 }

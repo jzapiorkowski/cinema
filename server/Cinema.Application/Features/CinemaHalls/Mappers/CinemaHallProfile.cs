@@ -8,23 +8,17 @@ using Cinema.Domain.Features.Seats.Entities;
 
 namespace Cinema.Application.Features.CinemaHalls.Mappers;
 
-public class CinemaHallProfile : Profile
+internal class CinemaHallProfile : Profile
 {
     public CinemaHallProfile()
     {
         CreateMap<CinemaHall, CinemaHallAppResponseDto>();
-        CreateMap<PaginationResponse<CinemaHall>, PaginationResponse<CinemaHallAppResponseDto>>()
-            .ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data.Select(ch => new CinemaHallAppResponseDto
-            {
-                Id = ch.Id,
-                Number = ch.Number,
-                Capacity = ch.Capacity
-            })));
-        
-        CreateMap<CinemaHall, CinemaHallWithDetailsAppResponseDto>()
-            .ForMember(dest => dest.Screenings, opt => opt.MapFrom(src => src.Screenings));
         CreateMap<Screening, CinemaHallScreeningAppResponseDto>();
         CreateMap<CinemaBuilding, CinemaHallBuildingAppResponseDto>();
         CreateMap<Seat, CinemaHallSeatAppResponseDto>();
+
+        CreateMap<PaginationResponse<CinemaHall>, PaginationResponse<CinemaHallAppResponseDto>>();
+
+        CreateMap<CinemaHall, CinemaHallWithDetailsAppResponseDto>();
     }
 }

@@ -1,25 +1,30 @@
 using Cinema.Application.Features.CinemaBuildings.Builders;
 using Cinema.Application.Features.CinemaBuildings.Facades;
 using Cinema.Application.Features.CinemaBuildings.Interfaces;
+using Cinema.Application.Features.CinemaBuildings.Mappers;
 using Cinema.Application.Features.CinemaBuildings.Services;
 using Cinema.Application.Features.CinemaHalls.Builders;
 using Cinema.Application.Features.CinemaHalls.Facades;
 using Cinema.Application.Features.CinemaHalls.Interfaces;
+using Cinema.Application.Features.CinemaHalls.Mappers;
 using Cinema.Application.Features.CinemaHalls.Services;
 using Cinema.Application.Features.CinemaHalls.Validators;
 using Cinema.Application.Features.Movies.Builders;
 using Cinema.Application.Features.Movies.Facades;
 using Cinema.Application.Features.Movies.Interfaces;
+using Cinema.Application.Features.Movies.Mappers;
 using Cinema.Application.Features.Movies.Services;
 using Cinema.Application.Features.Movies.Validators;
 using Cinema.Application.Features.Persons.Builders;
 using Cinema.Application.Features.Persons.Facades;
 using Cinema.Application.Features.Persons.Interfaces;
+using Cinema.Application.Features.Persons.Mappers;
 using Cinema.Application.Features.Persons.Services;
 using Cinema.Application.Features.Persons.Validators;
 using Cinema.Application.Features.Screenings.Builders;
 using Cinema.Application.Features.Screenings.Facades;
 using Cinema.Application.Features.Screenings.Interfaces;
+using Cinema.Application.Features.Screenings.Mappers;
 using Cinema.Application.Features.Screenings.Services;
 using Cinema.Application.Features.Screenings.Validators;
 using Cinema.Application.Features.Seats.Builders;
@@ -34,7 +39,14 @@ public static class DependencyInjection
     public static void AddApplicationServices(this IServiceCollection serviceCollection)
     {
         // register automapper
-        serviceCollection.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        serviceCollection.AddAutoMapper(
+            typeof(CinemaBuildingProfile),
+            typeof(CinemaHallProfile),
+            typeof(MovieProfile),
+            typeof(MovieProfile),
+            typeof(PersonProfile),
+            typeof(ScreeningProfile)
+        );
 
         // register services
         serviceCollection.AddScoped<IMovieService, MovieService>();

@@ -10,8 +10,7 @@ public class CinemaHallProfile : Profile
     public CinemaHallProfile()
     {
         CreateMap<CinemaHallAppResponseDto, CinemaHallApiResponseDto>();
-        CreateMap<PaginationResponse<CinemaHallAppResponseDto>, PaginationResponse<CinemaHallApiResponseDto>>()
-            .ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data));
+        CreateMap<PaginationResponse<CinemaHallAppResponseDto>, PaginationResponse<CinemaHallApiResponseDto>>();
 
         CreateMap<CinemaHallWithDetailsAppResponseDto, CinemaHallWithDetailsApiResponseDto>();
         CreateMap<CinemaHallScreeningAppResponseDto, CinemaHallScreeningApiResponseDto>();

@@ -10,13 +10,11 @@ public class CinemaBuildingProfile : Profile
     public CinemaBuildingProfile()
     {
         CreateMap<CinemaBuildingAppResponseDto, CinemaBuildingApiResponseDto>();
-        CreateMap<PaginationResponse<CinemaBuildingAppResponseDto>, PaginationResponse<CinemaBuildingApiResponseDto>>()
-            .ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data));
+        CreateMap<PaginationResponse<CinemaBuildingAppResponseDto>, PaginationResponse<CinemaBuildingApiResponseDto>>();
         
         CreateMap<CinemaBuildingWithDetailsAppResponseDto, CinemaBuildingWithDetailsApiResponseDto>();
+        CreateMap<CinemaBuildingHallAppResponseDto, CinemaBuildingHallApiResponseDto>();
 
         CreateMap<CreateCinemaBuildingApiDto, CreateCinemaBuildingAppDto>();
-
-        CreateMap<CinemaBuildingHallAppResponseDto, CinemaBuildingHallApiResponseDto>();
     }
 }

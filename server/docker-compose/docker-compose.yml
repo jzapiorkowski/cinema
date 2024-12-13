@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: Cinema.API/Dockerfile
+    image: cinema-api:latest
+    container_name: cinema-api
+    environment:
+      ConnectionStrings__DatabaseConnectionString: "Host=db;Port=5432;Database=dev-db;Username=dev-user;Password=dev-password"
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - migrations
+  db:
+    image: postgres:15-alpine
+    container_name: cinema-db
+    environment:
+      POSTGRES_USER: dev-user
+      POSTGRES_PASSWORD: dev-password
+      POSTGRES_DB: dev-db
+    ports:
+      - "5432:5432"
+  migrations:
+    build:
+      context: ..
+      dockerfile: docker-compose/migrations.Dockerfile
+    image: cinema-migrations:latest
+    container_name: cinema-migrations-runner
+    environment:
+        ConnectionStrings__DatabaseConnectionString: "Host=db;Port=5432;Database=dev-db;Username=dev-user;Password=dev-password"
+    depends_on:
+        - db

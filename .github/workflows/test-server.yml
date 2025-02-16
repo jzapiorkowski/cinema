@@ -1,0 +1,39 @@
+name: Server Tests
+
+on:
+  push:
+    branches:
+      - develop
+      - test
+      - production
+  pull_request:
+    branches:
+      - develop
+      - test
+      - production
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET Core SDK 8.0
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0'
+
+      - name: Install dependencies
+        run: dotnet restore server/Cinema.sln
+
+      - name: Run Domain Layer Tests
+        run: dotnet test server/Cinema.Domain.Tests/Cinema.Domain.Tests.csproj --configuration Release --no-restore --verbosity normal
+
+      - name: Run Application Layer Tests
+        run: dotnet test server/Cinema.Application.Tests/Cinema.Application.Tests.csproj --configuration Release --no-restore --verbosity normal
+
+      - name: Run Infrastructure Layer Tests
+        run: dotnet test server/Cinema.Infrastructure.Tests/Cinema.Infrastructure.Tests.csproj --configuration Release --no-restore --verbosity normal
+
+      # - name: Run API Tests
+      # run: dotnet test server/Cinema.API.Tests/Cinema.API.Tests.csproj --configuration Release --no-restore --verbosity normal

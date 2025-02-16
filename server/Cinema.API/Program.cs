@@ -15,3 +15,7 @@ Startup.ConfigureMiddleware(app, builder.Environment);
 Startup.ConfigureEndpoints(app);
 
 app.Run();
+
+public partial class Program
+{
+}

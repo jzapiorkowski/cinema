@@ -23,14 +23,15 @@ public class Startup
         services.AddAPIServices();
         services.AddApplicationServices();
 
+        services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.Converters.Add(new Iso8601TimeSpanConverter());
+            options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
+
         services.AddControllers(
-                options => { options.SuppressAsyncSuffixInActionNames = false; }
-            )
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new Iso8601TimeSpanConverter());
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            });
+            options => { options.SuppressAsyncSuffixInActionNames = false; }
+        );
     }
 
     public static void ConfigureMiddleware(WebApplication app, IWebHostEnvironment env)

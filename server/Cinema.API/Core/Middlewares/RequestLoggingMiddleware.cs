@@ -32,8 +32,13 @@ public class RequestLoggingMiddleware
         return bodyAsText;
     }
 
-    private static object DeserializeRequestBody(string bodyAsText)
+    private static object? DeserializeRequestBody(string bodyAsText)
     {
+        if (string.IsNullOrWhiteSpace(bodyAsText))
+        {
+            return null;
+        }
+
         try
         {
             return JsonSerializer.Deserialize<object>(bodyAsText);
@@ -52,7 +57,9 @@ public class RequestLoggingMiddleware
             Path = context.Request.Path.ToString(),
             QueryParameters = context.Request.QueryString,
             Body = bodyAsJson,
-            context.Request.Query
+            context.Request.Query,
+            context.Request.ContentType,
+            context.Request.ContentLength,
         };
     }
 

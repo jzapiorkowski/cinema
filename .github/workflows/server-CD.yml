@@ -1,0 +1,39 @@
+name: Server CD
+
+on:
+  workflow_run:
+    workflows: ['Server CI']
+    types:
+      - completed
+
+jobs:
+  deploy:
+    if: >
+      github.event.workflow_run.conclusion == 'success' && 
+      contains(fromJson('["refs/heads/develop", "refs/heads/test", "refs/heads/production"]'), github.event.workflow_run.head_branch)
+
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/cinema-api-${{github.event.workflow_run.head_branch}}:${GITHUB_SHA}
+      IMAGE_LATEST: ${{secrets.DOCKERHUB_USERNAME}}/cinema-api-${{github.event.workflow_run.head_branch}}:latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Docker Image
+        run: |
+          docker build -t ${{ env.IMAGE_TAG }} -f server/Cinema.API/Dockerfile .
+          docker tag ${{ env.IMAGE_TAG }} ${{ env.IMAGE_LATEST }}
+
+      - name: Push Docker Images
+        run: |
+          docker push ${{ env.IMAGE_TAG }}
+          docker push ${{ env.IMAGE_LATEST }}

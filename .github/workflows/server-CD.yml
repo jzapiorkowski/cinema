@@ -30,7 +30,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ${{ env.IMAGE_TAG }} -f server/Cinema.API/Dockerfile .
+          docker build -t ${{ env.IMAGE_TAG }} -f server/Cinema.API/Dockerfile server
           docker tag ${{ env.IMAGE_TAG }} ${{ env.IMAGE_LATEST }}
 
       - name: Push Docker Images

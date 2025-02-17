@@ -18,12 +18,13 @@ internal class SeatConfiguration : IEntityTypeConfiguration<Seat>
         builder.Property(s => s.CinemaHallId).HasColumnName("cinema_hall_id").IsRequired();
         builder.Property(s => s.Type).HasColumnName("type").HasConversion<string>().IsRequired();
 
-        builder.HasOne(s => s.CinemaHall)
-            .WithMany(ch => ch.Seats)
-            .HasForeignKey(s => s.CinemaHallId)
-            .OnDelete(DeleteBehavior.Cascade)
+        builder
+            .HasMany(s => s.ReservationSeats)
+            .WithOne(rs => rs.Seat)
+            .HasForeignKey(rs => rs.SeatId)
+            .OnDelete(DeleteBehavior.Restrict)
             .IsRequired()
-            .HasConstraintName(DatabaseConstraints.FKSeatCinemaHall);
+            .HasConstraintName(DatabaseConstraints.FKSeatReservationSeat);
 
         builder.HasIndex(s => new { s.CinemaHallId, s.Row, s.Column })
             .IsUnique()

@@ -13,21 +13,16 @@ internal class ScreeningConfiguration : IEntityTypeConfiguration<Screening>
         builder.HasKey(s => s.Id);
         builder.Property(s => s.Id).HasColumnName("id").ValueGeneratedOnAdd();
 
-        builder.Property(s => s.StartTime).HasColumnName("start_time").HasColumnType("timestamp with time zone").IsRequired();
+        builder.Property(s => s.StartTime).HasColumnName("start_time").HasColumnType("timestamp with time zone")
+            .IsRequired();
         builder.Property(s => s.MovieId).HasColumnName("movie_id").IsRequired();
         builder.Property(s => s.CinemaHallId).HasColumnName("cinema_hall_id").IsRequired();
 
-        builder.HasOne(s => s.Movie)
-            .WithMany(m => m.Screenings)
-            .HasForeignKey(s => s.MovieId)
+        builder
+            .HasMany(s => s.Reservations)
+            .WithOne(r => r.Screening)
+            .HasForeignKey(r => r.ScreeningId)
             .OnDelete(DeleteBehavior.Restrict)
-            .IsRequired()
-            .HasConstraintName(DatabaseConstraints.FKScreeningMovie);
-        builder.HasOne(s => s.CinemaHall)
-            .WithMany(ch => ch.Screenings)
-            .HasForeignKey(s => s.CinemaHallId)
-            .OnDelete(DeleteBehavior.Cascade)
-            .IsRequired()
-            .HasConstraintName(DatabaseConstraints.FKScreeningCinemaHall);
+            .HasConstraintName(DatabaseConstraints.FKScreeningReservation);
     }
 }

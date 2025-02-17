@@ -22,17 +22,16 @@ internal class MovieConfiguration : IEntityTypeConfiguration<Movie>
         builder
             .HasMany(m => m.MovieActors)
             .WithOne(ma => ma.Movie)
-            .HasForeignKey(ma => ma.MovieId);
-        builder
-            .HasOne(m => m.DirectedBy)
-            .WithMany(p => p.DirectedMovies)
-            .HasForeignKey(m => m.DirectorId)
-            .OnDelete(DeleteBehavior.Restrict)
+            .HasForeignKey(ma => ma.MovieId)
+            .OnDelete(DeleteBehavior.Cascade)
             .IsRequired()
-            .HasConstraintName(DatabaseConstraints.FKMovieDirector);
+            .HasConstraintName(DatabaseConstraints.FKMovieActorMovie);
         builder
             .HasMany(m => m.Screenings)
             .WithOne(s => s.Movie)
-            .HasForeignKey(s => s.MovieId);
+            .HasForeignKey(s => s.MovieId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired()
+            .HasConstraintName(DatabaseConstraints.FKMovieScreening);
     }
 }

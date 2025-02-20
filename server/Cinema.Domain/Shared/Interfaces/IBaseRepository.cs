@@ -5,6 +5,7 @@ namespace Cinema.Domain.Shared.Interfaces;
 public interface IBaseRepository<TEntity> where TEntity : class
 {
     public Task<TEntity> CreateAsync(TEntity entity);
+    public Task<List<TEntity>> CreateManyAsync(List<TEntity> entities);
     public Task<TEntity?> GetByIdAsync(int id, bool asNoTracking = false, bool includeAllRelations = false);
     public Task<PaginationResponse<TEntity>> GetAllAsync(PaginationRequest paginationRequest, bool asNoTracking = true,
         bool includeAllRelations = false);

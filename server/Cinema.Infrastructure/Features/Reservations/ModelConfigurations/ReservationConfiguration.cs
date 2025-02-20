@@ -13,7 +13,9 @@ internal class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
         builder.HasKey(r => r.Id);
         builder.Property(r => r.Id).HasColumnName("id").ValueGeneratedOnAdd();
 
-        builder.Property(r => r.Status).HasColumnName("status").HasConversion<string>().IsRequired();
+        builder.Property(r => r.Status).HasColumnName("status").HasConversion<string>()
+        .HasDefaultValue(ReservationStatus.RESERVED).IsRequired();
+
         builder.Property(r => r.ScreeningId).HasColumnName("screening_id").IsRequired();
 
         builder

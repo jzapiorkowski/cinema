@@ -21,6 +21,11 @@ using Cinema.Application.Features.Persons.Interfaces;
 using Cinema.Application.Features.Persons.Mappers;
 using Cinema.Application.Features.Persons.Services;
 using Cinema.Application.Features.Persons.Validators;
+using Cinema.Application.Features.Reservations.Builders;
+using Cinema.Application.Features.Reservations.Facades;
+using Cinema.Application.Features.Reservations.Interfaces;
+using Cinema.Application.Features.Reservations.Mappers;
+using Cinema.Application.Features.Reservations.Services;
 using Cinema.Application.Features.Screenings.Builders;
 using Cinema.Application.Features.Screenings.Facades;
 using Cinema.Application.Features.Screenings.Interfaces;
@@ -45,7 +50,8 @@ public static class DependencyInjection
             typeof(MovieProfile),
             typeof(MovieProfile),
             typeof(PersonProfile),
-            typeof(ScreeningProfile)
+            typeof(ScreeningProfile),
+            typeof(ReservationProfile)
         );
 
         // register services
@@ -55,6 +61,7 @@ public static class DependencyInjection
         serviceCollection.AddScoped<ICinemaHallService, CinemaHallService>();
         serviceCollection.AddScoped<ICinemaBuildingService, CinemaBuildingService>();
         serviceCollection.AddScoped<ISeatService, SeatService>();
+        serviceCollection.AddScoped<IReservationService, ReservationService>();
 
         // register validators
         serviceCollection.AddTransient<IMovieRelatedEntityValidator, MovieRelatedEntityValidator>();
@@ -70,6 +77,7 @@ public static class DependencyInjection
         serviceCollection.AddScoped<ICinemaHallFacade, CinemaHallFacade>();
         serviceCollection.AddScoped<ICinemaBuildingFacade, CinemaBuildingFacade>();
         serviceCollection.AddScoped<ICinemaHallSeatFacade, CinemaHallSeatFacade>();
+        serviceCollection.AddScoped<IReservationFacade, ReservationFacade>();
 
         // register builders
         serviceCollection.AddTransient<IMovieBuilder, MovieBuilder>();
@@ -78,5 +86,7 @@ public static class DependencyInjection
         serviceCollection.AddTransient<IScreeningBuilder, ScreeningBuilder>();
         serviceCollection.AddTransient<ICinemaBuildingBuilder, CinemaBuildingBuilder>();
         serviceCollection.AddTransient<ISeatBuilder, SeatBuilder>();
+        serviceCollection.AddTransient<IReservationBuilder, ReservationBuilder>();
+        serviceCollection.AddTransient<IReservationSeatBuilder, ReservationSeatBuilder>();
     }
 }

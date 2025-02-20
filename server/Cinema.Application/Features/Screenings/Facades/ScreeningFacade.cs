@@ -2,6 +2,7 @@ using AutoMapper;
 using Cinema.Application.Features.Screenings.Dto;
 using Cinema.Application.Features.Screenings.Interfaces;
 using Cinema.Domain.Features.Screenings.Entities;
+using Cinema.Domain.Features.Seats.Entities;
 
 namespace Cinema.Application.Features.Screenings.Facades;
 
@@ -58,6 +59,12 @@ internal class ScreeningFacade : IScreeningFacade
         var updatedScreening = await _screeningService.UpdateAsync(screening);
 
         return _mapper.Map<ScreeningAppResponseDto>(updatedScreening);
+    }
+
+    public async Task<IEnumerable<Seat>> GetAvailableSeatsAsync(int screeningId)
+    {
+        var availableSeats = await _screeningService.GetAvailableSeatsAsync(screeningId);
+        return _mapper.Map<IEnumerable<Seat>>(availableSeats);
     }
 
     private Screening BuildScreening(DateTime startTime, int movieId, int cinemaHallId, int? id = null)

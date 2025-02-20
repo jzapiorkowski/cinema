@@ -30,8 +30,13 @@ public class Startup
         });
 
         services.AddControllers(
-            options => { options.SuppressAsyncSuffixInActionNames = false; }
-        );
+                options => { options.SuppressAsyncSuffixInActionNames = false; }
+            )
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new Iso8601TimeSpanConverter());
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
     }
 
     public static void ConfigureMiddleware(WebApplication app, IWebHostEnvironment env)

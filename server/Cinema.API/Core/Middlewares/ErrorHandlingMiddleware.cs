@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using Cinema.Application.Features.Reservations.Exceptions;
 using Cinema.Application.Shared.Exceptions;
 using Cinema.Domain.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +59,16 @@ public class ErrorHandlingMiddleware
         {
             _logger.LogError("Invalid SortBy property: {Message}", e.Message);
             await HandleExceptionAsync(context, HttpStatusCode.BadRequest, "Bad Request", e.Message);
+        }
+        catch (SeatAlreadyOccupiedException e)
+        {
+            _logger.LogError("Seat already occupied: {Message}", e.Message);
+            await HandleExceptionAsync(context, HttpStatusCode.Conflict, "Conflict", e.Message);
+        }
+        catch (ReservationNotInReservedStateException e)
+        {
+            _logger.LogError("Reservation not in reserved state: {Message}", e.Message);
+            await HandleExceptionAsync(context, HttpStatusCode.Conflict, "Conflict", e.Message);
         }
         catch (Exception e)
         {

@@ -3,6 +3,8 @@ using Cinema.Domain.Features.CinemaBuildings.Repositories;
 using Cinema.Domain.Features.CinemaHalls.Repositories;
 using Cinema.Domain.Features.Movies.Interfaces;
 using Cinema.Domain.Features.Persons.Repositories;
+using Cinema.Domain.Features.Reservations.Repositories;
+using Cinema.Domain.Features.ReservationsSeats.Repositories;
 using Cinema.Domain.Features.Screenings.Repositories;
 using Cinema.Domain.Features.Seats.Repositories;
 using Cinema.Domain.Shared.Interfaces;
@@ -12,6 +14,8 @@ using Cinema.Infrastructure.Features.CinemaBuildings.Repositories;
 using Cinema.Infrastructure.Features.CinemaHalls.Repositories;
 using Cinema.Infrastructure.Features.Movies.Repositories;
 using Cinema.Infrastructure.Features.Persons.Repositories;
+using Cinema.Infrastructure.Features.Reservations.Repositories;
+using Cinema.Infrastructure.Features.ReservationSeats.Repositories;
 using Cinema.Infrastructure.Features.Screenings.Repositories;
 using Cinema.Infrastructure.Features.Seats.Repositories;
 using Cinema.Infrastructure.Shared.UnitOfWork;
@@ -40,5 +44,7 @@ public static class DependencyInjection
         serviceCollection.AddScoped<ICinemaHallRepository, CinemaHallRepository>();
         serviceCollection.AddScoped<ICinemaBuildingRepository, CinemaBuildingRepository>();
         serviceCollection.AddScoped<ISeatRepository, SeatRepository>();
+        serviceCollection.AddScoped<IReservationRepository, ReservationRepository>();
+        serviceCollection.AddScoped<IReservationSeatRepository, ReservationSeatRepository>();
     }
 }

@@ -7,6 +7,7 @@ using Cinema.Domain.Features.Reservations.Repositories;
 using Cinema.Domain.Features.ReservationsSeats.Repositories;
 using Cinema.Domain.Features.Screenings.Repositories;
 using Cinema.Domain.Features.Seats.Repositories;
+using Cinema.Domain.Features.Tickets.Repositories;
 using Cinema.Domain.Shared.Interfaces;
 using Cinema.Infrastructure.Core.Configs;
 using Cinema.Infrastructure.Core.Data;
@@ -18,6 +19,7 @@ using Cinema.Infrastructure.Features.Reservations.Repositories;
 using Cinema.Infrastructure.Features.ReservationSeats.Repositories;
 using Cinema.Infrastructure.Features.Screenings.Repositories;
 using Cinema.Infrastructure.Features.Seats.Repositories;
+using Cinema.Infrastructure.Features.Tickets.Repositories;
 using Cinema.Infrastructure.Shared.UnitOfWork;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -46,5 +48,6 @@ public static class DependencyInjection
         serviceCollection.AddScoped<ISeatRepository, SeatRepository>();
         serviceCollection.AddScoped<IReservationRepository, ReservationRepository>();
         serviceCollection.AddScoped<IReservationSeatRepository, ReservationSeatRepository>();
+        serviceCollection.AddScoped<ITicketRepository, TicketRepository>();
     }
 }

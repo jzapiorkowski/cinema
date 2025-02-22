@@ -12,7 +12,10 @@ internal class TicketConfiguration : IEntityTypeConfiguration<Ticket>
         builder.ToTable("ticket");
         builder.HasKey(r => r.Id);
         builder.Property(r => r.Id).HasColumnName("id").ValueGeneratedOnAdd();
+
         builder.Property(r => r.ReservationSeatId).HasColumnName("reservation_seat_id").IsRequired();
+        builder.Property(t => t.IsDeleted).HasColumnName("is_deleted").HasColumnType("boolean").HasDefaultValue(false)
+            .IsRequired();
 
         builder
             .HasOne(t => t.ReservationSeat)

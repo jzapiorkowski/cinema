@@ -8,8 +8,9 @@ public interface IReservationService
 {
     Task<Reservation> CreateAsync(Reservation reservation);
     Task<List<ReservationSeat>> AddSeatsToReservationAsync(int screeningId, List<ReservationSeat> reservationSeats);
-    Task<ReservationSeat> AddSeatToReservationAsync(int screeningId, ReservationSeat reservationSeat);
     Task RemoveSeatFromReservationAsync(int reservationId, int seatId);
     Task<Reservation> GetByIdAsync(int id);
     Task<PaginationResponse<Reservation>> GetAllAsync(PaginationRequest paginationRequest);
+    Task<Reservation> CancelReservationAsync(int reservationId);
+    Task<Reservation> ConfirmReservationAsync(int id);
 }

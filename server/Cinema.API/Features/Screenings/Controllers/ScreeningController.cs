@@ -64,11 +64,11 @@ public class ScreeningController : ControllerBase
     }
     
     [HttpGet("{screeningId:int}/seats")]
-    [ProducesResponseType<List<CinemaHallSeatApiResponseDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<List<SeatApiResponseDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetAvailableSeatsAsync(int screeningId)
     {
         var availableSeats = await _screeningFacade.GetAvailableSeatsAsync(screeningId);
-        return Ok(_mapper.Map<List<CinemaHallSeatApiResponseDto>>(availableSeats));
+        return Ok(_mapper.Map<List<SeatApiResponseDto>>(availableSeats));
     }
 }

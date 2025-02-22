@@ -49,7 +49,7 @@ internal class ReservationSeatRepository : BaseRepository<ReservationSeat>, IRes
         return await ExecuteDbOperation(async () =>
         {
             return await _dbContext.Set<ReservationSeat>()
-                .Where(rs => rs.Reservation.ScreeningId == screeningId)
+                .Where(rs => rs.Reservation.ScreeningId == screeningId && !rs.IsDeleted)
                 .Select(rs => rs.SeatId)
                 .ToListAsync();
         }, "getting reserved seat IDs for screening");

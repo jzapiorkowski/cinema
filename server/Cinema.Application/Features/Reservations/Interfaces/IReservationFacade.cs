@@ -10,4 +10,6 @@ public interface IReservationFacade
     Task<ReservationAppResponseDto> RemoveSeatFromReservationAsync(int reservationId, int seatId);
     Task<ReservationAppResponseDto> GetByIdAsync(int id);
     Task<PaginationResponse<ReservationAppResponseDto>> GetAllAsync(PaginationRequest paginationRequest);
+    Task<ReservationAppResponseDto> CancelReservationAsync(int id);
+    Task<ReservationAppResponseDto> ConfirmReservationAsync(int id);
 }

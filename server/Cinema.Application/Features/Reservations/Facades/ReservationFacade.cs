@@ -31,18 +31,26 @@ internal class ReservationFacade : IReservationFacade
             .SetScreeningId(createReservationDto.ScreeningId)
             .Build();
 
-        await _transactionalUnitOfWork.BeginTransactionAsync();
-        var createdReservation = await _reservationService.CreateAsync(reservation);
-        var reservationSeats = createReservationDto.SeatIds.Select(seatId =>
-                _reservationSeatBuilder
-                    .SetReservationId(reservation.Id)
-                    .SetSeatId(seatId)
-                    .Build())
-            .ToList();
-        await _reservationService.AddSeatsToReservationAsync(createdReservation.ScreeningId, reservationSeats);
-        await _transactionalUnitOfWork.CommitTransactionAsync();
+        try
+        {
+            await _transactionalUnitOfWork.BeginTransactionAsync();
+            var createdReservation = await _reservationService.CreateAsync(reservation);
+            var reservationSeats = createReservationDto.SeatIds.Select(seatId =>
+                    _reservationSeatBuilder
+                        .SetReservationId(reservation.Id)
+                        .SetSeatId(seatId)
+                        .Build())
+                .ToList();
+            await _reservationService.AddSeatsToReservationAsync(createdReservation.ScreeningId, reservationSeats);
+            await _transactionalUnitOfWork.CommitTransactionAsync();
 
-        return await GetByIdAsync(createdReservation.Id);
+            return await GetByIdAsync(createdReservation.Id);
+        }
+        catch
+        {
+            await _transactionalUnitOfWork.RollbackTransactionAsync();
+            throw;
+        }
     }
 
     public async Task<ReservationAppResponseDto> AddSeatToReservationAsync(int reservationId, int seatId)
@@ -52,10 +60,9 @@ internal class ReservationFacade : IReservationFacade
             .SetSeatId(seatId)
             .Build();
         var reservation = await _reservationService.GetByIdAsync(reservationId);
-        var createdReservationSeat =
-            await _reservationService.AddSeatToReservationAsync(reservation.ScreeningId, reservationSeat);
+        await _reservationService.AddSeatsToReservationAsync(reservation.ScreeningId, [reservationSeat]);
 
-        return await GetByIdAsync(createdReservationSeat.ReservationId);
+        return await GetByIdAsync(reservationId);
     }
 
     public async Task<ReservationAppResponseDto> RemoveSeatFromReservationAsync(int reservationId, int seatId)
@@ -74,5 +81,37 @@ internal class ReservationFacade : IReservationFacade
     {
         var paginationResponse = await _reservationService.GetAllAsync(paginationRequest);
         return _mapper.Map<PaginationResponse<ReservationAppResponseDto>>(paginationResponse);
+    }
+
+    public async Task<ReservationAppResponseDto> CancelReservationAsync(int id)
+    {
+        try
+        {
+            await _transactionalUnitOfWork.BeginTransactionAsync();
+            var canceledReservation = await _reservationService.CancelReservationAsync(id);
+            await _transactionalUnitOfWork.CommitTransactionAsync();
+            return _mapper.Map<ReservationAppResponseDto>(canceledReservation);
+        }
+        catch
+        {
+            await _transactionalUnitOfWork.RollbackTransactionAsync();
+            throw;
+        }
+    }
+
+    public async Task<ReservationAppResponseDto> ConfirmReservationAsync(int id)
+    {
+        try
+        {
+            await _transactionalUnitOfWork.BeginTransactionAsync();
+            var reservation = await _reservationService.ConfirmReservationAsync(id);
+            await _transactionalUnitOfWork.CommitTransactionAsync();
+            return _mapper.Map<ReservationAppResponseDto>(reservation);
+        }
+        catch
+        {
+            await _transactionalUnitOfWork.RollbackTransactionAsync();
+            throw;
+        }
     }
 }

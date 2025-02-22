@@ -88,5 +88,6 @@ public static class DependencyInjection
         serviceCollection.AddTransient<ISeatBuilder, SeatBuilder>();
         serviceCollection.AddTransient<IReservationBuilder, ReservationBuilder>();
         serviceCollection.AddTransient<IReservationSeatBuilder, ReservationSeatBuilder>();
+        serviceCollection.AddTransient<ITicketBuilder, TicketBuilder>();
     }
 }

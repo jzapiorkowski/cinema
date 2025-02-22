@@ -19,6 +19,7 @@ internal class ReservationRepository : BaseRepository<Reservation>, IReservation
         return query
             .Include(r => r.Screening).ThenInclude(s => s.Movie)
             .Include(r => r.Screening).ThenInclude(s => s.CinemaHall)
-            .Include(r => r.ReservationSeats).ThenInclude(rs => rs.Seat);
+            .Include(r => r.ReservationSeats).ThenInclude(rs => rs.Seat)
+            .Include(r => r.ReservationSeats).ThenInclude(rs => rs.Ticket);
     }
 }

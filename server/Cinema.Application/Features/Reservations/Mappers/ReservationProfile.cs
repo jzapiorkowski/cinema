@@ -6,6 +6,7 @@ using Cinema.Domain.Features.Movies.Entities;
 using Cinema.Domain.Features.Reservations.Entities;
 using Cinema.Domain.Features.ReservationsSeats.Entities;
 using Cinema.Domain.Features.Screenings.Entities;
+using Cinema.Domain.Features.Tickets.Entities;
 
 namespace Cinema.Application.Features.Reservations.Mappers;
 
@@ -18,6 +19,7 @@ internal class ReservationProfile : Profile
         CreateMap<Movie, ReservationMovieAppResponseDto>();
         CreateMap<CinemaHall, ReservationCinemaHallAppResponseDto>();
         CreateMap<ReservationSeat, ReservationSeatAppResponseDto>();
+        CreateMap<Ticket, ReservationTicketAppResponseDto>();
         
         CreateMap<PaginationResponse<Reservation>, PaginationResponse<ReservationAppResponseDto>>();
     }   

@@ -7,6 +7,8 @@ using Cinema.Domain.Features.Reservations.Entities;
 using Cinema.Domain.Features.Reservations.Repositories;
 using Cinema.Domain.Features.ReservationsSeats.Entities;
 using Cinema.Domain.Features.ReservationsSeats.Repositories;
+using Cinema.Domain.Features.Tickets.Entities;
+using Cinema.Domain.Features.Tickets.Repositories;
 using Cinema.Domain.Shared.Exceptions;
 using Cinema.Domain.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -18,20 +20,22 @@ internal class ReservationService : IReservationService
     private readonly ILogger<ReservationService> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IScreeningService _screeningService;
+    private readonly ITicketBuilder _ticketBuilder;
 
     public ReservationService(ILogger<ReservationService> logger, IUnitOfWork unitOfWork,
-        IScreeningService screeningService)
+        IScreeningService screeningService, ITicketBuilder ticketBuilder)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
         _screeningService = screeningService;
+        _ticketBuilder = ticketBuilder;
     }
 
     public Task<Reservation> CreateAsync(Reservation reservation)
     {
         try
         {
-            reservation.Status = ReservationStatus.RESERVED;
+            reservation.Reserve();
             return _unitOfWork.Repository<Reservation, IReservationRepository>().CreateAsync(reservation);
         }
         catch (Exception e)
@@ -45,7 +49,11 @@ internal class ReservationService : IReservationService
         List<ReservationSeat> reservationSeats)
     {
         var reservation = await GetByIdAsync(reservationSeats[0].ReservationId);
-        EnsureReservationIsInReservedState(reservation);
+
+        if (!reservation.CanAddSeats())
+        {
+            throw new SeatsAddingException($"Cannot add seats to reservation {reservation.Id}.");
+        }
 
         foreach (var seat in reservationSeats)
         {
@@ -66,36 +74,19 @@ internal class ReservationService : IReservationService
         }
     }
 
-    public async Task<ReservationSeat> AddSeatToReservationAsync(int screeningId, ReservationSeat reservationSeat)
-    {
-        var reservation = await GetByIdAsync(reservationSeat.ReservationId);
-        EnsureReservationIsInReservedState(reservation);
-
-        await ValidateSeatAvailabilityAsync(screeningId, reservationSeat.SeatId);
-
-        try
-        {
-            return await _unitOfWork.Repository<ReservationSeat, IReservationSeatRepository>()
-                .CreateAsync(reservationSeat);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "An error occurred while adding seat to reservation with id {id}",
-                reservationSeat.ReservationId);
-            throw new AppException(
-                $"An error occurred while adding seat to reservation with id {reservationSeat.ReservationId}", e);
-        }
-    }
-
     public async Task RemoveSeatFromReservationAsync(int reservationId, int seatId)
     {
         var reservation = await GetByIdAsync(reservationId);
-        EnsureReservationIsInReservedState(reservation);
+
+        if (!reservation.CanRemoveSeat())
+        {
+            throw new SeatsRemovingException($"Cannot remove seat from reservation {reservationId}.");
+        }
 
         try
         {
             var reservationSeat = await _unitOfWork.Repository<ReservationSeat, IReservationSeatRepository>()
-                .GetByReservationIdAndSeatIdAsync(reservationId, seatId);
+                .GetByReservationIdAndSeatIdAsync(reservation.Id, seatId);
 
             if (reservationSeat == null)
             {
@@ -125,7 +116,8 @@ internal class ReservationService : IReservationService
     {
         try
         {
-            return await _unitOfWork.Repository<Reservation, IReservationRepository>().GetAllAsync(paginationRequest);
+            return await _unitOfWork.Repository<Reservation, IReservationRepository>()
+                .GetAllAsync(paginationRequest, includeAllRelations: true);
         }
         catch (InvalidSortByException)
         {
@@ -135,6 +127,57 @@ internal class ReservationService : IReservationService
         {
             _logger.LogError(e, "An error occurred while retrieving all reservations");
             throw new AppException($"An error occurred while retrieving all reservations");
+        }
+    }
+
+    public async Task<Reservation> CancelReservationAsync(int reservationId)
+    {
+        var reservation = await GetByIdAsync(reservationId);
+
+        try
+        {
+            reservation.Cancel();
+            foreach (var reservationSeat in reservation.ReservationSeats)
+            {
+                reservationSeat.MarkAsDeleted();
+                reservationSeat.Ticket.MarkAsDeleted();
+            }
+
+            return await _unitOfWork.Repository<Reservation, IReservationRepository>().UpdateAsync(reservation);
+        }
+        catch (InvalidOperationException e)
+        {
+            _logger.LogError(e, "An error occurred while canceling reservation with id {id}", reservationId);
+            throw new ReservationCancellingException(e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while canceling reservation with id {id}", reservationId);
+            throw new AppException($"An error occurred while canceling reservation with id {reservationId}", e);
+        }
+    }
+
+    public async Task<Reservation> ConfirmReservationAsync(int id)
+    {
+        var reservation = await GetByIdAsync(id);
+
+        try
+        {
+            reservation.Confirm();
+            var tickets = reservation.ReservationSeats.Select(rs => _ticketBuilder.SetReservationSeatId(rs.Id).Build())
+                .ToList();
+            await _unitOfWork.Repository<Ticket, ITicketRepository>().CreateManyAsync(tickets);
+            return await _unitOfWork.Repository<Reservation, IReservationRepository>().UpdateAsync(reservation);
+        }
+        catch (InvalidOperationException e)
+        {
+            _logger.LogError(e, "An error occurred while confirming reservation with id {id}", id);
+            throw new ReservationConfirmingException(e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while confirming reservation with id {id}", id);
+            throw new AppException($"An error occurred while confirming reservation with id {id}", e);
         }
     }
 
@@ -168,14 +211,6 @@ internal class ReservationService : IReservationService
         if (!await _screeningService.IsSeatAvailableAsync(screeningId, seatId))
         {
             throw new SeatAlreadyOccupiedException(seatId, screeningId);
-        }
-    }
-
-    private static void EnsureReservationIsInReservedState(Reservation reservation)
-    {
-        if (reservation.Status != ReservationStatus.RESERVED)
-        {
-            throw new ReservationNotInReservedStateException(reservation.Id, reservation.Status);
         }
     }
 }

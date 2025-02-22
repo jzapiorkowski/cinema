@@ -61,10 +61,10 @@ internal class ScreeningFacade : IScreeningFacade
         return _mapper.Map<ScreeningAppResponseDto>(updatedScreening);
     }
 
-    public async Task<IEnumerable<Seat>> GetAvailableSeatsAsync(int screeningId)
+    public async Task<IEnumerable<SeatAppResponseDto>> GetAvailableSeatsAsync(int screeningId)
     {
         var availableSeats = await _screeningService.GetAvailableSeatsAsync(screeningId);
-        return _mapper.Map<IEnumerable<Seat>>(availableSeats);
+        return _mapper.Map<IEnumerable<SeatAppResponseDto>>(availableSeats);
     }
 
     private Screening BuildScreening(DateTime startTime, int movieId, int cinemaHallId, int? id = null)

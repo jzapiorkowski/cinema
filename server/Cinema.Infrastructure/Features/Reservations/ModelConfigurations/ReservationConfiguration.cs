@@ -14,7 +14,9 @@ internal class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
         builder.Property(r => r.Id).HasColumnName("id").ValueGeneratedOnAdd();
 
         builder.Property(r => r.Status).HasColumnName("status").HasConversion<string>()
-        .HasDefaultValue(ReservationStatus.RESERVED).IsRequired();
+            .HasDefaultValue(ReservationStatus.RESERVED).IsRequired();
+        builder.Property(r => r.CanceledAt).HasColumnName("canceled_at").HasColumnType("timestamp with time zone")
+            .IsRequired(false);
 
         builder.Property(r => r.ScreeningId).HasColumnName("screening_id").IsRequired();
 

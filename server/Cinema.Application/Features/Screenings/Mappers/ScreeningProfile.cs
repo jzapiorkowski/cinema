@@ -3,6 +3,7 @@ using Cinema.Application.Features.Screenings.Dto;
 using Cinema.Domain.Features.CinemaHalls.Entities;
 using Cinema.Domain.Features.Movies.Entities;
 using Cinema.Domain.Features.Screenings.Entities;
+using Cinema.Domain.Features.Seats.Entities;
 
 namespace Cinema.Application.Features.Screenings.Mappers;
 
@@ -15,5 +16,7 @@ internal class ScreeningProfile : Profile
 
         CreateMap<Movie, ScreeningMovieAppResponseDto>();
         CreateMap<CinemaHall, ScreeningCinemaHallAppResponseDto>();
+
+        CreateMap<Seat, SeatAppResponseDto>();
     }
 }

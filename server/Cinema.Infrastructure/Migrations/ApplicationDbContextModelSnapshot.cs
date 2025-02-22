@@ -165,6 +165,73 @@ namespace Cinema.Infrastructure.Migrations
                     b.ToTable("person", (string)null);
                 });
 
+            modelBuilder.Entity("Cinema.Domain.Features.Reservations.Entities.Reservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CanceledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("canceled_at");
+
+                    b.Property<int>("ScreeningId")
+                        .HasColumnType("integer")
+                        .HasColumnName("screening_id");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("RESERVED")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ScreeningId");
+
+                    b.ToTable("reservation", (string)null);
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Features.ReservationsSeats.Entities.ReservationSeat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_deleted");
+
+                    b.Property<int>("ReservationId")
+                        .HasColumnType("integer")
+                        .HasColumnName("reservation_id");
+
+                    b.Property<int>("SeatId")
+                        .HasColumnType("integer")
+                        .HasColumnName("seat_id");
+
+                    b.Property<int>("TicketId")
+                        .HasColumnType("integer")
+                        .HasColumnName("ticket_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReservationId");
+
+                    b.HasIndex("SeatId");
+
+                    b.ToTable("reservation_seat", (string)null);
+                });
+
             modelBuilder.Entity("Cinema.Domain.Features.Screenings.Entities.Screening", b =>
                 {
                     b.Property<int>("Id")
@@ -230,6 +297,33 @@ namespace Cinema.Infrastructure.Migrations
                     b.ToTable("seat", (string)null);
                 });
 
+            modelBuilder.Entity("Cinema.Domain.Features.Tickets.Entities.Ticket", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_deleted");
+
+                    b.Property<int>("ReservationSeatId")
+                        .HasColumnType("integer")
+                        .HasColumnName("reservation_seat_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReservationSeatId")
+                        .IsUnique();
+
+                    b.ToTable("ticket", (string)null);
+                });
+
             modelBuilder.Entity("Cinema.Domain.Features.CinemaHalls.Entities.CinemaHall", b =>
                 {
                     b.HasOne("Cinema.Domain.Features.CinemaBuildings.Entities.CinemaBuilding", "CinemaBuilding")
@@ -237,7 +331,7 @@ namespace Cinema.Infrastructure.Migrations
                         .HasForeignKey("CinemaBuildingId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("FK_cinema_hall_cinema_building_id");
+                        .HasConstraintName("FK_cinema_building_cinema_hall_id");
 
                     b.Navigation("CinemaBuilding");
                 });
@@ -275,21 +369,54 @@ namespace Cinema.Infrastructure.Migrations
                     b.Navigation("DirectedBy");
                 });
 
+            modelBuilder.Entity("Cinema.Domain.Features.Reservations.Entities.Reservation", b =>
+                {
+                    b.HasOne("Cinema.Domain.Features.Screenings.Entities.Screening", "Screening")
+                        .WithMany("Reservations")
+                        .HasForeignKey("ScreeningId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_screening_reservation_id");
+
+                    b.Navigation("Screening");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Features.ReservationsSeats.Entities.ReservationSeat", b =>
+                {
+                    b.HasOne("Cinema.Domain.Features.Reservations.Entities.Reservation", "Reservation")
+                        .WithMany("ReservationSeats")
+                        .HasForeignKey("ReservationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_reservation_reservation_seat_id");
+
+                    b.HasOne("Cinema.Domain.Features.Seats.Entities.Seat", "Seat")
+                        .WithMany("ReservationSeats")
+                        .HasForeignKey("SeatId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_seat_reservation_seat_id");
+
+                    b.Navigation("Reservation");
+
+                    b.Navigation("Seat");
+                });
+
             modelBuilder.Entity("Cinema.Domain.Features.Screenings.Entities.Screening", b =>
                 {
                     b.HasOne("Cinema.Domain.Features.CinemaHalls.Entities.CinemaHall", "CinemaHall")
                         .WithMany("Screenings")
                         .HasForeignKey("CinemaHallId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("FK_screening_cinema_hall_id");
+                        .HasConstraintName("FK_cinema_hall_screening_id");
 
                     b.HasOne("Cinema.Domain.Features.Movies.Entities.Movie", "Movie")
                         .WithMany("Screenings")
                         .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_screening_movie_id");
+                        .HasConstraintName("FK_movie_screening_id");
 
                     b.Navigation("CinemaHall");
 
@@ -301,11 +428,23 @@ namespace Cinema.Infrastructure.Migrations
                     b.HasOne("Cinema.Domain.Features.CinemaHalls.Entities.CinemaHall", "CinemaHall")
                         .WithMany("Seats")
                         .HasForeignKey("CinemaHallId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("FK_seat_cinema_hall_id");
+                        .HasConstraintName("FK_cinema_hall_seat_id");
 
                     b.Navigation("CinemaHall");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Features.Tickets.Entities.Ticket", b =>
+                {
+                    b.HasOne("Cinema.Domain.Features.ReservationsSeats.Entities.ReservationSeat", "ReservationSeat")
+                        .WithOne("Ticket")
+                        .HasForeignKey("Cinema.Domain.Features.Tickets.Entities.Ticket", "ReservationSeatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_ticket_reservation_seat_id");
+
+                    b.Navigation("ReservationSeat");
                 });
 
             modelBuilder.Entity("Cinema.Domain.Features.CinemaBuildings.Entities.CinemaBuilding", b =>
@@ -332,6 +471,27 @@ namespace Cinema.Infrastructure.Migrations
                     b.Navigation("DirectedMovies");
 
                     b.Navigation("MovieActors");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Features.Reservations.Entities.Reservation", b =>
+                {
+                    b.Navigation("ReservationSeats");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Features.ReservationsSeats.Entities.ReservationSeat", b =>
+                {
+                    b.Navigation("Ticket")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Features.Screenings.Entities.Screening", b =>
+                {
+                    b.Navigation("Reservations");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Features.Seats.Entities.Seat", b =>
+                {
+                    b.Navigation("ReservationSeats");
                 });
 #pragma warning restore 612, 618
         }

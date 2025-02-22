@@ -3,15 +3,20 @@ using Cinema.Domain.Features.CinemaBuildings.Entities;
 using Cinema.Domain.Features.CinemaHalls.Entities;
 using Cinema.Domain.Features.Movies.Entities;
 using Cinema.Domain.Features.Persons.Entities;
+using Cinema.Domain.Features.Reservations.Entities;
 using Cinema.Domain.Features.Screenings.Entities;
 using Cinema.Domain.Features.Seats.Entities;
+using Cinema.Domain.Features.Tickets.Entities;
 using Cinema.Infrastructure.Features.CinemaBuildings.ModelConfigurations;
 using Cinema.Infrastructure.Features.CinemaHalls.ModelConfigurations;
 using Cinema.Infrastructure.Features.MovieActors.ModelConfigurations;
 using Cinema.Infrastructure.Features.Movies.ModelConfigurations;
 using Cinema.Infrastructure.Features.Persons.ModelConfigurations;
+using Cinema.Infrastructure.Features.Reservations.ModelConfigurations;
+using Cinema.Infrastructure.Features.ReservationSeats.ModelConfigurations;
 using Cinema.Infrastructure.Features.Screenings.ModelConfigurations;
 using Cinema.Infrastructure.Features.Seats.ModelConfigurations;
+using Cinema.Infrastructure.Features.Tickets.ModelConfigurations;
 using EntityFramework.Exceptions.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,9 +46,12 @@ internal class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new CinemaHallConfiguration());
         modelBuilder.ApplyConfiguration(new CinemaBuildingConfiguration());
         modelBuilder.ApplyConfiguration(new SeatConfiguration());
+        modelBuilder.ApplyConfiguration(new ReservationConfiguration());
+        modelBuilder.ApplyConfiguration(new TicketConfiguration());
 
         // register relationships configurations
         modelBuilder.ApplyConfiguration(new MovieActorConfiguration());
+        modelBuilder.ApplyConfiguration(new ReservationSeatConfiguration());
     }
 
     public DbSet<Movie> Movie { get; set; }
@@ -52,4 +60,6 @@ internal class ApplicationDbContext : DbContext
     public DbSet<CinemaHall> CinemaHall { get; set; }
     public DbSet<CinemaBuilding> CinemaBuilding { get; set; }
     public DbSet<Seat> Seat { get; set; }
+    public DbSet<Reservation> Reservation { get; set; }
+    public DbSet<Ticket> Ticket { get; set; }
 }

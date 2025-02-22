@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using Cinema.Application.Features.Reservations.Exceptions;
 using Cinema.Application.Shared.Exceptions;
 using Cinema.Domain.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +59,31 @@ public class ErrorHandlingMiddleware
         {
             _logger.LogError("Invalid SortBy property: {Message}", e.Message);
             await HandleExceptionAsync(context, HttpStatusCode.BadRequest, "Bad Request", e.Message);
+        }
+        catch (SeatAlreadyOccupiedException e)
+        {
+            _logger.LogError("Seat already occupied: {Message}", e.Message);
+            await HandleExceptionAsync(context, HttpStatusCode.Conflict, "Conflict", e.Message);
+        }
+        catch (ReservationCancellingException e)
+        {
+            _logger.LogError("Reservation cancelling error: {Message}", e.Message);
+            await HandleExceptionAsync(context, HttpStatusCode.Conflict, "Conflict", e.Message);
+        }
+        catch (ReservationConfirmingException e)
+        {
+            _logger.LogError("Reservation confirming error: {Message}", e.Message);
+            await HandleExceptionAsync(context, HttpStatusCode.Conflict, "Conflict", e.Message);
+        }
+        catch (SeatsAddingException e)
+        {
+            _logger.LogError("Seats adding error: {Message}", e.Message);
+            await HandleExceptionAsync(context, HttpStatusCode.Conflict, "Conflict", e.Message);
+        }
+        catch (SeatsRemovingException e)
+        {
+            _logger.LogError("Seats removing error: {Message}", e.Message);
+            await HandleExceptionAsync(context, HttpStatusCode.Conflict, "Conflict", e.Message);
         }
         catch (Exception e)
         {

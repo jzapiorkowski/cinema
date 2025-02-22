@@ -34,6 +34,16 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where
         }, "creating");
     }
 
+    public Task<List<TEntity>> CreateManyAsync(List<TEntity> entities)
+    {
+        return ExecuteDbOperation(async () =>
+        {
+            await _dbContext.Set<TEntity>().AddRangeAsync(entities);
+            await _dbContext.SaveChangesAsync();
+            return entities;
+        }, "creating many");
+    }
+
     public async Task DeleteAsync(TEntity entity)
     {
         await ExecuteDbOperation(async () =>

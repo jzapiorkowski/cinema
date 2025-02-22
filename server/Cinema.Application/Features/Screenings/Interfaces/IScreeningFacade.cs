@@ -8,4 +8,5 @@ public interface IScreeningFacade
     public Task<IEnumerable<ScreeningWithDetailsAppResponseDto>> GetAllWithDetailsAsync(DateTime date);
     public Task<ScreeningAppResponseDto> CreateAsync(CreateScreeningAppDto screening);
     public Task<ScreeningAppResponseDto> UpdateAsync(int id, UpdateScreeningAppDto screening);
+    Task<IEnumerable<SeatAppResponseDto>> GetAvailableSeatsAsync(int screeningId);
 }

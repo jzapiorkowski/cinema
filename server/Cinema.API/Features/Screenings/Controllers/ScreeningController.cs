@@ -1,4 +1,5 @@
 using AutoMapper;
+using Cinema.API.Features.CinemaHalls.Dto;
 using Cinema.API.Features.Screenings.Dto;
 using Cinema.Application.Features.Screenings.Dto;
 using Cinema.Application.Features.Screenings.Interfaces;
@@ -60,5 +61,14 @@ public class ScreeningController : ControllerBase
     {
         var updatedScreening = await _screeningFacade.UpdateAsync(id, _mapper.Map<UpdateScreeningAppDto>(screening));
         return Ok(_mapper.Map<ScreeningApiResponseDto>(updatedScreening));
+    }
+    
+    [HttpGet("{screeningId:int}/seats")]
+    [ProducesResponseType<List<SeatApiResponseDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetAvailableSeatsAsync(int screeningId)
+    {
+        var availableSeats = await _screeningFacade.GetAvailableSeatsAsync(screeningId);
+        return Ok(_mapper.Map<List<SeatApiResponseDto>>(availableSeats));
     }
 }

@@ -1,4 +1,5 @@
 using Cinema.Domain.Features.CinemaBuildings.Entities;
+using Cinema.Infrastructure.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,6 +18,9 @@ internal class CinemaBuildingConfiguration : IEntityTypeConfiguration<CinemaBuil
         builder
             .HasMany(cb => cb.CinemaHalls)
             .WithOne(ch => ch.CinemaBuilding)
-            .HasForeignKey(ch => ch.CinemaBuildingId);
+            .HasForeignKey(ch => ch.CinemaBuildingId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired()
+            .HasConstraintName(DatabaseConstraints.FKCinemaBuildingCinemaHall);
     }
 }

@@ -1,8 +1,10 @@
 using AutoMapper;
+using Cinema.API.Core.Constants;
 using Cinema.API.Features.CinemaBuildings.Dto;
 using Cinema.Application.Features.CinemaBuildings.Dto;
 using Cinema.Application.Features.CinemaBuildings.Interfaces;
 using Cinema.Domain.Core.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.API.Features.CinemaBuildings.Controllers;
@@ -21,6 +23,7 @@ public class CinemaBuildingController : ControllerBase
         _mapper = mapper;
     }
     
+    [AllowAnonymous]
     [HttpGet]
     [ProducesResponseType<PaginationResponse<CinemaBuildingApiResponseDto>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllAsync([FromQuery] PaginationRequest paginationRequest)
@@ -29,6 +32,7 @@ public class CinemaBuildingController : ControllerBase
         return Ok(_mapper.Map<PaginationResponse<CinemaBuildingApiResponseDto>>(cinemaBuildings));
     }
     
+    [AllowAnonymous]
     [HttpGet("{id:int}")]
     [ProducesResponseType<CinemaBuildingWithDetailsApiResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -38,7 +42,10 @@ public class CinemaBuildingController : ControllerBase
         return Ok(_mapper.Map<CinemaBuildingWithDetailsApiResponseDto>(cinemaBuilding));
     }
     
+    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteAsync(int id)
@@ -47,8 +54,11 @@ public class CinemaBuildingController : ControllerBase
         return NoContent();
     }
     
+    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpPost]
     [ProducesResponseType<CinemaBuildingApiResponseDto>(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateAsync([FromBody] CreateCinemaBuildingApiDto createCinemaBuildingApiDto)
     {

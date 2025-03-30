@@ -31,6 +31,21 @@ services:
     image: cinema-migrations:latest
     container_name: cinema-migrations-runner
     environment:
-        ConnectionStrings__DatabaseConnectionString: "Host=db;Port=5432;Database=dev-db;Username=dev-user;Password=dev-password"
+      ConnectionStrings__DatabaseConnectionString: "Host=db;Port=5432;Database=dev-db;Username=dev-user;Password=dev-password"
     depends_on:
-        - db
+      - db
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1
+    container_name: cinema-keycloak
+    command: start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db/dev-db
+      KC_DB_USERNAME: dev-user
+      KC_DB_PASSWORD: dev-password
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db

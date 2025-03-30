@@ -1,8 +1,10 @@
 using AutoMapper;
+using Cinema.API.Core.Constants;
 using Cinema.API.Features.CinemaHalls.Dto;
 using Cinema.Application.Features.CinemaHalls.Dto;
 using Cinema.Application.Features.CinemaHalls.Interfaces;
 using Cinema.Domain.Core.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.API.Features.CinemaHalls.Controllers;
@@ -23,6 +25,7 @@ public class CinemaHallController : ControllerBase
         _cinemaHallSeatFacade = cinemaHallSeatFacade;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     [ProducesResponseType<PaginationResponse<CinemaHallApiResponseDto>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllAsync([FromQuery] PaginationRequest paginationRequest)
@@ -31,6 +34,7 @@ public class CinemaHallController : ControllerBase
         return Ok(_mapper.Map<PaginationResponse<CinemaHallApiResponseDto>>(cinemaHalls));
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:int}")]
     [ProducesResponseType<CinemaHallWithDetailsApiResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -49,7 +53,10 @@ public class CinemaHallController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<CinemaHallApiResponseDto>(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateAsync([FromBody] CreateCinemaHallApiDto createCinemaHallApiDto)
@@ -60,7 +67,10 @@ public class CinemaHallController : ControllerBase
             _mapper.Map<CinemaHallApiResponseDto>(createdCinemaHall));
     }
 
+    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpPut("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<CinemaHallApiResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -71,7 +81,10 @@ public class CinemaHallController : ControllerBase
         return Ok(_mapper.Map<CinemaHallApiResponseDto>(updatedCinemaHall));
     }
 
+    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpPost("{id:int}/seats")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<CinemaHallSeatApiResponseDto>(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -83,7 +96,10 @@ public class CinemaHallController : ControllerBase
             _mapper.Map<CinemaHallSeatApiResponseDto>(createdSeat));
     }
     
+    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpPut("{id:int}/seats/{seatId:int}")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<CinemaHallSeatApiResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -94,7 +110,10 @@ public class CinemaHallController : ControllerBase
         return Ok(_mapper.Map<CinemaHallSeatApiResponseDto>(updatedSeat));
     }
     
+    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpDelete("seats/{seatId:int}")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteSeatAsync(int seatId)
@@ -103,6 +122,7 @@ public class CinemaHallController : ControllerBase
         return NoContent();
     }
 
+    [AllowAnonymous]
     [HttpGet("seats/{seatId:int}")]
     [ProducesResponseType<CinemaHallSeatApiResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

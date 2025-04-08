@@ -1,5 +1,4 @@
 using AutoMapper;
-using Cinema.API.Core.Constants;
 using Cinema.API.Features.Reservations.Dto;
 using Cinema.Application.Features.Reservations.Dto;
 using Cinema.Application.Features.Reservations.Interfaces;
@@ -32,6 +31,12 @@ public class ReservationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateAsync([FromBody] CreateReservationApiDto reservation)
     {
+        var authorizationResult = await _authorizationService
+            .AuthorizeAsync(User, reservation, Core.Constants.Policies.CreateReservation);
+
+        if (!authorizationResult.Succeeded)
+            return Forbid();
+
         var createdReservation =
             await _reservationFacade.CreateAsync(_mapper.Map<CreateReservationAppDto>(reservation));
         var reservationApiResponse = _mapper.Map<ReservationApiResponseDto>(createdReservation);
@@ -46,13 +51,13 @@ public class ReservationController : ControllerBase
     public async Task<IActionResult> GetByIdAsync(int id)
     {
         var reservation = await _reservationFacade.GetByIdAsync(id);
-        
+
         var authorizationResult = await _authorizationService
-            .AuthorizeAsync(User, reservation, Policies.ManageReservations.ToString());
-        
+            .AuthorizeAsync(User, reservation, Cinema.API.Core.Constants.Policies.ManageReservations);
+
         if (!authorizationResult.Succeeded)
             return Forbid();
-        
+
         return Ok(_mapper.Map<ReservationApiResponseDto>(reservation));
     }
 
@@ -74,11 +79,11 @@ public class ReservationController : ControllerBase
         var reservation = await _reservationFacade.GetByIdAsync(id);
 
         var authorizationResult = await _authorizationService
-            .AuthorizeAsync(User, reservation, Policies.ManageReservations.ToString());
-        
+            .AuthorizeAsync(User, reservation, Cinema.API.Core.Constants.Policies.ManageReservations);
+
         if (!authorizationResult.Succeeded)
             return Forbid();
-        
+
         var confirmedReservation = await _reservationFacade.ConfirmReservationAsync(id);
         return Ok(_mapper.Map<ReservationApiResponseDto>(confirmedReservation));
     }
@@ -91,11 +96,11 @@ public class ReservationController : ControllerBase
         var reservation = await _reservationFacade.GetByIdAsync(id);
 
         var authorizationResult = await _authorizationService
-            .AuthorizeAsync(User, reservation, Policies.ManageReservations.ToString());
-        
+            .AuthorizeAsync(User, reservation, Cinema.API.Core.Constants.Policies.ManageReservations);
+
         if (!authorizationResult.Succeeded)
             return Forbid();
-        
+
         await _reservationFacade.CancelReservationAsync(id);
         return Ok();
     }
@@ -110,14 +115,14 @@ public class ReservationController : ControllerBase
         var reservation = await _reservationFacade.GetByIdAsync(reservationId);
 
         var authorizationResult = await _authorizationService
-            .AuthorizeAsync(User, reservation, Policies.ManageReservations.ToString());
-        
+            .AuthorizeAsync(User, reservation, Cinema.API.Core.Constants.Policies.ManageReservations);
+
         if (!authorizationResult.Succeeded)
             return Forbid();
-        
+
         var updatedReservation = await _reservationFacade.AddSeatToReservationAsync(reservationId, seatId);
         var reservationDto = _mapper.Map<ReservationApiResponseDto>(updatedReservation);
-        
+
         return CreatedAtAction(nameof(GetByIdAsync), new { id = reservationDto.Id },
             reservationDto);
     }
@@ -131,11 +136,11 @@ public class ReservationController : ControllerBase
         var reservation = await _reservationFacade.GetByIdAsync(reservationId);
 
         var authorizationResult = await _authorizationService
-            .AuthorizeAsync(User, reservation, Policies.ManageReservations.ToString());
-        
+            .AuthorizeAsync(User, reservation, Cinema.API.Core.Constants.Policies.ManageReservations);
+
         if (!authorizationResult.Succeeded)
             return Forbid();
-        
+
         await _reservationFacade.RemoveSeatFromReservationAsync(reservationId, seatId);
         return NoContent();
     }

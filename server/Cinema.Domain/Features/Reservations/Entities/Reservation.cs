@@ -9,6 +9,7 @@ public class Reservation
     public ReservationStatus Status { get; set; }
     public int ScreeningId { get; set; }
     public DateTime? CanceledAt { get; set; }
+    public Guid CustomerId { get; set; }
     public Screening Screening { get; set; }
     public ICollection<ReservationSeat> ReservationSeats { get; set; } = [];
 

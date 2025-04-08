@@ -8,4 +8,5 @@ public class ReservationApiResponseDto
     public ReservationScreeningApiResponseDto Screening { get; set; }
     public ReservationStatus Status { get; set; }
     public IEnumerable<ReservationSeatApiResponseDto> ReservationSeats { get; set; } = [];
+    public Guid CustomerId { get; set; }
 }

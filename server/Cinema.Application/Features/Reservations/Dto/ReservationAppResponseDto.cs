@@ -8,4 +8,5 @@ public class ReservationAppResponseDto
     public ReservationScreeningAppResponseDto Screening { get; set; }
     public ReservationStatus Status { get; set; }
     public IEnumerable<ReservationSeatAppResponseDto> ReservationSeats { get; set; } = [];
+    public Guid CustomerId { get; set; }
 }

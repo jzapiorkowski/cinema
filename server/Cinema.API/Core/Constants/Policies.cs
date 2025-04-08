@@ -1,7 +1,8 @@
 namespace Cinema.API.Core.Constants;
 
-public enum Policies
+public static class  Policies
 {
-    ManageCinema,
-    ManageReservations
+    public static string ManageCinema { get; } = "ManageCinema";
+    public static string ManageReservations { get; } = "ManageReservations";
+    public static string CreateReservation { get; } = "CreateReservation";
 }

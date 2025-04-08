@@ -12,7 +12,7 @@ namespace Cinema.API;
 public class Startup
 {
     private readonly IConfiguration _configuration;
-    
+
     public Startup(IConfiguration configuration)
     {
         _configuration = configuration;
@@ -27,20 +27,21 @@ public class Startup
 
         // register authentication and authorization services
         services.AddJwtAuthentication(keycloakOptions.Get<KeycloakSettings>());
+        services.AddCustomPolicyHandlers();
         services.AddCustomAuthorization();
 
         // register swagger services
         services.AddEndpointsApiExplorer();
         services.AddSwaggerDocumentation();
 
-       // register services from other layers 
+        // register services from other layers 
         services.AddInfrastructureServices();
         services.AddAPIServices();
         services.AddApplicationServices();
 
         // register json options
         services.ConfigureHttpJsonOptions(options => ConfigureJsonSerializerOptions(options.SerializerOptions));
-       
+
         // register controllers
         services.AddControllers(
                 options => { options.SuppressAsyncSuffixInActionNames = false; }
@@ -63,7 +64,7 @@ public class Startup
 
     public static void ConfigureEndpoints(WebApplication app)
     {
-        app.MapControllers();
+        app.MapControllers().RequireAuthorization();
     }
 
     private static void ConfigureJsonSerializerOptions(JsonSerializerOptions options)

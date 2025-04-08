@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.API.Features.Persons.Controllers;
 
+[Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
 [ApiController]
 [Route("persons")]
 [Produces("application/json")]
@@ -32,7 +33,7 @@ public class PersonController : ControllerBase
         return Ok(_mapper.Map<PaginationResponse<PersonApiResponseDto>>(persons));
     }
 
-    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
+    [AllowAnonymous]
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -44,7 +45,6 @@ public class PersonController : ControllerBase
         return Ok(_mapper.Map<PersonWithDetailsApiResponseDto>(person));
     }
 
-    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -56,7 +56,6 @@ public class PersonController : ControllerBase
         return NoContent();
     }
 
-    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -72,7 +71,6 @@ public class PersonController : ControllerBase
             personApiResponse);
     }
     
-    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]

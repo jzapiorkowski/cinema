@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.API.Features.Movies.Controllers;
 
+[Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
 [ApiController]
 [Route("movies")]
 [Produces("application/json")]
@@ -42,7 +43,6 @@ public class MovieController : ControllerBase
         return Ok(_mapper.Map<MovieWithDetailsApiResponseDto>(movie));
     }
 
-    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -58,7 +58,6 @@ public class MovieController : ControllerBase
             movieApiResponse);
     }
 
-    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpDelete("{movieId:int}")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -70,7 +69,6 @@ public class MovieController : ControllerBase
         return NoContent();
     }
 
-    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpPut("{movieId:int}")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]

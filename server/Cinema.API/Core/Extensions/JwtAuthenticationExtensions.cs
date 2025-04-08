@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using System.Text.Json;
 using Cinema.API.Core.Constants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -54,37 +53,6 @@ public static class JwtAuthenticationExtensions
         if (context.Principal?.Identity is not ClaimsIdentity claimsIdentity)
         {
             return Task.CompletedTask;
-        }
-
-        var realmAccessClaim = context.Principal.FindFirst(CustomClaimTypes.RealmAccess)?.Value;
-        if (string.IsNullOrEmpty(realmAccessClaim))
-        {
-            return Task.CompletedTask;
-        }
-
-        try
-        {
-            using var json = JsonDocument.Parse(realmAccessClaim);
-            if (json.RootElement.TryGetProperty("roles", out var rolesElement) &&
-                rolesElement.ValueKind == JsonValueKind.Array)
-            {
-                foreach (var roleElement in rolesElement.EnumerateArray())
-                {
-                    var role = roleElement.GetString();
-                    if (!string.IsNullOrEmpty(role) && Enum.TryParse(typeof(Roles), role, true, out _))
-                    {
-                        claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, role));
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Role {role} is not supported");
-                    }
-                }
-            }
-        }
-        catch (JsonException ex)
-        {
-            Console.WriteLine($"Error parsing realm roles: {ex.Message}");
         }
 
         Console.WriteLine("Token validated successfully");

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.API.Features.Screenings.Controllers;
 
+[Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
 [ApiController]
 [Route("screenings")]
 [Produces("application/json")]
@@ -43,7 +44,6 @@ public class ScreeningController : ControllerBase
         return Ok(_mapper.Map<IEnumerable<ScreeningWithDetailsApiResponseDto>>(screenings));
     }
 
-    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -59,7 +59,6 @@ public class ScreeningController : ControllerBase
             screeningApiResponse);
     }
     
-    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]

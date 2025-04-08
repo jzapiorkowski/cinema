@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.API.Features.CinemaBuildings.Controllers;
 
+[Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
 [ApiController]
 [Route("cinema-buildings")]
 [Produces("application/json")]
@@ -42,7 +43,6 @@ public class CinemaBuildingController : ControllerBase
         return Ok(_mapper.Map<CinemaBuildingWithDetailsApiResponseDto>(cinemaBuilding));
     }
     
-    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -53,8 +53,7 @@ public class CinemaBuildingController : ControllerBase
         await _cinemaBuildingFacade.DeleteAsync(id);
         return NoContent();
     }
-    
-    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
+
     [HttpPost]
     [ProducesResponseType<CinemaBuildingApiResponseDto>(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

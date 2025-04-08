@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.API.Features.CinemaHalls.Controllers;
 
+[Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
 [ApiController]
 [Route("cinema-halls")]
 [Produces("application/json")]
@@ -53,7 +54,6 @@ public class CinemaHallController : ControllerBase
         return NoContent();
     }
 
-    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -67,7 +67,6 @@ public class CinemaHallController : ControllerBase
             _mapper.Map<CinemaHallApiResponseDto>(createdCinemaHall));
     }
 
-    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -81,7 +80,6 @@ public class CinemaHallController : ControllerBase
         return Ok(_mapper.Map<CinemaHallApiResponseDto>(updatedCinemaHall));
     }
 
-    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpPost("{id:int}/seats")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -96,7 +94,6 @@ public class CinemaHallController : ControllerBase
             _mapper.Map<CinemaHallSeatApiResponseDto>(createdSeat));
     }
     
-    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpPut("{id:int}/seats/{seatId:int}")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -110,7 +107,6 @@ public class CinemaHallController : ControllerBase
         return Ok(_mapper.Map<CinemaHallSeatApiResponseDto>(updatedSeat));
     }
     
-    [Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
     [HttpDelete("seats/{seatId:int}")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]

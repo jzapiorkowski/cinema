@@ -1,12 +1,15 @@
 using AutoMapper;
+using Cinema.API.Core.Constants;
 using Cinema.API.Features.Movies.Dto;
 using Cinema.Application.Features.Movies.Dto;
 using Cinema.Application.Features.Movies.Interfaces;
 using Cinema.Domain.Core.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.API.Features.Movies.Controllers;
 
+[Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
 [ApiController]
 [Route("movies")]
 [Produces("application/json")]
@@ -21,6 +24,7 @@ public class MovieController : ControllerBase
         _mapper = mapper;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     [ProducesResponseType<PaginationResponse<MovieApiResponseDto>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllAsync([FromQuery] PaginationRequest paginationRequest)
@@ -29,6 +33,7 @@ public class MovieController : ControllerBase
         return Ok(_mapper.Map<PaginationResponse<MovieApiResponseDto>>(movies));
     }
 
+    [AllowAnonymous]
     [HttpGet("{movieId:int}")]
     [ProducesResponseType<MovieWithDetailsApiResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -39,6 +44,8 @@ public class MovieController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<MovieApiResponseDto>(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -52,6 +59,8 @@ public class MovieController : ControllerBase
     }
 
     [HttpDelete("{movieId:int}")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteAsync(int movieId)
@@ -61,6 +70,8 @@ public class MovieController : ControllerBase
     }
 
     [HttpPut("{movieId:int}")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType<MovieAppResponseDto>(StatusCodes.Status200OK)]

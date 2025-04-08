@@ -1,12 +1,15 @@
 using AutoMapper;
+using Cinema.API.Core.Constants;
 using Cinema.API.Features.Persons.Dto;
 using Cinema.Application.Features.Persons.Dto;
 using Cinema.Application.Features.Persons.Interfaces;
 using Cinema.Domain.Core.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.API.Features.Persons.Controllers;
 
+[Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
 [ApiController]
 [Route("persons")]
 [Produces("application/json")]
@@ -21,6 +24,7 @@ public class PersonController : ControllerBase
         _personFacade = personFacade;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     [ProducesResponseType<PaginationResponse<PersonApiResponseDto>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllAsync([FromQuery] PaginationRequest paginationRequest)
@@ -29,7 +33,10 @@ public class PersonController : ControllerBase
         return Ok(_mapper.Map<PaginationResponse<PersonApiResponseDto>>(persons));
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<PersonWithDetailsApiResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByIdAsync(int id)
@@ -39,6 +46,8 @@ public class PersonController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteAsync(int id)
@@ -48,6 +57,8 @@ public class PersonController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<PersonApiResponseDto>(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -61,6 +72,8 @@ public class PersonController : ControllerBase
     }
     
     [HttpPut("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType<PersonApiResponseDto>(StatusCodes.Status200OK)]

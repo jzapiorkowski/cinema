@@ -1,12 +1,14 @@
 using AutoMapper;
-using Cinema.API.Features.CinemaHalls.Dto;
+using Cinema.API.Core.Constants;
 using Cinema.API.Features.Screenings.Dto;
 using Cinema.Application.Features.Screenings.Dto;
 using Cinema.Application.Features.Screenings.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.API.Features.Screenings.Controllers;
 
+[Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
 [ApiController]
 [Route("screenings")]
 [Produces("application/json")]
@@ -21,6 +23,7 @@ public class ScreeningController : ControllerBase
         _screeningFacade = screeningFacade;
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:int}")]
     [ProducesResponseType<ScreeningWithDetailsApiResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -30,6 +33,7 @@ public class ScreeningController : ControllerBase
         return Ok(_mapper.Map<ScreeningWithDetailsApiResponseDto>(screening));
     }
 
+    [AllowAnonymous]
     [HttpGet("date/{date:datetime}")]
     [ProducesResponseType<IEnumerable<ScreeningWithDetailsApiResponseDto>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllWithDetailsAsync([FromRoute] DateTime date)
@@ -41,6 +45,8 @@ public class ScreeningController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ScreeningApiResponseDto>(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -54,6 +60,8 @@ public class ScreeningController : ControllerBase
     }
     
     [HttpPut("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ScreeningApiResponseDto>(StatusCodes.Status200OK)]
@@ -63,6 +71,7 @@ public class ScreeningController : ControllerBase
         return Ok(_mapper.Map<ScreeningApiResponseDto>(updatedScreening));
     }
     
+    [AllowAnonymous]
     [HttpGet("{screeningId:int}/seats")]
     [ProducesResponseType<List<SeatApiResponseDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

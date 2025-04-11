@@ -1,4 +1,5 @@
 using Cinema.API.Core.Constants;
+using Cinema.API.Core.Extensions;
 using Cinema.API.Features.Reservations.Dto;
 using Microsoft.AspNetCore.Authorization;
 
@@ -12,8 +13,9 @@ public class CreateReservationHandler : AuthorizationHandler<CreateReservationRe
     {
         var isManager = context.User.IsInRole(Roles.Manager.ToLower());
         var isCustomer = context.User.IsInRole(Roles.Customer.ToLower());
+        var userId = context.User.GetUserId();
 
-        if (dto.CustomerId == null && isCustomer)
+        if (isCustomer && (dto.CustomerId == null || dto.CustomerId == userId))
         {
             context.Succeed(requirement);
             return Task.CompletedTask;

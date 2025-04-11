@@ -1,4 +1,5 @@
 using AutoMapper;
+using Cinema.API.Core.Extensions;
 using Cinema.API.Features.Reservations.Dto;
 using Cinema.Application.Features.Reservations.Dto;
 using Cinema.Application.Features.Reservations.Interfaces;
@@ -36,6 +37,11 @@ public class ReservationController : ControllerBase
 
         if (!authorizationResult.Succeeded)
             return Forbid();
+
+        if (User.IsCustomer() && reservation.CustomerId == null)
+        {
+            reservation.CustomerId = User.GetUserId();
+        }
 
         var createdReservation =
             await _reservationFacade.CreateAsync(_mapper.Map<CreateReservationAppDto>(reservation));

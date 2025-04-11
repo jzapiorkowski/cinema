@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.API.Features.Persons.Controllers;
 
-[Authorize(Policy = $"{nameof(Policies.ManageCinema)}")]
+[Authorize(Policy = Policies.ManageCinema)]
 [ApiController]
 [Route("persons")]
 [Produces("application/json")]

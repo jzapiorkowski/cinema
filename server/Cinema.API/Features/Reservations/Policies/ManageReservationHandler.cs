@@ -1,5 +1,4 @@
-using System.Security.Claims;
-using Cinema.API.Core.Constants;
+using Cinema.API.Core.Extensions;
 using Cinema.Application.Features.Reservations.Dto;
 using Microsoft.AspNetCore.Authorization;
 
@@ -11,17 +10,15 @@ public class ManageReservationHandler : AuthorizationHandler<ManageReservationRe
         ManageReservationRequirement requirement,
         ReservationAppResponseDto reservation)
     {
-        var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (context.User.IsInRole(Roles.Manager.ToLower()))
+        if (context.User.IsManager())
         {
             context.Succeed(requirement);
             return Task.CompletedTask;
         }
 
         if (
-            context.User.IsInRole(Roles.Customer.ToLower())
-            && reservation.CustomerId.ToString() == userId
+            context.User.IsCustomer()
+            && reservation.CustomerId == context.User.GetUserId()
         )
         {
             context.Succeed(requirement);

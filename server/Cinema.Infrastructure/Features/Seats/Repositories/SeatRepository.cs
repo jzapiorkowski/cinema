@@ -20,9 +20,7 @@ internal class SeatRepository : BaseRepository<Seat>, ISeatRepository
 
     protected override IQueryable<Seat> BuildIncludesQuery(IQueryable<Seat> query)
     {
-        return query
-            .Include(s => s.CinemaHall)
-            .Include(s => s.ReservationSeats);
+        return query;
     }
 
     public async Task<IEnumerable<Seat>> GetAllAsync(Expression<Func<Seat, bool>> predicate, bool asNoTracking = true,

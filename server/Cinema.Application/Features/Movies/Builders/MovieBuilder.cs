@@ -51,11 +51,10 @@ internal class MovieBuilder : IMovieBuilder
 
     public IMovieBuilder AddActors(IEnumerable<(int actorId, string role)> actors)
     {
-        if (_movie.MovieActors == null)
-            _movie.MovieActors = new List<MovieActor>();
-
-        _movie.MovieActors.AddRange(
-            actors.Select(actor => new MovieActor { ActorId = actor.actorId, Role = actor.role }));
+        foreach (var actor in actors)
+        {
+            _movie.MovieActors.Add(new MovieActor { ActorId = actor.actorId, Role = actor.role });
+        }
 
         return this;
     }

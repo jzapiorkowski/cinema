@@ -10,8 +10,8 @@ public class Reservation
     public int ScreeningId { get; set; }
     public DateTime? CanceledAt { get; set; }
     public Guid CustomerId { get; set; }
-    public Screening Screening { get; set; }
-    public ICollection<ReservationSeat> ReservationSeats { get; set; } = [];
+    public virtual Screening Screening { get; set; }
+    public virtual ICollection<ReservationSeat> ReservationSeats { get; set; } = [];
 
     public void Cancel()
     {

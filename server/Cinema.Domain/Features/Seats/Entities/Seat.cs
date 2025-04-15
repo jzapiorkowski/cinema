@@ -11,6 +11,6 @@ public class Seat
     public SeatType Type { get; set; }
     
     public int CinemaHallId { get; set; }
-    public CinemaHall CinemaHall { get; set; }
-    public ICollection<ReservationSeat> ReservationSeats { get; set; } = [];
+    public virtual CinemaHall CinemaHall { get; set; }
+    public virtual ICollection<ReservationSeat> ReservationSeats { get; set; } = [];
 }

@@ -17,7 +17,6 @@ internal class CinemaHallRepository : BaseRepository<CinemaHall>, ICinemaHallRep
     protected override IQueryable<CinemaHall> BuildIncludesQuery(IQueryable<CinemaHall> query)
     {
         return query
-            .Include(ch => ch.Screenings)
             .Include(ch => ch.CinemaBuilding)
             .Include(ch => ch.Seats);
     }

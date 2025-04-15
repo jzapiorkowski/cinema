@@ -34,7 +34,10 @@ internal class ApplicationDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(_config.GetDbConnectionString()).UseExceptionProcessor();
+        optionsBuilder
+            .UseLazyLoadingProxies()
+            .UseNpgsql(_config.GetDbConnectionString())
+            .UseExceptionProcessor();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
